@@ -8,8 +8,8 @@ router.get("/", (req, res) => {
   res.redirect("/home");
 });
 
-router.get("/home", (req, res) => {
-  res.sendFile(__dirname + "/../public/index.html");
+router.get("/login", (req, res) => {
+  res.send("Here lies the login logic");
 });
 
 module.exports = router;

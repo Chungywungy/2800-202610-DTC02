@@ -26,20 +26,12 @@ app.use(express.static("public"));
  * it redirects to that folders directory
  */
 app.use("/", require("./routes/index"));
-// app.use("/auth", require("./routes/auth"));
-// app.use("/api", require("./routes/api"));
-
-app.get("/", (req, res) => {
-  res.redirect(__dirname + "/home");
-});
-
-app.get("/home", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
-});
+app.use("/auth", require("./routes/auth"));
 
 app.listen(PORT, () => {
-  console.log("Listening at port: ", PORT);
+  console.log(`Listening at PORT: ${PORT}`);
 });
+
 // connect to MongoDB Atlas
 async function main() {
   try {
