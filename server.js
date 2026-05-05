@@ -4,8 +4,9 @@
 
 // import all dependencies
 const express = require("express");
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose"); dont need 
 const session = require("express-session");
+const { connectToDatabase } = require("./routes/mongodbAtlas");
 const FileStore = require("session-file-store")(session); // Not sure if we need this
 require("dotenv").config();
 
@@ -28,18 +29,12 @@ app.use(express.static("public"));
 app.use("/", require("./routes/index"));
 app.use("/auth", require("./routes/auth"));
 
+// connect to MongoDB Atlas
+connectToDatabase();
+
+// start server
 app.listen(PORT, () => {
   console.log(`Listening at PORT: ${PORT}`);
 });
 
-// connect to MongoDB Atlas
-async function main() {
-  try {
-    await mongoose.connect("replace with dotenv later");
-    console.log(`Connected to MongoDB.`);
-  } catch (error) {
-    console.error(`Failed connecting to MongoDB Atlas ${error}`);
-  }
-}
 
-// main();
