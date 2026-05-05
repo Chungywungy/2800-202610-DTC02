@@ -15,13 +15,20 @@
     />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js" defer></script>
     <!-- ShadeMap -->
-    <script src="https://unpkg.com/leaflet-shadow-simulator/dist/leaflet-shadow-simulator.umd.min.js" defer></script>
+    <script
+      src="https://unpkg.com/leaflet-shadow-simulator/dist/leaflet-shadow-simulator.umd.min.js"
+      defer
+    ></script>
     <!-- Buildings -->
     <script src="https://unpkg.com/osmtogeojson/osmtogeojson.js" defer></script>
     <script src="js/map.js" defer></script>
+    <!-- components -->
+    <script type="module" src="./components/site-navbar.js" defer></script>
   </head>
   <body>
-    <h1>MAP</h1>
+    <!-- NAVBAR COMPONENT -->
+    <site-navbar></site-navbar>
+
     <div id="map" class="h-screen w-screen"></div>
   </body>
 </html>
