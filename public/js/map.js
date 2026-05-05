@@ -1,3 +1,8 @@
+fetchShadeAPIKey = async function () {
+  const result = await fetch("/shadeAPIKey");
+  return await result.text();
+};
+
 // Vancouver coordinates
 const bounds = [
   [49.18, -123.25],
@@ -7,13 +12,14 @@ const bounds = [
 // setup map boundaries
 let map = L.map("map", {
   maxBounds: bounds,
-  maxBoundsViscosity: 1.0
+  maxBoundsViscosity: 1.0,
 }).fitBounds(bounds);
 
 // Display map
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map)
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
 // ShadeMap setup
+// displayShadeMap = async function () {
 const shadeMap = L.shadeMap({
   date: new Date(), // display shadows for current date
   color: "#01112f", // shade color
@@ -61,3 +67,6 @@ const shadeMap = L.shadeMap({
     console.log(new Date().toISOString(), msg);
   },
 }).addTo(map);
+// };
+
+// displayShadeMap();
