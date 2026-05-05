@@ -3,7 +3,7 @@ let fountainData = [];
 let fountainVisible = false;
 
 const fetchWaterFountains = async () => {
-    fountainData = [];
+  fountainData = [];
   try {
     const limit = 100;
     let offset = 0;
@@ -13,7 +13,7 @@ const fetchWaterFountains = async () => {
         `https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/drinking-fountains/records?limit=${limit}&offset=${offset}`,
       );
       const resultJSON = await result.json();
-      console.log(resultJSON);
+      // console.log(resultJSON);
 
       for (let i = 0; i < resultJSON.results.length; i++) {
         fountainData.push(resultJSON.results[i]);
