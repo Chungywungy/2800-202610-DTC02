@@ -28,6 +28,7 @@ app.use(express.static("public"));
  */
 app.use("/", require("./routes/index"));
 app.use("/auth", require("./routes/auth"));
+app.use("/api/weather", require("./routes/openWeather"))
 
 // connect to MongoDB Atlas
 connectToDatabase();

@@ -24,14 +24,19 @@
     <script src="js/map.js" defer></script>
     <!-- components -->
     <script type="module" src="./components/site-navbar.js" defer></script>
+    <script
+      type="module"
+      src="./components/temperature-container.js"
+      defer
+    ></script>
   </head>
   <body>
     <!-- NAVBAR COMPONENT -->
     <site-navbar></site-navbar>
 
     <div id="map" class="h-screen w-screen relative">
-      <div class="absolute text-white p-10 rounded-lg z-10000000 bottom-5 right-3 bg-black/50">
-      </div>
+      <!-- TEMPERATURE COMPONENT -->
+      <temperature-container></temperature-container>
     </div>
   </body>
 </html>
