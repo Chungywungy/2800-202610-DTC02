@@ -1,3 +1,5 @@
+import { toggleFountainMarkers } from "../js/waterFountainApi.js";
+
 /**
  * Navbar Component
  * Create a <site-navbar> tag to implement
@@ -29,7 +31,7 @@ class SiteNavbar extends HTMLElement {
           <button id="transitBtn">Transit</button>
         </li>
         <li class="bg-white p-2 rounded-lg duration-50">
-          <button id="waterFountainsBtn">Water Fountains</button>
+          <button id="fountainsBtn">Water Fountains</button>
         </li>
       </ul>
     </nav>
@@ -45,6 +47,7 @@ document.querySelectorAll("#navContainer button").forEach((btn) => {
     btn.parentElement.classList.toggle("bg-white");
     btn.parentElement.classList.toggle("text-white");
     btn.parentElement.classList.toggle("active");
-
   });
 });
+
+document.getElementById("fountainsBtn").addEventListener("click", toggleFountainMarkers);
