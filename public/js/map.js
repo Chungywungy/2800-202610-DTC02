@@ -65,7 +65,6 @@ const shadeMap = L.shadeMap({
 // Display water fountains
 let fountainMarkers = [];
 let fountainData = [];
-let fountainVisible = false;
 
 // from svgrepo https://www.svgrepo.com/svg/509452/water-fountain
 const fountainIcon = L.divIcon({
@@ -118,17 +117,15 @@ const createFountainMarkers = () => {
 };
 
 export const toggleFountainMarkers = () => {
-  if (fountainVisible) {
+  const button = document.getElementById("fountainsBtn");
+  if (!button.parentElement.classList.contains("active")) {
     fountainMarkers.forEach((marker) => {
       map.removeLayer(marker);
     });
-
-    fountainVisible = false;
   } else {
     fountainMarkers.forEach((marker) => {
       marker.addTo(map);
     });
-    fountainVisible = true;
   }
 };
 
