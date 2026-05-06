@@ -94,6 +94,9 @@ router.get("/public-trees", async (req, res) => {
   const result = await fetch(url);
   const resultJSON = await result.json();
   res.send(resultJSON);
+});
+
+/**
  * Fetch raw parks data from opendata.vancouver.ca
  * Limited to 100 results for each call, continues calling using offset until all parks fetched
  * @returns {Array} Raw parks data from opendata.vancouver.ca
