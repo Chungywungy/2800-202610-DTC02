@@ -148,7 +148,6 @@ export const toggleParkGeom = () => {
 fetchParks();
 fetchWaterFountains();
 
-<<<<<<< feature/fawaz-community-centres-integration
 let communityCentresMarkers = [];
 let communityCentresData = [];
 
@@ -198,7 +197,7 @@ const createCommunityCentreMarkers = () => {
 /**
  * Toggle community centre markers on the map based on button state
  */
-export const toggleCommunityCentreMarkers = () => {
+const toggleCommunityCentreMarkers = () => {
   const button = document.getElementById("communityCentresBtn");
   if (button.parentElement.classList.contains("active")) {
     communityCentresMarkers.forEach((marker) => {
@@ -212,7 +211,6 @@ export const toggleCommunityCentreMarkers = () => {
 };
 
 fetchCommunityCentres();
-=======
 /**
  * Trees API Integration Section (start)
  * Contains: fetching data, toggling markers, creating markers
@@ -314,4 +312,6 @@ document
   .getElementById("publicWashroomsBtn")
   .addEventListener("click", toggleWashroomMarkers);
 document.getElementById("parksBtn").addEventListener("click", toggleParkGeom);
->>>>>>> dev
+document
+  .getElementById("communityCentresBtn")
+  .addEventListener("click", toggleCommunityCentreMarkers);

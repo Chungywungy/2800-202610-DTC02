@@ -1,9 +1,3 @@
-<<<<<<< feature/fawaz-community-centres-integration
-import { toggleFountainMarkers, toggleCommunityCentreMarkers } from "../js/map.js";
-import { toggleWashroomMarkers } from "../js/publicWashroomsApi.js";
-
-=======
->>>>>>> dev
 /**
  * Navbar Component
  * Create a <site-navbar> tag to implement
@@ -53,11 +47,3 @@ document.querySelectorAll("#navContainer button").forEach((btn) => {
     btn.parentElement.classList.toggle("active");
   });
 });
-<<<<<<< feature/fawaz-community-centres-integration
-
-document.getElementById("fountainsBtn").addEventListener("click", toggleFountainMarkers);
-document.getElementById("publicWashroomsBtn").addEventListener("click", toggleWashroomMarkers);
-document.getElementById("communityCentresBtn").addEventListener("click", toggleCommunityCentreMarkers);
-
-=======
->>>>>>> dev
