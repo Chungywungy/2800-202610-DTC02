@@ -1,4 +1,5 @@
 import { toggleFountainMarkers } from "../js/waterFountainApi.js";
+import { toggleWashroomMarkers } from "../js/publicWashroomsApi.js";
 
 /**
  * Navbar Component
@@ -51,3 +52,5 @@ document.querySelectorAll("#navContainer button").forEach((btn) => {
 });
 
 document.getElementById("fountainsBtn").addEventListener("click", toggleFountainMarkers);
+document.getElementById("publicWashroomsBtn").addEventListener("click", toggleWashroomMarkers);
+
