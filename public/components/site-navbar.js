@@ -1,4 +1,4 @@
-import { toggleFountainMarkers } from "../js/map.js";
+import { toggleFountainMarkers, toggleCommunityCentreMarkers } from "../js/map.js";
 import { toggleWashroomMarkers } from "../js/publicWashroomsApi.js";
 
 /**
@@ -53,4 +53,5 @@ document.querySelectorAll("#navContainer button").forEach((btn) => {
 
 document.getElementById("fountainsBtn").addEventListener("click", toggleFountainMarkers);
 document.getElementById("publicWashroomsBtn").addEventListener("click", toggleWashroomMarkers);
+document.getElementById("communityCentresBtn").addEventListener("click", toggleCommunityCentreMarkers);
 

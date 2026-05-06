@@ -49,6 +49,8 @@ router.get("/", async (req, res) => {
   res.json(data);
 });
 
+
+// fetch community centres data
 router.get("/community-centres", async (req, res) => {
   try {
     const limit = 100;
