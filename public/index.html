@@ -19,8 +19,16 @@
       src="https://unpkg.com/leaflet-shadow-simulator/dist/leaflet-shadow-simulator.umd.min.js"
       defer
     ></script>
+    <!-- components -->
+    <script type="module" src="./components/site-navbar.js" defer></script>
+    <script
+      type="module"
+      src="./components/temperature-container.js"
+      defer
+    ></script>
     <!-- Buildings -->
     <script src="https://unpkg.com/osmtogeojson/osmtogeojson.js" defer></script>
+    <script type="module" src="js/map.js" defer></script>
     <!-- components -->
     <script type="module" src="./components/site-navbar.js" defer></script>
     <script src="js/map.js" defer></script>
@@ -29,6 +37,9 @@
     <!-- NAVBAR COMPONENT -->
     <site-navbar></site-navbar>
 
-    <div id="map" class="h-screen w-screen"></div>
+    <div id="map" class="h-screen w-screen relative">
+      <!-- TEMPERATURE COMPONENT -->
+      <temperature-container></temperature-container>
+    </div>
   </body>
 </html>
