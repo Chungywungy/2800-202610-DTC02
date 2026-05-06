@@ -22,29 +22,45 @@ const fountainIcon = L.divIcon({
 
 const fetchWaterFountains = async () => {
   fountainData = [];
+
   try {
-    const limit = 100;
-    let offset = 0;
+    const result = await fetch("/api/fountains");
 
-    while (true) {
-      const result = await fetch(
-        `https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/drinking-fountains/records?limit=${limit}&offset=${offset}`,
-      );
-      const resultJSON = await result.json();
-      // console.log(resultJSON);
+    const resultJSON = await result.json();
 
-      for (let i = 0; i < resultJSON.results.length; i++) {
-        fountainData.push(resultJSON.results[i]);
-      }
-
-      if (resultJSON.results.length < limit) break;
-      offset += limit;
-    }
+    fountainData = resultJSON;
   } catch (error) {
     console.log(error);
   }
+
   createFountainMarkers();
 };
+
+// const fetchWaterFountains = async () => {
+//   fountainData = [];
+//   try {
+//     const limit = 100;
+//     let offset = 0;
+
+//     while (true) {
+//       const result = await fetch(
+//         `https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/drinking-fountains/records?limit=${limit}&offset=${offset}`,
+//       );
+//       const resultJSON = await result.json();
+//       // console.log(resultJSON);
+
+//       for (let i = 0; i < resultJSON.results.length; i++) {
+//         fountainData.push(resultJSON.results[i]);
+//       }
+
+//       if (resultJSON.results.length < limit) break;
+//       offset += limit;
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+//   createFountainMarkers();
+// };
 
 const createFountainMarkers = () => {
   fountainMarkers = [];
