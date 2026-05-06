@@ -7,11 +7,20 @@ const bounds = [
 // setup map boundaries
 let map = L.map("map", {
   maxBounds: bounds,
-  maxBoundsViscosity: 1.0
+  maxBoundsViscosity: 1.0,
 }).fitBounds(bounds);
 
 // Display map
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map)
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+// Replace temperature
+const tempComponent = document.querySelector("temperature-container");
+
+map.on("click", (e) => {
+  const { lat, lng } = e.latlng;
+  
+  tempComponent.loadTemperature(lat, lng);
+});
 
 // ShadeMap setup
 const shadeMap = L.shadeMap({
