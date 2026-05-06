@@ -141,6 +141,7 @@ export const toggleFountainMarkers = () => {
 // Display parks
 let parkMarkers = [];
 let parkData = [];
+let parkGeom = [];
 
 // from svgrepo http://svgrepo.com/svg/297751/park-picnic
 const parkIcon = L.divIcon({
@@ -173,8 +174,6 @@ const parkIcon = L.divIcon({
     </svg>
   `,
   className: "",
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
 });
 
 const fetchParks = async () => {
@@ -192,6 +191,7 @@ const fetchParks = async () => {
   console.log(parkData);
 
   createParkMarkers();
+  // createParkGeom();
 };
 
 const createParkMarkers = async () => {
@@ -202,8 +202,20 @@ const createParkMarkers = async () => {
     const lon = park.geo_point_2d.lon;
     const lat = park.geo_point_2d.lat;
     const marker = L.marker([lat, lon], { icon: parkIcon });
+    marker.bindPopup(park.park_name);
 
     parkMarkers.push(marker);
+  }
+};
+
+const createParkGeom = async () => {
+  parkGeom = [];
+
+  for (let i = 0; i < parkData.length; i++) {
+    const park = parkData[i];
+    const geom = L.geoJSON(park.geom);
+    geom.bindPopup(park.park_name);
+    parkGeom.push(geom);
   }
 };
 
@@ -216,6 +228,19 @@ export const toggleParkMarkers = () => {
   } else {
     parkMarkers.forEach((marker) => {
       marker.addTo(map);
+    });
+  }
+};
+
+export const toggleParkGeom = () => {
+  const button = document.getElementById("parksBtn");
+  if (!button.parentElement.classList.contains("active")) {
+    parkGeom.forEach((geom) => {
+      map.removeLayer(geom);
+    });
+  } else {
+    parkGeom.forEach((geom) => {
+      geom.addTo(map);
     });
   }
 };

@@ -1,4 +1,8 @@
-import { toggleFountainMarkers, toggleParkMarkers } from "../js/map.js";
+import {
+  toggleFountainMarkers,
+  toggleParkMarkers,
+  toggleParkGeom,
+} from "../js/map.js";
 import { toggleWashroomMarkers } from "../js/publicWashroomsApi.js";
 
 /**
@@ -57,6 +61,7 @@ document
 document
   .getElementById("publicWashroomsBtn")
   .addEventListener("click", toggleWashroomMarkers);
+// document.getElementById("parksBtn").addEventListener("click", toggleParkGeom);
 document
   .getElementById("parksBtn")
   .addEventListener("click", toggleParkMarkers);
