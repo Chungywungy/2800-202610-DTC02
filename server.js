@@ -4,7 +4,7 @@
 
 // import all dependencies
 const express = require("express");
-// const mongoose = require("mongoose"); dont need 
+// const mongoose = require("mongoose"); dont need
 const session = require("express-session");
 const { connectToDatabase } = require("./mongodbAtlas");
 const FileStore = require("session-file-store")(session); // Not sure if we need this
@@ -38,5 +38,3 @@ connectToDatabase();
 app.listen(PORT, () => {
   console.log(`Listening at PORT: ${PORT}`);
 });
-
-

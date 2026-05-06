@@ -36,6 +36,64 @@ router.get("/fountains", async (req, res) => {
 });
 
 /**
+ * Route for fetching a filtered subset of public trees within the City of Vancouver.
+ *
+ * DISCLAIMER: This route intentionally limits the dataset to tree families that
+ * provide good canopy coverage. As loading all ~180,000 public trees would result
+ * in performance issues.
+ *
+ * A tree that satisfies this criteria is if they belong to a specific family of trees,
+ * have a height >= 6m and diameter >= 20cm
+ *
+ * Reference: Claude used to determine family of trees that provide sufficient canopy coverage
+ * Reference: Huwise/OpenDataSoft used to construct filtered queries and geo_cluster feature (https://help.opendatasoft.com/apis/ods-explore-v2/#section/Introduction)
+ */
+router.get("/public-trees", async (req, res) => {
+  // Structured with quotations to make ODSQL query work
+  const SPECIES_OF_TREES_WITH_CANOPY_COVERAGE = [
+    '"ACER"',
+    '"QUERCUS"',
+    '"TILIA"',
+    '"PLATANUS"',
+    '"FRAXINUS"',
+    '"ULMUS"',
+    '"FAGUS"',
+    '"CASTANEA"',
+    '"AESCULUS"',
+    '"ROBINIA"',
+    '"LIRIODENDRON"',
+    '"LIQUIDAMBAR"',
+    '"CARPINUS"',
+  ];
+
+  // A request to this endpoint must include a zoom level and radius
+  const zoom = Math.min(parseInt(req.query.zoom) || 13, 16); // the zoom level (fetched using map.getZoom() ), cap at 16
+  const radius = Math.max(80 - zoom * 4, 20); // the max cluster radius size: the smaller the more markers, shrinks as zoom increases, floor of 20
+
+  // Bounding box - only returns results from the passed bbox (best practice: should return the map's bounds / viewport screen) default to Vancouver
+  const bbox = req.query.bbox || "49.20,-123.22,49.36,-122.98";
+  const [south, west, north, east] = bbox.split(","); // unpack
+
+  // Filter trees that are:
+  const where = [
+    `in_bbox(geo_point_2d, ${south}, ${west}, ${north}, ${east})`, // (1) Inside the given bounding box
+    `height_m >= 6`, // (2) Tree height >= 6m
+    `diameter_cm >= 20`, // (3) Trunk diameter >= to 20cm
+    `genus_name in (${SPECIES_OF_TREES_WITH_CANOPY_COVERAGE.join(", ")})`, // (4) Part of the aforementioned species of trees
+  ].join(" AND ");
+
+  const queryParams = new URLSearchParams({
+    group_by: `geo_cluster(geo_point_2d, ${zoom}, ${radius})`, // sets the search to a geo_cluster search
+    select: "count(*) as count", // gets the number of trees within a given cluster
+    where, // filter logic
+    limit: 100,
+  });
+
+  const url = `https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/public-trees/records?${queryParams}`; // Base API call + additional params for filtering and geo clustering
+
+  const result = await fetch(url);
+  const resultJSON = await result.json();
+  res.send(resultJSON);
  * Fetch raw parks data from opendata.vancouver.ca
  * Limited to 100 results for each call, continues calling using offset until all parks fetched
  * @returns {Array} Raw parks data from opendata.vancouver.ca
