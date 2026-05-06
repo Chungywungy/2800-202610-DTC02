@@ -35,6 +35,11 @@ router.get("/fountains", async (req, res) => {
   }
 });
 
+/**
+ * Fetch raw parks data from opendata.vancouver.ca
+ * Limited to 100 results for each call, continues calling using offset until all parks fetched
+ * @returns {Array} Raw parks data from opendata.vancouver.ca
+ */
 router.get("/parks", async (req, res) => {
   try {
     const parksData = [];
