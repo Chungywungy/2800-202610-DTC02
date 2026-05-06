@@ -38,13 +38,24 @@ router.get("/fountains", async (req, res) => {
 router.get("/parks", async (req, res) => {
   try {
     const parksData = [];
-    const results = await fetch(
-      "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parks-polygon-representation/records",
-    );
-    const resultsJSON = await results.json();
+    const limit = 100;
+    let offset = 0;
 
-    for (let i = 0; i < resultsJSON.results.length; i++) {
-      parksData.push(resultsJSON.results[i]);
+    while (true) {
+      const results = await fetch(
+        `https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parks-polygon-representation/records?limit=${limit}&offset=${offset}`,
+      );
+      const resultsJSON = await results.json();
+
+      for (let i = 0; i < resultsJSON.results.length; i++) {
+        parksData.push(resultsJSON.results[i]);
+      }
+
+      if (resultsJSON.results.length < limit) {
+        break;
+      }
+
+      offset += limit;
     }
 
     res.json(parksData);

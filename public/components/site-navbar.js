@@ -1,4 +1,4 @@
-import { toggleFountainMarkers } from "../js/map.js";
+import { toggleFountainMarkers, toggleParkMarkers } from "../js/map.js";
 import { toggleWashroomMarkers } from "../js/publicWashroomsApi.js";
 
 /**
@@ -51,6 +51,12 @@ document.querySelectorAll("#navContainer button").forEach((btn) => {
   });
 });
 
-document.getElementById("fountainsBtn").addEventListener("click", toggleFountainMarkers);
-document.getElementById("publicWashroomsBtn").addEventListener("click", toggleWashroomMarkers);
-
+document
+  .getElementById("fountainsBtn")
+  .addEventListener("click", toggleFountainMarkers);
+document
+  .getElementById("publicWashroomsBtn")
+  .addEventListener("click", toggleWashroomMarkers);
+document
+  .getElementById("parksBtn")
+  .addEventListener("click", toggleParkMarkers);
