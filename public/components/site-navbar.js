@@ -1,6 +1,3 @@
-import { toggleFountainMarkers } from "../js/map.js";
-import { toggleWashroomMarkers } from "../js/publicWashroomsApi.js";
-
 /**
  * Navbar Component
  * Create a <site-navbar> tag to implement
@@ -50,7 +47,3 @@ document.querySelectorAll("#navContainer button").forEach((btn) => {
     btn.parentElement.classList.toggle("active");
   });
 });
-
-document.getElementById("fountainsBtn").addEventListener("click", toggleFountainMarkers);
-document.getElementById("publicWashroomsBtn").addEventListener("click", toggleWashroomMarkers);
-

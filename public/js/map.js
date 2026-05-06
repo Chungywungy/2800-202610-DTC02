@@ -1,10 +1,11 @@
+import { toggleWashroomMarkers } from "./publicWashroomsApi.js";
 // Vancouver coordinates
 const bounds = [
   [49.18, -123.25],
   [49.35, -123.0],
 ];
 
-// setup map boundaries, can remove this export if fetching from backend 
+// setup map boundaries, can remove this export if fetching from backend
 export const map = L.map("map", {
   maxBounds: bounds,
   maxBoundsViscosity: 1.0,
@@ -19,7 +20,7 @@ const tempComponent = document.querySelector("temperature-container");
 
 map.on("click", (e) => {
   const { lat, lng } = e.latlng;
-  
+
   tempComponent.loadTemperature(lat, lng);
 });
 
@@ -141,7 +142,6 @@ export const toggleFountainMarkers = () => {
 
 fetchWaterFountains();
 
-
 /**
  * Trees API Integration Section (start)
  * Contains: fetching data, toggling markers, creating markers
@@ -205,6 +205,7 @@ const debounce = (fn, delay = 1000) => {
 };
 
 const debouncedToggleTreeMarkers = debounce(toggleTreesMarkers);
+const treesBtn = document.getElementById("treesBtn");
 
 // Event Listener: Map movement (zoom in and zoom out)
 map.on("zoomend", () => {
@@ -222,7 +223,6 @@ map.on("moveend", () => {
 });
 
 // treesBtn listener: On initial click, we toggle the createTreesMarkers
-const treesBtn = document.getElementById("treesBtn");
 treesBtn.addEventListener("click", () => {
   const isActive = treesBtn.parentElement.classList.contains("active");
   if (isActive) debouncedToggleTreeMarkers();
@@ -235,3 +235,10 @@ treesBtn.addEventListener("click", () => {
  * Trees API Integration Section (end)
  * Contains: fetching data, toggling markers, creating markers
  */
+
+document
+  .getElementById("fountainsBtn")
+  .addEventListener("click", toggleFountainMarkers);
+document
+  .getElementById("publicWashroomsBtn")
+  .addEventListener("click", toggleWashroomMarkers);
