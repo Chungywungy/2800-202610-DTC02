@@ -7,11 +7,11 @@ const bounds = [
 // setup map boundaries
 let map = L.map("map", {
   maxBounds: bounds,
-  maxBoundsViscosity: 1.0
+  maxBoundsViscosity: 1.0,
 }).fitBounds(bounds);
 
 // Display map
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map)
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
 // ShadeMap setup
 const shadeMap = L.shadeMap({
@@ -58,6 +58,49 @@ const shadeMap = L.shadeMap({
     return [];
   },
   debug: (msg) => {
-    console.log(new Date().toISOString(), msg);
+    // console.log(new Date().toISOString(), msg);
   },
 }).addTo(map);
+
+// Trees API Integration
+async function toggleTreesMarkers() {
+  console.log("hello");
+  const canRenderTrees = map.getZoom() >= 18;
+  if (canRenderTrees) {
+    const response = await fetch("");
+  } else {
+    alert("Please zoom in further! Can't render tree markers!");
+    ["bg-red-800", "bg-white", "text-white", "active"].forEach((cls) => {
+      treesBtn.parentElement.classList.toggle(cls);
+    });
+  }
+}
+
+/**
+ * Decorate a function by adding a delay. Can be used for map event listeners (zoom-in, zoom-out, map movement)
+ * Reference: Stack Overflow (74981172)
+ */
+const debounce = (fn, delay = 1000) => {
+  let timer; // holds the current timer ID
+  return (...args) => {
+    clearTimeout(timer); // cancel the previous timer if it exists
+    timer = setTimeout(() => fn(...args), delay); // start a fresh one
+  };
+};
+
+const debouncedToggleTreeMarkers = debounce(toggleTreesMarkers);
+
+// Event Listener: Map movement (zoom in and zoom out)
+map.on("zoomend", () => {
+  // check if treesBtn is clicked:
+  const treesBtnIsToggled = treesBtn.parentElement.classList.contains("active");
+  if (treesBtnIsToggled) debouncedToggleTreeMarkers();
+});
+
+// Event Listener: Map movement (map movement)
+map.on("moveend", () => {
+  // check if treesBtn is clicked:
+  const treesBtnIsToggled = treesBtn.parentElement.classList.contains("active");
+  console.log(treesBtnIsToggled);
+  if (treesBtnIsToggled) debouncedToggleTreeMarkers();
+});
