@@ -13,6 +13,15 @@ let map = L.map("map", {
 // Display map
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
+// Replace temperature
+const tempComponent = document.querySelector("temperature-container");
+
+map.on("click", (e) => {
+  const { lat, lng } = e.latlng;
+  
+  tempComponent.loadTemperature(lat, lng);
+});
+
 // ShadeMap setup
 const shadeMap = L.shadeMap({
   date: new Date(), // display shadows for current date

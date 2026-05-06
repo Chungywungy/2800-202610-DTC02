@@ -1,4 +1,5 @@
 import { toggleFountainMarkers } from "../js/map.js";
+import { toggleWashroomMarkers } from "../js/publicWashroomsApi.js";
 
 /**
  * Navbar Component
@@ -13,7 +14,7 @@ class SiteNavbar extends HTMLElement {
 
   createNavbar() {
     this.innerHTML = `
-      <nav id="navContainer" class="flex bg-slate-500 overflow-x-scroll">
+      <nav id="navContainer" class="absolute z-1000 flex w-full justify-center bg-slate-500 overflow-x-scroll">
       <ul class="flex p-2 py-5 gap-3">
         <li class="bg-white p-2 rounded-lg duration-50">
           <button id="treesBtn">Trees</button>
@@ -51,3 +52,5 @@ document.querySelectorAll("#navContainer button").forEach((btn) => {
 });
 
 document.getElementById("fountainsBtn").addEventListener("click", toggleFountainMarkers);
+document.getElementById("publicWashroomsBtn").addEventListener("click", toggleWashroomMarkers);
+
