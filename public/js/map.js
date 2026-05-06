@@ -1,30 +1,15 @@
-fetchShadeAPIKey = async function () {
+async function fetchShadeAPIKey() {
   const result = await fetch("/shadeAPIKey");
-  return await result.text();
-};
-
-// Vancouver coordinates
-const bounds = [
-  [49.18, -123.25],
-  [49.35, -123.0],
-];
-
-// setup map boundaries
-let map = L.map("map", {
-  maxBounds: bounds,
-  maxBoundsViscosity: 1.0,
-}).fitBounds(bounds);
-
-// Display map
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+  key = await result.text();
+}
 
 // ShadeMap setup
-displayShadeMap = async function () {
+async function displayShadeMap() {
   const shadeMap = L.shadeMap({
     date: new Date(), // display shadows for current date
     color: "#01112f", // shade color
     opacity: 0.7, // opacity of shade color
-    apiKey: await fetchShadeAPIKey(), // obtain from https://shademap.app/about/
+    apiKey: key, // obtain from https://shademap.app/about/
     terrainSource: {
       tileSize: 256, // DEM tile size
       maxZoom: 15, // Maximum zoom of DEM tile set
@@ -66,6 +51,36 @@ displayShadeMap = async function () {
       console.log(new Date().toISOString(), msg);
     },
   }).addTo(map);
-};
+}
 
-displayShadeMap();
+function onMapClick(e) {
+  console.log(`latlng: ${e.latlng}`);
+}
+
+let key;
+
+// Vancouver coordinates
+const bounds = [
+  [49.18, -123.25],
+  [49.35, -123.0],
+];
+
+// setup map boundaries
+let map = L.map("map", {
+  maxBounds: bounds,
+  maxBoundsViscosity: 1.0,
+}).fitBounds(bounds);
+
+// Display map
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+fetchShadeAPIKey();
+
+displayShadeMap().then();
+map.on("click", onMapClick);
+// shadeMap.on("idle", async () => {
+//   const latlng = [42.12, -121.74];
+//   const { x, y } = map.latLngToContainerPoint(latlng);
+//   const inTheSun = await shadeMap.isPositionInSun(x, y);
+//   console.log(`Position ${lat},${lng} is in ${inTheSun ? "sun" : "shade"}`);
+// });
