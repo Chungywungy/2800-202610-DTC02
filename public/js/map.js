@@ -63,17 +63,31 @@ const shadeMap = L.shadeMap({
 }).addTo(map);
 
 // Trees API Integration
+async function fetchTreeClusters() {
+  const zoom = map.getZoom(); // get map's current zoom level
+  const bounds = map.getBounds(); // get current map viewport bounds
+  const bbox = [
+    bounds.getSouth(),
+    bounds.getWest(),
+    bounds.getNorth(),
+    bounds.getEast(),
+  ]; // normalize the bounds into a format that the API accepts
+
+  // fetch the tree clusters from our backend server
+  const result = await fetch(
+    `http://localhost:5500/api/public-trees?zoom=${zoom}&bbox=${bbox}`,
+  );
+  const treesGeoCluster = await result.json();
+  return treesGeoCluster.results;
+}
+
+async function createTreesMarkers(treesGeoCluster) {
+  alert(`Creating ${treesGeoCluster.length} cluster markers`);
+}
+
 async function toggleTreesMarkers() {
-  console.log("hello");
-  const canRenderTrees = map.getZoom() >= 18;
-  if (canRenderTrees) {
-    const response = await fetch("");
-  } else {
-    alert("Please zoom in further! Can't render tree markers!");
-    ["bg-red-800", "bg-white", "text-white", "active"].forEach((cls) => {
-      treesBtn.parentElement.classList.toggle(cls);
-    });
-  }
+  const treesGeoCluster = await fetchTreeClusters();
+  createTreesMarkers(treesGeoCluster);
 }
 
 /**
