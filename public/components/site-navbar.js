@@ -45,6 +45,5 @@ document.querySelectorAll("#navContainer button").forEach((btn) => {
     btn.parentElement.classList.toggle("bg-white");
     btn.parentElement.classList.toggle("text-white");
     btn.parentElement.classList.toggle("active");
-
   });
 });

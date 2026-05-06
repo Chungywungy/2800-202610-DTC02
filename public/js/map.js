@@ -62,7 +62,12 @@ const shadeMap = L.shadeMap({
   },
 }).addTo(map);
 
-// Trees API Integration
+/**
+ * Trees API Integration Section (start)
+ * Contains: fetching data, toggling markers, creating markers
+ */
+let treeLayerGroup = L.layerGroup().addTo(map);
+
 async function fetchTreeClusters() {
   const zoom = map.getZoom(); // get map's current zoom level
   const bounds = map.getBounds(); // get current map viewport bounds
@@ -82,7 +87,24 @@ async function fetchTreeClusters() {
 }
 
 async function createTreesMarkers(treesGeoCluster) {
-  alert(`Creating ${treesGeoCluster.length} cluster markers`);
+  // Remove all cluster markers in the layer group
+  treeLayerGroup.clearLayers();
+
+  treesGeoCluster.forEach((geoClusterData) => {
+    const { lat, lon } = Object.values(geoClusterData)[0].cluster_centroid; // unpacks the data
+    const countOfTreesInCluster = geoClusterData.count;
+
+    L.circleMarker([lat, lon], {
+      radius: 30,
+      color: "green",
+      fillColor: "#228B22",
+      fillOpacity: 0.6,
+    })
+      .bindPopup(`${countOfTreesInCluster} trees`)
+      .addTo(treeLayerGroup);
+  });
+
+  console.log(`Creating ${treesGeoCluster.length} cluster markers`);
 }
 
 async function toggleTreesMarkers() {
@@ -118,3 +140,18 @@ map.on("moveend", () => {
   console.log(treesBtnIsToggled);
   if (treesBtnIsToggled) debouncedToggleTreeMarkers();
 });
+
+// treesBtn listener: On initial click, we toggle the createTreesMarkers
+const treesBtn = document.getElementById("treesBtn");
+treesBtn.addEventListener("click", () => {
+  const isActive = treesBtn.parentElement.classList.contains("active");
+  if (isActive) debouncedToggleTreeMarkers();
+  else {
+    treeLayerGroup.clearLayers();
+  }
+});
+
+/**
+ * Trees API Integration Section (end)
+ * Contains: fetching data, toggling markers, creating markers
+ */
