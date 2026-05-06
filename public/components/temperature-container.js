@@ -7,7 +7,7 @@ class TemperatureContainer extends HTMLElement {
   constructor() {
     super();
     this.createTempContainer();
-    this.loadTemperature();
+    this.loadTemperature(49.28, -123.12);
   }
 
   createTempContainer() {
@@ -25,12 +25,12 @@ class TemperatureContainer extends HTMLElement {
   }
 
   //   load temperature from weather route in server.js
-  async loadTemperature() {
+  async loadTemperature(lat, lon) {
     try {
-      const res = await fetch("/api/weather");
+      const res = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
       const data = await res.json();
 
-      const temp = Math.round(data.main.temp);
+      const temp = Math.round(data.main.temp * 10) / 10;
       const iconCode = data.weather[0].icon;
 
       //   OpenWeather icon url
