@@ -49,4 +49,35 @@ router.get("/", async (req, res) => {
   res.json(data);
 });
 
+router.get("/community-centres", async (req, res) => {
+  try {
+    const limit = 100;
+    let offset = 0;
+    const communityCentresData = [];
+
+    while (true) {
+      const result = await fetch(
+        `https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/community-centres/records?limit=${limit}&offset=${offset}`,
+      );
+
+      const resultJSON = await result.json();
+
+      for (let i = 0; i < resultJSON.results.length; i++) {
+        communityCentresData.push(resultJSON.results[i]);
+      }
+
+      if (resultJSON.results.length < limit) {
+        break;
+      }
+
+      offset += limit;
+    }
+
+    res.json(communityCentresData);
+  } catch (error) {
+    console.log("Error fetching community centres:", error);
+    res.status(500).json({ error: "Failed to fetch community centres" });
+  }
+});
+
 module.exports = router;
