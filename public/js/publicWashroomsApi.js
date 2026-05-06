@@ -1,3 +1,6 @@
+// publicWashroomsApi.js
+import { map } from "./map.js";
+
 let washroomMarkers = [];
 let washroomData = [];
 let washroomVisible = false;

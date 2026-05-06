@@ -4,8 +4,8 @@ const bounds = [
   [49.35, -123.0],
 ];
 
-// setup map boundaries
-let map = L.map("map", {
+// setup map boundaries, can remove this export if fetching from backend 
+export const map = L.map("map", {
   maxBounds: bounds,
   maxBoundsViscosity: 1.0,
 }).fitBounds(bounds);
