@@ -27,7 +27,7 @@ class TemperatureContainer extends HTMLElement {
   //   load temperature from weather route in server.js
   async loadTemperature(lat, lon) {
     try {
-      const res = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
+      const res = await fetch(`/api?lat=${lat}&lon=${lon}`);
       const data = await res.json();
 
       const temp = Math.round(data.main.temp * 10) / 10;
