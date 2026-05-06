@@ -1,4 +1,4 @@
-import { toggleFountainMarkers } from "../js/waterFountainApi.js";
+import { toggleFountainMarkers } from "../js/map.js";
 import { toggleWashroomMarkers } from "../js/publicWashroomsApi.js";
 
 /**
