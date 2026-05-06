@@ -4,6 +4,9 @@ async function fetchShadeAPIKey() {
 }
 
 // ShadeMap setup
+// Wrapped in an async function so that the shadeKey can be fetched from the backend instead of hard-coded,
+// but now the shadeMap object is locked within this function's scope. Tried returning shadeMap from this function
+// but there are errors interacting with it (shadeMap.on is not a function?)
 async function displayShadeMap() {
   const shadeKey = await fetchShadeAPIKey();
   const shadeMap = L.shadeMap({
@@ -52,12 +55,16 @@ async function displayShadeMap() {
       console.log(new Date().toISOString(), msg);
     },
   }).addTo(map);
+
+  return shadeMap;
 }
 
 function onMapClick(e) {
   console.log(`latlng: ${e.latlng}`);
+  // inSun();
 }
 
+// This does not work because shadeMap is out of scope
 function inSun() {
   shadeMap.on("idle", async () => {
     const latlng = [42.12, -121.74];
@@ -82,6 +89,14 @@ let map = L.map("map", {
 // Display map
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-displayShadeMap();
+// Attempt to return shadeMap from displayShadeMap, but there's an error in the console: shadeMap.on is not a function
+let shadeMap = displayShadeMap();
+
+shadeMap.on("idle", async () => {
+  const latlng = [42.12, -121.74];
+  const { x, y } = map.latLngToContainerPoint(latlng);
+  const inTheSun = await shadeMap.isPositionInSun(x, y);
+  console.log(`Position ${lat},${lng} is in ${inTheSun ? "sun" : "shade"}`);
+});
 
 map.on("click", onMapClick);
