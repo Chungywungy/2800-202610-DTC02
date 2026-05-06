@@ -35,4 +35,23 @@ router.get("/fountains", async (req, res) => {
   }
 });
 
+router.get("/parks", async (req, res) => {
+  try {
+    const parksData = [];
+    const results = await fetch(
+      "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/parks-polygon-representation/records",
+    );
+    const resultsJSON = await results.json();
+
+    for (let i = 0; i < resultsJSON.results.length; i++) {
+      parksData.push(resultsJSON.results[i]);
+    }
+
+    res.json(parksData);
+  } catch (error) {
+    console.log("Error fetching parks:", error);
+    res.status(500).json({ error: "Failed to fetch parks" });
+  }
+});
+
 module.exports = router;
