@@ -7,9 +7,9 @@ async function fetchShadeAPIKey() {
 // Wrapped in an async function so that the shadeKey can be fetched from the backend instead of hard-coded,
 // but now the shadeMap object is locked within this function's scope. Tried returning shadeMap from this function
 // but there are errors interacting with it (shadeMap.on is not a function?)
-async function displayShadeMap() {
+async function initializeShadeMap() {
   const shadeKey = await fetchShadeAPIKey();
-  const shadeMap = L.shadeMap({
+  shadeMap = L.shadeMap({
     date: new Date(), // display shadows for current date
     color: "#01112f", // shade color
     opacity: 0.7, // opacity of shade color
@@ -54,14 +54,11 @@ async function displayShadeMap() {
     debug: (msg) => {
       console.log(new Date().toISOString(), msg);
     },
-  }).addTo(map);
-
-  return shadeMap;
+  });
 }
 
 function onMapClick(e) {
   console.log(`latlng: ${e.latlng}`);
-  // inSun();
 }
 
 // This does not work because shadeMap is out of scope
@@ -70,9 +67,20 @@ function inSun() {
     const latlng = [42.12, -121.74];
     const { x, y } = map.latLngToContainerPoint(latlng);
     const inTheSun = await shadeMap.isPositionInSun(x, y);
-    console.log(`Position ${lat},${lng} is in ${inTheSun ? "sun" : "shade"}`);
+    console.log(`Position ${x},${y} is in ${inTheSun ? "sun" : "shade"}`);
   });
 }
+
+async function main() {
+  await mapReady;
+  shadeMap.addTo(map);
+
+  map.on("click", onMapClick);
+
+  inSun();
+}
+
+let shadeMap;
 
 // Vancouver coordinates
 const bounds = [
@@ -89,14 +97,6 @@ let map = L.map("map", {
 // Display map
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-// Attempt to return shadeMap from displayShadeMap, but there's an error in the console: shadeMap.on is not a function
-let shadeMap = displayShadeMap();
+const mapReady = initializeShadeMap();
 
-shadeMap.on("idle", async () => {
-  const latlng = [42.12, -121.74];
-  const { x, y } = map.latLngToContainerPoint(latlng);
-  const inTheSun = await shadeMap.isPositionInSun(x, y);
-  console.log(`Position ${lat},${lng} is in ${inTheSun ? "sun" : "shade"}`);
-});
-
-map.on("click", onMapClick);
+main();
