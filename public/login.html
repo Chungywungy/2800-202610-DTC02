@@ -28,21 +28,69 @@
       id="bodyContainer"
       class="max-w-6xl mx-auto flex justify-center items-center min-h-screen my-auto"
     >
-      <!-- LOGIN FIELDSET -->
-      <form action="" class="w-full flex justify-center">
+      <!-- LOGIN FORM -->
+      <form action="/auth/login" class="w-full flex justify-center">
         <fieldset
-          class="fieldset bg-base-200 border-base-300 rounded-box w-1/2 flex flex-col border p-30"
+          class="fieldset bg-base-200/80 border-base-300 rounded-box w-1/2 flex flex-col border p-30"
         >
           <h1 class="font-bold text-7xl pb-5 text-center">Login</h1>
-          <label class="label">Email</label>
-          <input type="email" class="input w-full" placeholder="Email" />
+          <label class="label">Email or username</label>
+          <input
+            type="email"
+            class="input w-full"
+            placeholder="Email or username"
+          />
 
           <label class="label">Password</label>
           <input type="password" class="input w-full" placeholder="Password" />
 
-          <button class="btn bg-green-500 text-white mt-4 hover:outline-1">
+          <button class="btn bg-blue-500 text-white mt-4 hover:outline-1">
             Login
           </button>
+          <a
+            class="hover:underline hover:text-blue-700 cursor-pointer text-center"
+          >
+            Create an account
+          </a>
+        </fieldset>
+      </form>
+      <!-- REGISTER FORM -->
+      <form action="/auth/register" class="w-full flex">
+        <fieldset
+          class="fieldset bg-base-200/80 border-base-300 rounded-box w-1/2 flex flex-col border p-30"
+        >
+          <h1 class="font-bold text-7xl pb-5 text-center">Register</h1>
+
+          <!-- EMAIL -->
+          <label class="label">Email</label>
+          <input type="email" class="input w-full" placeholder="Email" />
+
+          <!-- PASSWORD -->
+          <label class="label">Password</label>
+          <input type="password" class="input w-full" placeholder="Password" />
+
+          <!-- CONFIRM PASSWORD -->
+          <label class="label">Confirm password</label>
+          <input type="password" class="input w-full" placeholder="Password" />
+
+          <!-- ROLE -->
+          <label class="label">Select a role</label>
+          <select class="select">
+            <option disabled selected>Select a role</option>
+            <option>Resident</option>
+            <option>Employee</option>
+          </select>
+
+          <button class="btn bg-green-500 text-white mt-4 hover:outline-1">
+            Register
+          </button>
+
+          <a
+            id="alreadyHaveAccountBtn"
+            class="hover:underline hover:text-blue-700 cursor-pointer text-center"
+          >
+            Already have an account
+          </a>
         </fieldset>
       </form>
     </div>
