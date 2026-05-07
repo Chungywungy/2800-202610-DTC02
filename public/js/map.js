@@ -315,8 +315,11 @@ async function createTreesMarkers(treesGeoCluster) {
 }
 
 async function toggleTreesMarkers() {
-  const treesGeoCluster = await fetchTreeClusters();
-  createTreesMarkers(treesGeoCluster);
+  const isActive = treesBtn.parentElement.classList.contains("active");
+  if (isActive) {
+    const treesGeoCluster = await fetchTreeClusters();
+    createTreesMarkers(treesGeoCluster);
+  } else treeLayerGroup.clearLayers();
 }
 
 /**
@@ -350,13 +353,7 @@ map.on("moveend", () => {
 });
 
 // treesBtn listener: On initial click, we toggle the createTreesMarkers
-treesBtn.addEventListener("click", () => {
-  const isActive = treesBtn.parentElement.classList.contains("active");
-  if (isActive) debouncedToggleTreeMarkers();
-  else {
-    treeLayerGroup.clearLayers();
-  }
-});
+treesBtn.addEventListener("click", await debouncedToggleTreeMarkers);
 
 /**
  * Trees API Integration Section (end)
