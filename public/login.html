@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- IMPORTS -->
+    <!-- TAILWIND -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- DAISYUI -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- DAISYUI THEMES -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+  <body
+    class="bg-[linear-gradient(to_top,rgba(34,197,94,0.5),rgba(59,130,246,0.5)),url('./images/background-vancouver-backdrop.avif')] bg-cover bg-no-repeat min-h-screen"
+  >
+    <div
+      id="bodyContainer"
+      class="max-w-6xl mx-auto flex justify-center items-center min-h-screen my-auto"
+    >
+      <!-- LOGIN FIELDSET -->
+      <form action="" class="w-full flex justify-center">
+        <fieldset
+          class="fieldset bg-base-200 border-base-300 rounded-box w-1/2 flex flex-col border p-30"
+        >
+          <h1 class="font-bold text-7xl pb-5 text-center">Login</h1>
+          <label class="label">Email</label>
+          <input type="email" class="input w-full" placeholder="Email" />
+
+          <label class="label">Password</label>
+          <input type="password" class="input w-full" placeholder="Password" />
+
+          <button class="btn bg-green-500 text-white mt-4 hover:outline-1">
+            Login
+          </button>
+        </fieldset>
+      </form>
+    </div>
+  </body>
+</html>
