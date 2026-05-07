@@ -35,6 +35,36 @@ router.get("/fountains", async (req, res) => {
   }
 });
 
+router.get("/washrooms", async (req, res) => {
+  try {
+    const limit = 100;
+    let offset = 0;
+    const washroomData = [];
+
+    while (true) {
+      const result = await fetch(
+        `https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/public-washrooms/records?limit=${limit}&offset=${offset}`,
+      );
+
+      const resultJSON = await result.json();
+
+      for (let i = 0; i < resultJSON.results.length; i++) {
+        washroomData.push(resultJSON.results[i]);
+      }
+
+      if (resultJSON.results.length < limit) {
+        break;
+      }
+
+      offset += limit;
+    }
+
+    res.json(washroomData);
+  } catch (error) {
+    console.log("Error fetching washrooms:", error);
+    res.status(500).json({ error: "Failed to fetch washrooms" });
+  }
+});
 
 // fetch current weather data
 router.get("/", async (req, res) => {
