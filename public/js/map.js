@@ -206,6 +206,62 @@ const toggleWashroomMarkers = () => {
 
 fetchPublicWashrooms();
 
+let transitLayer = null;
+let transitData = null;
+
+const inVancouver = (lat, lng) => {
+  return lat >= 49.2 && lat <= 49.32 && lng >= -123.25 && lng <= -123.02;
+};
+
+const fetchTransitStops = async () => {
+  console.log("Fetching transit stops...");
+  try {
+    const res = await fetch("/data/stops.geojson");
+    transitData = await res.json();
+    console.log("Loaded stops:", transitData.features.length);
+  } catch (error) {
+    console.log("Error:", error);
+  }
+};
+
+const createTransitLayer = () => {
+  transitLayer = L.geoJSON(transitData, {
+    filter: (feature) => {
+      const [lng, lat] = feature.geometry.coordinates;
+      return inVancouver(lat, lng);
+    },
+    pointToLayer: (feature, latlng) => {
+      return L.circleMarker(latlng, {
+        radius: 5,
+        fillColor: "#A78BFA",
+        color: "#fff",
+        weight: 1.5,
+        fillOpacity: 0.9,
+      });
+    },
+    onEachFeature: (feature, layer) => {
+      const p = feature.properties;
+      layer.bindPopup(`
+        <b>${p.name}</b><br>
+        Stop code: ${p.code}<br>
+        Wheelchair: ${p.wheelchair_boarding === "1" ? "Yes" : "No"}
+      `);
+    },
+  });
+};
+
+const toggleTransitMarkers = () => {
+  const button = document.getElementById("transitBtn");
+  if (button.parentElement.classList.contains("active")) {
+    if (!transitLayer) createTransitLayer();
+    transitLayer.addTo(map);
+  } else {
+    if (transitLayer) map.removeLayer(transitLayer);
+  }
+};
+
+fetchTransitStops();
+
 let communityCentresMarkers = [];
 let communityCentresData = [];
 
@@ -370,3 +426,7 @@ document.getElementById("parksBtn").addEventListener("click", toggleParkGeom);
 document
   .getElementById("communityCentresBtn")
   .addEventListener("click", toggleCommunityCentreMarkers);
+document
+  .getElementById("transitBtn")
+  .addEventListener("click", toggleTransitMarkers);
+
