@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Page</title>
+    <!-- TAILWIND -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Leaflet -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js" defer></script>
+    <!-- ShadeMap -->
+    <script
+      src="https://unpkg.com/leaflet-shadow-simulator/dist/leaflet-shadow-simulator.umd.min.js"
+      defer
+    ></script>
+    <!-- components -->
+    <script
+      type="module"
+      src="./components/temperature-container.js"
+      defer
+    ></script>
+    <!-- Buildings -->
+    <script src="https://unpkg.com/osmtogeojson/osmtogeojson.js" defer></script>
+    <!-- components -->
+    <script type="module" src="./components/site-navbar.js" defer></script>
+    <script type="module" src="js/map.js" defer></script>
+  </head>
+  <body>
+    <!-- NAVBAR COMPONENT -->
+    <site-navbar></site-navbar>
+
+    <div id="map" class="h-screen w-screen relative">
+      <!-- TEMPERATURE COMPONENT -->
+      <temperature-container></temperature-container>
+    </div>
+  </body>
+</html>
