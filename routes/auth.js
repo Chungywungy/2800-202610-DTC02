@@ -12,8 +12,24 @@ router.get("/", (req, res) => {
   res.redirect("/home");
 });
 
-router.post("/login", (req, res) => {
-  res.json({ message: "Here lies the login logic", result: req.body });
+// Reference: COMP2537 Assignment 1
+router.post("/login", async (req, res) => {
+  const { emailOrUsername, password, rememberMe } = req.body;
+
+  const userFound = await userModel.findOne({
+    $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
+  });
+
+  if (!userFound) {
+    return res.status(409).json({ message: "User does not exist." });
+  }
+
+  const passwordMatch = await bcrypt.compare(password, userFound.password);
+
+  if (!passwordMatch) {
+    return res.status(401).json({ message: "Incorrect password. Try again." });
+  }
+  return res.status(200).json({ message: "User logged in successfully." });
 });
 
 // Reference: COMP2537 Assignment 1
