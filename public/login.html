@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- IMPORTS -->
+    <!-- TAILWIND -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- DAISYUI -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- DAISYUI THEMES -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- SCRIPTS -->
+    <script src="./js/login.js" defer></script>
+  </head>
+  <body
+    class="bg-[linear-gradient(to_top,rgba(34,197,94,0.5),rgba(59,130,246,0.5)),url('./images/background-vancouver-backdrop.avif')] bg-cover bg-no-repeat max-h-screen"
+  >
+    <div
+      id="bodyContainer"
+      class="max-w-6xl mx-auto flex justify-center items-center min-h-screen my-auto"
+    >
+      <!-- LOGIN FORM -->
+      <form
+        id="loginFormContainer"
+        action="/auth/login"
+        method="post"
+        class="w-1/2 min-w-md flex justify-center fieldset bg-base-200/90 border-base-300 rounded-box flex-col border px-30 py-5"
+      >
+        <fieldset class="fieldset py-5 w-full">
+          <h1 class="font-bold text-5xl pb-5 text-center">Login</h1>
+
+          <!-- EMAIL OR USERNAME -->
+          <label class="label">Email or username</label>
+          <input
+            name="emailOrUsername"
+            type="text"
+            class="input w-full"
+            placeholder="Email or username"
+            required
+          />
+
+          <!-- PASSWORD -->
+          <label class="label">Password</label>
+          <input
+            type="password"
+            name="password"
+            class="input w-full"
+            placeholder="Password"
+            required
+          />
+
+          <!-- ERROR MESSAGE -->
+          <p id="loginErrorMsg" class="text-red-500"></p>
+
+          <!-- LOGIN BUTTON -->
+          <button class="btn bg-blue-500 text-white mt-4 hover:outline-1">
+            Login
+          </button>
+
+          <!-- REMEMBER ME CHECKBOX -->
+          <label class="">
+            <input
+              type="checkbox"
+              checked="checked"
+              class=""
+              name="rememberMe"
+            />
+            Remember me
+          </label>
+        </fieldset>
+        <a
+          id="createAccountBtn"
+          class="hover:underline hover:text-blue-700 cursor-pointer text-center"
+        >
+          Create an account
+        </a>
+      </form>
+      <!-- REGISTER FORM -->
+      <form
+        id="registerFormContainer"
+        action="/auth/register"
+        method="post"
+        class="w-1/2 min-w-md flex justify-center fieldset bg-base-200/90 border-base-300 rounded-box flex-col border px-30 py-5 hidden"
+      >
+        <fieldset class="fieldset py-5 w-full">
+          <h1 class="font-bold text-5xl pb-5 text-center">Register</h1>
+
+          <!-- USERNAME -->
+          <label class="label">Username</label>
+          <input
+            type="text"
+            name="username"
+            class="input w-full"
+            placeholder="Username"
+            required
+          />
+
+          <!-- EMAIL -->
+          <label class="label">Email</label>
+          <input
+            type="email"
+            name="email"
+            class="input w-full"
+            placeholder="Email"
+            required
+          />
+
+          <!-- PASSWORD -->
+          <label class="label">Password</label>
+          <input
+            type="password"
+            name="password"
+            class="input w-full"
+            placeholder="Password"
+            required
+          />
+
+          <!-- CONFIRM PASSWORD -->
+          <label class="label">Confirm password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            class="input w-full"
+            placeholder="Password"
+            required
+          />
+
+          <!-- ROLE -->
+          <label class="label">Select a role</label>
+          <select class="select" name="role" required>
+            <option value="" disabled selected>Select a role</option>
+            <option value="resident">City Resident</option>
+            <option value="planner">City Planner</option>
+          </select>
+
+          <!-- ERROR MESSAGE -->
+          <p id="registerErrorMsg" class="text-red-500"></p>
+
+          <!-- REGISTER BUTTON -->
+          <button class="btn bg-green-500 text-white mt-4 hover:outline-1">
+            Register
+          </button>
+        </fieldset>
+        <a
+          id="alreadyHaveAccountBtn"
+          class="hover:underline hover:text-blue-700 cursor-pointer text-center"
+        >
+          Already have an account
+        </a>
+      </form>
+    </div>
+  </body>
+</html>

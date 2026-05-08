@@ -9,7 +9,14 @@ router.get("/", (req, res) => {
 });
 
 router.get("/home", (req, res) => {
-  res.sendFile(__dirname + "/../public/index.html");
+  res.sendFile("index.html", { root: "public" });
+});
+
+router.get("/login", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/home"); // user is already logged in (remember be)
+  }
+  res.sendFile("login.html", { root: "public" });
 });
 
 module.exports = router;
