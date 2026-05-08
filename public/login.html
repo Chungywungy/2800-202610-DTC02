@@ -34,10 +34,12 @@
         id="loginFormContainer"
         action="/auth/login"
         method="post"
-        class="w-1/2 flex justify-center fieldset bg-base-200/90 border-base-300 rounded-box flex-col border px-30 py-5"
+        class="w-1/2 min-w-md flex justify-center fieldset bg-base-200/90 border-base-300 rounded-box flex-col border px-30 py-5"
       >
         <fieldset class="fieldset py-5 w-full">
           <h1 class="font-bold text-5xl pb-5 text-center">Login</h1>
+
+          <!-- EMAIL OR USERNAME -->
           <label class="label">Email or username</label>
           <input
             name="emailOrUsername"
@@ -47,6 +49,7 @@
             required
           />
 
+          <!-- PASSWORD -->
           <label class="label">Password</label>
           <input
             type="password"
@@ -56,9 +59,12 @@
             required
           />
 
+          <!-- LOGIN BUTTON -->
           <button class="btn bg-blue-500 text-white mt-4 hover:outline-1">
             Login
           </button>
+
+          <!-- REMEMBER ME CHECKBOX -->
           <label class="">
             <input type="checkbox" checked="checked" class="" />
             Remember me
@@ -76,10 +82,20 @@
         id="registerFormContainer"
         action="/auth/register"
         method="post"
-        class="w-1/2 flex justify-center fieldset bg-base-200/90 border-base-300 rounded-box flex-col border px-30 py-5 hidden"
+        class="w-1/2 min-w-md flex justify-center fieldset bg-base-200/90 border-base-300 rounded-box flex-col border px-30 py-5 hidden"
       >
         <fieldset class="fieldset py-5 w-full">
           <h1 class="font-bold text-5xl pb-5 text-center">Register</h1>
+
+          <!-- USERNAME -->
+          <label class="label">Username</label>
+          <input
+            type="text"
+            name="username"
+            class="input w-full"
+            placeholder="Username"
+            required
+          />
 
           <!-- EMAIL -->
           <label class="label">Email</label>
@@ -119,6 +135,7 @@
             <option value="planner">City Planner</option>
           </select>
 
+          <!-- REGISTER BUTTON -->
           <button class="btn bg-green-500 text-white mt-4 hover:outline-1">
             Register
           </button>

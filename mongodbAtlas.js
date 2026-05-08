@@ -3,11 +3,12 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   username: String,
+  email: String,
   password: String,
   role: {
     type: String,
-    enum: ["City staff", "user"],
-    default: "user",
+    enum: ["resident", "planner"],
+    default: "resident",
   },
 });
 
@@ -15,7 +16,7 @@ const userModel = mongoose.model(`users`, userSchema);
 
 async function connectToDatabase() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI, { dbName: "test" });
     console.log("Connected to database");
   } catch (error) {
     console.log(error);
