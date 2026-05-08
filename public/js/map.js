@@ -371,18 +371,6 @@ console.log("Shade API Key:", key);
 const buildingCache = new Map();
 
 /**
- * Generates a cache key for the given bounds based on rounded coordinates.
- * @param {*} bounds 
- * @returns North, west, south, east rounded to 3 decimal places as a string key for caching building data. This allows nearby views to hit the same cache entry and reduces redundant API calls.
- */
-const getBoundsKey = (bounds) => {
-  // Round to 3 decimal places so nearby views hit the same cache entry
-  const round = (n) => Math.round(n * 1000) / 1000;
-  return `${round(bounds.getSouth())},${round(bounds.getWest())},${round(bounds.getNorth())},${round(bounds.getEast())}`;
-};
-
-
-/**
  * Returns a larger area than the current view, so zoom changes still hit the cache
  * @param {*} bounds 
  * @returns North, west, south, east rounded to 2 decimal places and expanded by 0.01 degrees (about 1km) to create a buffer around the current view. This helps ensure that small movements or zoom changes still hit the same cache entry and reduces redundant API calls.
@@ -445,6 +433,9 @@ const shadeMap = new ShadeMap({
     return geojson.features;
   },
 }).addTo(map);
+/** * Shade API Integration Section (end)
+ * Contains: fetching data and creating shade layer
+ */
 
 document
   .getElementById("fountainsBtn")
