@@ -360,6 +360,30 @@ treesBtn.addEventListener("click", await debouncedToggleTreeMarkers);
  * Contains: fetching data, toggling markers, creating markers
  */
 
+/**
+ * Shade API Integration Section (start)
+ * Contains: fetching data, toggling shade layer, creating shade layer
+ */
+const res = await fetch("/api/key");
+const { key } = await res.json();
+console.log("Shade API Key:", key);
+
+const shadeMap = new ShadeMap({
+  apiKey: key,
+  date: new Date(),
+  color: "#01112f",
+  opacity: 0.7,
+  terrainSource: {
+    tileSize: 256,
+    maxZoom: 15,
+    getSourceUrl: ({ x, y, z }) =>
+      `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`,
+    getElevation: ({ r, g, b }) => r * 256 + g + b / 256 - 32768,
+  },
+}).addTo(map);
+
+
+
 document
   .getElementById("fountainsBtn")
   .addEventListener("click", toggleFountainMarkers);
