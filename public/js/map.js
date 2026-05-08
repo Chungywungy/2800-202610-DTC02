@@ -12,7 +12,9 @@ export const map = L.map("map", {
 }).fitBounds(bounds);
 
 // Display map
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  minZoom: 12,
+}).addTo(map);
 
 // Replace temperature
 const tempComponent = document.querySelector("temperature-container");
