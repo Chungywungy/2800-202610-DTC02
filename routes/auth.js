@@ -58,7 +58,9 @@ router.post("/register", async (req, res) => {
     role: requestedRole,
   });
 
-  return res.redirect("/login");
+  return res
+    .status(200)
+    .json({ message: "Account created. Please login with credentials" });
 });
 
 module.exports = router;
