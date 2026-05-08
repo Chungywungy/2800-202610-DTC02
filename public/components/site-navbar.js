@@ -55,13 +55,13 @@ class SiteNavbar extends HTMLElement {
             id="logInBtn"
             class="bg-blue-600 text-white p-2 px-4 rounded-lg cursor-pointer"
           >
-            Log-in
+            Login
           </button>
           <button
             id="logOutBtn"
             class="hidden bg-blue-600 text-white p-2 px-4 rounded-lg cursor-pointer"
           >
-            Log-out
+            Logout
           </button>
         </ul>
       </div>
