@@ -10,10 +10,10 @@ alreadyHaveAccountBtn.addEventListener("click", () => {
 
 loginFormContainer.addEventListener("submit", (e) => {
   //   e.preventDefault();
-  alert("trying to login");
+  //   alert("trying to login");
 });
 
 registerFormContainer.addEventListener("submit", (e) => {
   //   e.preventDefault();
-  alert("trying to register");
+  //   alert("trying to register");
 });
