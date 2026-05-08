@@ -102,7 +102,7 @@ class SiteNavbar extends HTMLElement {
           <svg xmlns="http://www.w3.org/2000/svg" height="100px" viewBox="0 -960 960 960" width="100px" fill="white"><path d="M480-360 280-559h400L480-360Z"/></svg>
         </div>
 
-        </divclass=class=>
+        </div>
       </div>
 
     </nav>
