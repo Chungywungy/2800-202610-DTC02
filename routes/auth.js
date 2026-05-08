@@ -29,16 +29,28 @@ router.post("/login", async (req, res) => {
   if (!passwordMatch) {
     return res.status(401).json({ message: "Incorrect password. Try again." });
   }
+  if (rememberMe) {
+    req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; // 30 days
+    req.session.user = {
+      username: userFound.username,
+      email: userFound.email,
+      role: userFound.role,
+    };
+  } else {
+    req.session.cookie.expires = false; // expires when browser closes
+  }
   return res.status(200).json({ message: "User logged in successfully." });
 });
 
 // Reference: COMP2537 Assignment 1
 router.post("/register", async (req, res) => {
-  const requestedUsername = req.body.username;
-  const requestedEmail = req.body.email;
-  const requestedPassword = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
-  const requestedRole = req.body.role;
+  const {
+    requestedUsername,
+    requestedEmail,
+    requestedPassword,
+    confirmPassword,
+    requestedRole,
+  } = req.body;
 
   const usernameAlreadyExists = await userModel.findOne({
     username: requestedUsername,

@@ -20,6 +20,22 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public", { index: false }));
+app.use(
+  session({
+    store: new FileStore({
+      path: "./sessions",
+      secret: "mr. morale", // TODO: mask using dotenv when deploying
+      retries: 1,
+    }),
+    secret: "mr. morale", // TODO: mask using dotenv when deploying
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false, // IMPORTANT: Change to true when deploying
+    },
+  }),
+);
 
 // connect to routes folder
 /**

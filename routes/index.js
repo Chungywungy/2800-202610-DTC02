@@ -13,6 +13,9 @@ router.get("/home", (req, res) => {
 });
 
 router.get("/login", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/home"); // user is already logged in (remember be)
+  }
   res.sendFile("login.html", { root: "public" });
 });
 
