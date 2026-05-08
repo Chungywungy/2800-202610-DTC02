@@ -18,8 +18,8 @@ const app = express();
 
 // declare all middlewares
 app.use(express.json());
-app.use(express.urlencoded());
-app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public", { index: false }));
 
 // connect to routes folder
 /**
@@ -29,7 +29,6 @@ app.use(express.static("public"));
 app.use("/", require("./routes/index"));
 app.use("/auth", require("./routes/auth"));
 app.use("/api", require("./routes/api"));
-
 
 // connect to MongoDB Atlas
 connectToDatabase();

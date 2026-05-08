@@ -13,7 +13,6 @@
       rel="stylesheet"
       type="text/css"
     />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- DAISYUI THEMES -->
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
@@ -34,19 +33,28 @@
       <form
         id="loginFormContainer"
         action="/auth/login"
+        method="post"
         class="w-1/2 flex justify-center fieldset bg-base-200/90 border-base-300 rounded-box flex-col border px-30 py-5"
       >
         <fieldset class="fieldset py-5 w-full">
           <h1 class="font-bold text-5xl pb-5 text-center">Login</h1>
           <label class="label">Email or username</label>
           <input
-            type="email"
+            name="emailOrUsername"
+            type="text"
             class="input w-full"
             placeholder="Email or username"
+            required
           />
 
           <label class="label">Password</label>
-          <input type="password" class="input w-full" placeholder="Password" />
+          <input
+            type="password"
+            name="password"
+            class="input w-full"
+            placeholder="Password"
+            required
+          />
 
           <button class="btn bg-blue-500 text-white mt-4 hover:outline-1">
             Login
@@ -67,6 +75,7 @@
       <form
         id="registerFormContainer"
         action="/auth/register"
+        method="post"
         class="w-1/2 flex justify-center fieldset bg-base-200/90 border-base-300 rounded-box flex-col border px-30 py-5 hidden"
       >
         <fieldset class="fieldset py-5 w-full">
@@ -74,22 +83,40 @@
 
           <!-- EMAIL -->
           <label class="label">Email</label>
-          <input type="email" class="input w-full" placeholder="Email" />
+          <input
+            type="email"
+            name="email"
+            class="input w-full"
+            placeholder="Email"
+            required
+          />
 
           <!-- PASSWORD -->
           <label class="label">Password</label>
-          <input type="password" class="input w-full" placeholder="Password" />
+          <input
+            type="password"
+            name="password"
+            class="input w-full"
+            placeholder="Password"
+            required
+          />
 
           <!-- CONFIRM PASSWORD -->
           <label class="label">Confirm password</label>
-          <input type="password" class="input w-full" placeholder="Password" />
+          <input
+            type="password"
+            name="confirmPassword"
+            class="input w-full"
+            placeholder="Password"
+            required
+          />
 
           <!-- ROLE -->
           <label class="label">Select a role</label>
-          <select class="select">
-            <option disabled selected>Select a role</option>
-            <option>Resident</option>
-            <option>Employee</option>
+          <select class="select" name="role" required>
+            <option value="" disabled selected>Select a role</option>
+            <option value="resident">City Resident</option>
+            <option value="planner">City Planner</option>
           </select>
 
           <button class="btn bg-green-500 text-white mt-4 hover:outline-1">

@@ -9,7 +9,11 @@ router.get("/", (req, res) => {
 });
 
 router.get("/home", (req, res) => {
-  res.sendFile(__dirname + "/../public/index.html");
+  res.sendFile("index.html", { root: "public" });
+});
+
+router.get("/login", (req, res) => {
+  res.sendFile("login.html", { root: "public" });
 });
 
 module.exports = router;
