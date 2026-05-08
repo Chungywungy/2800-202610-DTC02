@@ -51,3 +51,7 @@ registerFormContainer.addEventListener("submit", async (e) => {
     registerErrorMsg.textContent = data.message;
   }
 });
+
+redirectMapBtn.addEventListener("click", () => {
+  window.location.href = "/home";
+});

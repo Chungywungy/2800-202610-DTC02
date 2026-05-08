@@ -12,6 +12,11 @@ router.get("/", (req, res) => {
   res.redirect("/home");
 });
 
+router.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/home");
+});
+
 // Reference: COMP2537 Assignment 1
 router.post("/login", async (req, res) => {
   const { emailOrUsername, password, rememberMe } = req.body;
@@ -29,13 +34,13 @@ router.post("/login", async (req, res) => {
   if (!passwordMatch) {
     return res.status(401).json({ message: "Incorrect password. Try again." });
   }
+  req.session.user = {
+    username: userFound.username,
+    email: userFound.email,
+    role: userFound.role,
+  };
   if (rememberMe) {
     req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; // 30 days
-    req.session.user = {
-      username: userFound.username,
-      email: userFound.email,
-      role: userFound.role,
-    };
   } else {
     req.session.cookie.expires = false; // expires when browser closes
   }
