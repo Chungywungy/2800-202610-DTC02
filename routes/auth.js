@@ -49,19 +49,17 @@ router.post("/login", async (req, res) => {
 
 // Reference: COMP2537 Assignment 1
 router.post("/register", async (req, res) => {
-  const {
-    requestedUsername,
-    requestedEmail,
-    requestedPassword,
-    confirmPassword,
-    requestedRole,
-  } = req.body;
+  const requestedUsername = req.body.username;
+  const requestedEmail = req.body.email;
+  const requestedPassword = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+  const requestedRole = req.body.role;
 
   const usernameAlreadyExists = await userModel.findOne({
     username: requestedUsername,
   });
   const emailAlreadyExists = await userModel.findOne({
-    email: requestedEmail,
+    email: requestedEmail.toLowerCase(),
   });
 
   if (usernameAlreadyExists) {
@@ -86,7 +84,7 @@ router.post("/register", async (req, res) => {
 
   const createdAccount = await userModel.insertOne({
     username: requestedUsername,
-    email: requestedEmail,
+    email: requestedEmail.toLowerCase(),
     password: hashedPassword,
     role: requestedRole,
   });
