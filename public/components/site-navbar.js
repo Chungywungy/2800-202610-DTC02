@@ -11,26 +11,26 @@ class SiteNavbar extends HTMLElement {
 
   createNavbar() {
     this.innerHTML = `
-      <nav id="navContainers" class="absolute z-1000 flex w-full justify-center bg-slate-500 overflow-x-scroll">
+      <nav id="navContainers" class="absolute z-2000 flex w-full bg-slate-500">
       
-      <div id="navContainer">
-      <ul class="flex p-2 py-5 gap-3">
-        <li class="bg-white p-2 rounded-lg duration-50">
+      <div id="navContainer" class="flex w-full justify-start md:justify-center overflow-x-scroll mx-4">
+      <ul class="flex px-4 py-5 gap-3">
+        <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
           <button id="treesBtn">Trees</button>
         </li>
-        <li class="bg-white p-2 rounded-lg duration-50">
+        <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
           <button id="parksBtn">Parks</button>
         </li>
-        <li class="bg-white p-2 rounded-lg duration-50">
+        <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
           <button id="communityCentresBtn">Community Centres</button>
         </li>
-        <li class="bg-white p-2 rounded-lg duration-50">
+        <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
           <button id="publicWashroomsBtn">Public Washrooms</button>
         </li>
-        <li class="bg-white p-2 rounded-lg duration-50">
+        <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
           <button id="transitBtn">Transit</button>
         </li>
-        <li class="bg-white p-2 rounded-lg duration-50">
+        <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
           <button id="fountainsBtn">Water Fountains</button>
         </li>
         <li class="animate-pulse bg-blue-600 text-white p-2 rounded-lg duration-50">
