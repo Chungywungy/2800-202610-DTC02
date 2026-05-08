@@ -362,27 +362,89 @@ treesBtn.addEventListener("click", await debouncedToggleTreeMarkers);
 
 /**
  * Shade API Integration Section (start)
- * Contains: fetching data, toggling shade layer, creating shade layer
+ * Contains: fetching data and creating shade layer
  */
 const res = await fetch("/api/key");
 const { key } = await res.json();
 console.log("Shade API Key:", key);
 
+const buildingCache = new Map();
+
+/**
+ * Generates a cache key for the given bounds based on rounded coordinates.
+ * @param {*} bounds 
+ * @returns North, west, south, east rounded to 3 decimal places as a string key for caching building data. This allows nearby views to hit the same cache entry and reduces redundant API calls.
+ */
+const getBoundsKey = (bounds) => {
+  // Round to 3 decimal places so nearby views hit the same cache entry
+  const round = (n) => Math.round(n * 1000) / 1000;
+  return `${round(bounds.getSouth())},${round(bounds.getWest())},${round(bounds.getNorth())},${round(bounds.getEast())}`;
+};
+
+
+/**
+ * Returns a larger area than the current view, so zoom changes still hit the cache
+ * @param {*} bounds 
+ * @returns North, west, south, east rounded to 2 decimal places and expanded by 0.01 degrees (about 1km) to create a buffer around the current view. This helps ensure that small movements or zoom changes still hit the same cache entry and reduces redundant API calls.
+ */
+const getPaddedBounds = (bounds) => {
+  const round = (n) => Math.round(n * 100) / 100; // 2 decimal places (~1km chunks)
+  return {
+    north: round(bounds.getNorth() + 0.01),
+    south: round(bounds.getSouth() - 0.01),
+    east: round(bounds.getEast() + 0.01),
+    west: round(bounds.getWest() - 0.01),
+  };
+};
+
+
+/**
+ * Initialize the ShadeMap layer with the provided API key and configuration. The getFeatures function fetches building data from the Overpass API based on the current map bounds and zoom level, converts it to GeoJSON format, and caches the results to optimize performance. The layer is added to the map to visualize shaded areas representing building heights.
+ */
 const shadeMap = new ShadeMap({
   apiKey: key,
   date: new Date(),
   color: "#01112f",
   opacity: 0.7,
-  terrainSource: {
-    tileSize: 256,
-    maxZoom: 15,
-    getSourceUrl: ({ x, y, z }) =>
-      `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`,
-    getElevation: ({ r, g, b }) => r * 256 + g + b / 256 - 32768,
+
+  getFeatures: async () => {
+    if (map.getZoom() < 15) return [];
+
+    const bounds = map.getBounds();
+    const padded = getPaddedBounds(bounds);
+    const cacheKey = `${padded.south},${padded.west},${padded.north},${padded.east}`;
+
+    // Return cached data if available
+    if (buildingCache.has(cacheKey)) {
+      console.log("Cache hit for bounds:", cacheKey);
+      return buildingCache.get(cacheKey);
+    }
+
+    const north = bounds.getNorth();
+    const south = bounds.getSouth();
+    const east = bounds.getEast();
+    const west = bounds.getWest();
+
+    const query = `https://overpass-api.de/api/interpreter?data=%2F*%0AThis%20has%20been%20generated%20by%20the%20overpass-turbo%20wizard.%0AThe%20original%20search%20was%3A%0A%E2%80%9Cbuilding%E2%80%9D%0A*%2F%0A%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3B%0A%2F%2F%20gather%20results%0A%28%0A%20%20%2F%2F%20query%20part%20for%3A%20%E2%80%9Cbuilding%E2%80%9D%0A%20%20way%5B%22building%22%5D%28${padded.south}%2C${padded.west}%2C${padded.north}%2C${padded.east}%29%3B%0A%29%3B%0A%2F%2F%20print%20results%0Aout%20body%3B%0A%3E%3B%0Aout%20skel%20qt%3B`;
+
+    const response = await fetch(query);
+    const json = await response.json();
+    const geojson = osmtogeojson(json);
+
+    geojson.features.forEach((feature) => {
+      if (!feature.properties) feature.properties = {};
+      const levels = feature.properties["building:levels"];
+      feature.properties.height = levels ? levels * 3 : 6;
+    });
+
+    // Store in cache before returning
+    buildingCache.set(cacheKey, geojson.features);
+    console.log(
+      `Fetched and cached ${geojson.features.length} building features for bounds: ${cacheKey}`,
+    );
+    return geojson.features;
   },
 }).addTo(map);
-
-
 
 document
   .getElementById("fountainsBtn")
