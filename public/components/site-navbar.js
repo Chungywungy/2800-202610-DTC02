@@ -157,7 +157,8 @@ customElements.define("site-navbar", SiteNavbar);
 
 document.querySelectorAll("#navContainer button").forEach((btn) => {
   btn.addEventListener("click", () => {
-    if (btn.id === "helpBtn") return;
+    if (btn.id === "helpBtn" || btn.id === "logInBtn" || btn.id === "logOutBtn")
+      return;
     btn.parentElement.classList.toggle("bg-red-800");
     btn.parentElement.classList.toggle("bg-white");
     btn.parentElement.classList.toggle("text-white");

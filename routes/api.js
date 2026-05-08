@@ -79,7 +79,6 @@ router.get("/", async (req, res) => {
   res.json(data);
 });
 
-
 // fetch community centres data
 router.get("/community-centres", async (req, res) => {
   try {
@@ -111,7 +110,6 @@ router.get("/community-centres", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch community centres" });
   }
 });
-
 
 /**
  * Route for fetching a filtered subset of public trees within the City of Vancouver.
@@ -206,6 +204,13 @@ router.get("/parks", async (req, res) => {
     console.log("Error fetching parks:", error);
     res.status(500).json({ error: "Failed to fetch parks" });
   }
+});
+
+router.get("/user", (req, res) => {
+  if (req.session.user) {
+    res.json({ loggedIn: true, user: req.session.user });
+  }
+  res.json({ loggedIn: false });
 });
 
 module.exports = router;
