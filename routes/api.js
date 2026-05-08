@@ -209,8 +209,9 @@ router.get("/parks", async (req, res) => {
 router.get("/user", (req, res) => {
   if (req.session.user) {
     res.json({ loggedIn: true, user: req.session.user });
+  } else {
+    res.json({ loggedIn: false });
   }
-  res.json({ loggedIn: false });
 });
 
 module.exports = router;

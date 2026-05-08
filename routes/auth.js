@@ -12,6 +12,11 @@ router.get("/", (req, res) => {
   res.redirect("/home");
 });
 
+router.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/home");
+});
+
 // Reference: COMP2537 Assignment 1
 router.post("/login", async (req, res) => {
   const { emailOrUsername, password, rememberMe } = req.body;
