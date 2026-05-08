@@ -33,30 +33,25 @@ class SiteNavbar extends HTMLElement {
         <li class="bg-white p-2 rounded-lg duration-50">
           <button id="fountainsBtn">Water Fountains</button>
         </li>
-        <li class="bg-blue-600 text-white p-2 rounded-lg duration-50">
-          <button id="helpBtn" data-modal-target="filterModal" data-modal-toggle="default-modal">? Help</button>
+        <li class="animate-pulse bg-blue-600 text-white p-2 rounded-lg duration-50">
+          <button id="helpBtn" data-modal-target="filterModal" data-modal-toggle="default-modal" class="px-4 font-bold">?</button>
         </li>
       </ul>
       
       </div> 
+
       <!-- Filter Help Modal -->
 
-      <div
-        id="filterModal"
-        class="hidden fixed bg-black/50 z-[2000] flex items-center justify-center"
-      >
-      <div class="">
+      <div id="filterModal" class="hidden fixed inset-0 flex justify-center bg-black/50">
 
-      <div class="bg-white">
-
-      <svg class="top-0 w-15 h-15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" clip-rule="evenodd" d="M12.0001 5.94363L4.76627 18H19.2339L12.0001 5.94363ZM10.7138 4.20006C11.2964 3.22905 12.7037 3.22905 13.2863 4.20006L21.4032 17.7282C22.0031 18.728 21.2829 20 20.117 20H3.88318C2.71724 20 1.99706 18.728 2.59694 17.7282L10.7138 4.20006Z" fill="#000000"/>
-</svg>
- </div>
+      <div class="fixed z-[2000] flex flex-col items-center mt-[140px] md:mt-18">
+    
+        <div class="flex relative justify-center rounded-xl -mb-11">
+          <svg xmlns="http://www.w3.org/2000/svg" height="100px" viewBox="0 -960 960 960" width="100px" fill="white"><path d="m280-400 200-201 200 201H280Z"/></svg>
+        </div>
  
-        <div class="bg-white rounded-xl shadow-lg
-        <h2 class="text-2xl font-bold mb-4">How to Use the App</h2>
-
+        <div class="bg-white rounded-xl p-4">
+          <h2 class="text-2xl font-bold mb-4">How to Use the App</h2>
           <p>
             You can select a filter to render the locations on the map. </br>
             Toggle a filter on or off to render the information.
@@ -85,28 +80,30 @@ class SiteNavbar extends HTMLElement {
       </div>
 
       <!-- Weather Help Modal -->
-      <div
-        id="weatherModal"
-        class="hidden fixed inset-0 bg-black/50 z-[2000] flex items-center justify-center"
-      >
-        <div class="bg-white rounded-xl shadow-lg p-6 w-[90%] max-w-md relative">
-          <h2 class="text-2xl font-bold mb-4">Filter Toggles</h2>
+      <div id="weatherModal" class="hidden fixed inset-0 bg-black/50 items-end justify-end flex">
+        <div class="z-[2000] flex flex-col mb-30 mr-30">
+     
+          <div class="bg-white rounded-lg shadow-lg p-6 -top-48">
+            <h2 class="text-2xl font-bold mb-4">Temperature and Heat Score</h2>
+            
+            <p>
+              See the current temperature and heat score for your location.
+            </p>
 
-                    <p>
-          <p>
-            Here's Luka with the weather.
-          </p>
-
-          <button
-            id="nextBtnWeather"
-            class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg"
-          >
-            Close
-          </button>
+            <button
+              id="nextBtnWeather"
+              class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        
+           <div class="flex relative justify-end rounded-xl -mt-11">
+          <svg xmlns="http://www.w3.org/2000/svg" height="100px" viewBox="0 -960 960 960" width="100px" fill="white"><path d="M480-360 280-559h400L480-360Z"/></svg>
         </div>
-      
-      
-      </div> 
+
+        </divclass=class=>
+      </div>
 
     </nav>
 `;
@@ -169,6 +166,10 @@ rememberMe.addEventListener("change", () => {
 function loadTutorial() {
   if (rememberMe.checked) {
     document.getElementById("filterModal").classList.remove("hidden");
+  } else {
+    document
+      .getElementById("helpBtn")
+      .parentElement.classList.remove("animate-pulse");
   }
 }
 
