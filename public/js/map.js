@@ -11,6 +11,8 @@ export const map = L.map("map", {
   maxBoundsViscosity: 1.0,
 }).fitBounds(bounds);
 
+map.doubleClickZoom.disable();
+
 // Display map
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   minZoom: 12,
@@ -25,18 +27,59 @@ map.on("click", (e) => {
   tempComponent.loadTemperature(lat, lng);
 });
 
-// for form submission
-map.on("dblclick", (e) => {
+// for form submission, dbl click to open form and fill with location information
+map.on("dblclick", async (e) => {
   const { lat, lng } = e.latlng;
+
+  let address = "Unknown location";
+
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+    );
+
+    const data = await response.json();
+
+    if (data.address) {
+      address = [
+        data.address.house_number,
+        data.address.road,
+        data.address.suburb,
+        data.address.neighbourhood,
+        data.address.city,
+        data.address.postcode,
+      ]
+        .filter(Boolean)
+        .join(", ");
+    }
+  } catch (error) {
+    console.log(error);
+  }
 
   const popupContent = `    
     <div class="w-64">
       <h3 class="text-lg font-semibold mb-2">Share your feedback</h3>
 
-      <textarea id="reportText" placeholder="Describe the issue (e.g. this bus stop needs shade)" 
-        rows="3" class="w-full p-2 mb-2 border border-gray-300 rounded"></textarea>
-      <button onclick="submitReport(${lat}, ${lng})" 
-        class="w-full p-2 bg-blue-900 text-white rounded cursor-pointer hover:bg-blue-800">
+      <p class="text-sm mb-2">
+        <strong>Address:</strong><br>
+        ${address}
+      </p>
+
+      <p class="text-xs mb-3 text-gray-600">
+        ${lat.toFixed(5)}, ${lng.toFixed(5)}
+      </p>
+
+      <textarea
+        id="reportText"
+        placeholder="Describe the issue"
+        rows="3"
+        class="w-full p-2 mb-2 border border-gray-300 rounded"
+      ></textarea>
+
+      <button
+        onclick="submitReport(${lat}, ${lng}, \`${address}\`)"
+        class="w-full p-2 bg-blue-900 text-white rounded hover:bg-blue-800"
+      >
         Submit Feedback
       </button>
     </div>
@@ -45,13 +88,14 @@ map.on("dblclick", (e) => {
   L.popup({
     minWidth: 260,
     maxWidth: 260,
+    autoPan: false,
   })
     .setLatLng(e.latlng)
     .setContent(popupContent)
     .openOn(map);
 });
 
-window.submitReport = async function(lat, lng) {
+window.submitReport = async function (lat, lng, address) {
   const formText = document.getElementById("reportText").value;
 
   if (!formText) {
@@ -63,7 +107,12 @@ window.submitReport = async function(lat, lng) {
     const res = await fetch("/api/reports", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ lat, lng, formText }),
+      body: JSON.stringify({
+        lat,
+        lng,
+        address,
+        formText,
+      }),
     });
     const data = await res.json();
     if (data.success) {
@@ -74,7 +123,63 @@ window.submitReport = async function(lat, lng) {
     console.log(error);
     alert("Failed to submit report");
   }
-};  
+};
+
+let formMarkers = [];
+let formsData = [];
+
+const fetchForms = async () => {
+  formsData = [];
+
+  try {
+    const result = await fetch("/api/reports");
+    const resultJSON = await result.json();
+
+    formsData = resultJSON;
+  } catch (error) {
+    console.log(error);
+  }
+
+  createFormMarkers();
+};
+
+const createFormMarkers = () => {
+  formMarkers = [];
+
+  for (let i = 0; i < formsData.length; i++) {
+    const report = formsData[i];
+
+    const marker = L.marker([report.lat, report.lng]);
+
+    marker.bindPopup(`
+      <div class="w-56">
+        <h3 class="font-semibold text-lg mb-2">Community Report</h3>
+
+        <p><strong>User:</strong> ${report.username}</p>
+
+        <p class="mt-2">
+          <strong>Feedback:</strong><br>
+          ${report.formText}
+        </p>
+      </div>
+    `);
+
+    formMarkers.push(marker);
+  }
+};
+
+const toggleForms = () => {
+  const button = document.getElementById("formReports");
+  if (!button.parentElement.classList.contains("active")) {
+    formMarkers.forEach((marker) => {
+      map.removeLayer(marker);
+    });
+  } else {
+    formMarkers.forEach((marker) => {
+      marker.addTo(map);
+    });
+  }
+};
 
 // Display water fountains
 let fountainMarkers = [];
@@ -130,7 +235,7 @@ const createFountainMarkers = () => {
   }
 };
 
-export const toggleFountainMarkers = () => {
+const toggleFountainMarkers = () => {
   const button = document.getElementById("fountainsBtn");
   if (!button.parentElement.classList.contains("active")) {
     fountainMarkers.forEach((marker) => {
@@ -378,6 +483,92 @@ const toggleCommunityCentreMarkers = () => {
 };
 
 fetchCommunityCentres();
+
+// Toggle pins for feedback report forms submitted
+let reportMarkers = [];
+let reportData = [];
+
+const reportIcon = L.divIcon({
+  html: `
+    <svg width="32" height="32" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <path d="M256 0C161.9 0 85.3 76.6 85.3 170.7c0 131.8 155.2 328.5 161.8 337.2 2.5 3.3 6.4 5.2 10.5 5.1 4-.1 7.8-2.1 10.2-5.4C274.2 499 426.7 301.2 426.7 170.7 426.7 76.6 350.1 0 256 0z" fill="#E24B4A"/>
+      <circle cx="256" cy="170.7" r="68.3" fill="#fff"/>
+    </svg>
+  `,
+  className: "",
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+});
+
+const fetchReports = async () => {
+  reportData = [];
+  try {
+    const result = await fetch("/api/reports");
+    const resultJSON = await result.json();
+    reportData = resultJSON;
+  } catch (error) {
+    console.log(error);
+  }
+  createReportMarkers();
+};
+
+const createReportMarkers = () => {
+  reportMarkers = [];
+
+  for (let i = 0; i < reportData.length; i++) {
+    const report = reportData[i];
+
+    const marker = L.marker([report.lat, report.lng], { icon: reportIcon });
+
+    marker.bindPopup(`
+      <div class="w-64">
+        <h3 class="font-semibold text-lg mb-2">Community Report</h3>
+
+        <p class="text-sm mb-2">
+          <strong>Address:</strong><br>
+          ${report.address || "No address available"}
+        </p>
+
+        <p class="text-xs text-gray-600 mb-2">
+          <strong>Coordinates:</strong><br>
+          ${Number(report.lat).toFixed(5)}, ${Number(report.lng).toFixed(5)}
+        </p>
+
+        <p class="text-sm mb-2">
+          <strong>Message:</strong><br>
+          ${report.formText}
+        </p>
+
+        <p class="text-xs text-gray-500">
+          Submitted by: ${report.username}
+        </p>
+      </div>
+    `);
+
+    reportMarkers.push(marker);
+  }
+};
+
+const toggleReportMarkers = async () => {
+  const button = document.getElementById("formReports");
+
+  const res = await fetch("/api/user");
+  const userData = await res.json();
+
+  if (!userData.loggedIn) {
+    alert("You must be logged in to view and submit feedback reports");
+    button.parentElement.classList.remove("active");
+    return;
+  }
+
+  if (button.parentElement.classList.contains("active")) {
+    await fetchReports();
+    reportMarkers.forEach((marker) => marker.addTo(map));
+  } else {
+    reportMarkers.forEach((marker) => map.removeLayer(marker));
+  }
+};
+
 /**
  * Trees API Integration Section (start)
  * Contains: fetching data, toggling markers, creating markers
@@ -482,3 +673,8 @@ document
 document
   .getElementById("transitBtn")
   .addEventListener("click", toggleTransitMarkers);
+document
+  .getElementById("formReports")
+  .addEventListener("click", toggleReportMarkers);
+
+fetchReports();

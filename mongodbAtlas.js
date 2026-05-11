@@ -18,6 +18,7 @@ const formSchema = new mongoose.Schema({
   username: String,
   lat: Number,
   lng: Number,
+  address: String,
   formText: String,
 });
 

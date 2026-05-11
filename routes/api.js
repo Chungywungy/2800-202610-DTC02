@@ -221,13 +221,14 @@ router.post("/reports", async (req, res) => {
       .status(401)
       .json({ error: "You must be logged in to submit a report" });
   }
-
+  
   try {
-    const { lat, lng, formText } = req.body;
+    const { lat, lng, address, formText } = req.body;
     const newReport = new formsModel({
       username: req.session.user.username,
       lat,
       lng,
+      address,
       formText,
     });
     await newReport.save();
@@ -235,6 +236,16 @@ router.post("/reports", async (req, res) => {
   } catch (error) {
     console.log("Error saving report:", error);
     res.status(500).json({ error: "Failed to save report" });
+  }
+});
+
+router.get("/reports", async (req, res) => {
+  try {
+    const reports = await formsModel.find({});
+    res.json(reports);
+  } catch (error) {
+    console.log("Error fetching reports:", error);
+    res.status(500).json({ error: "Failed to fetch reports" });
   }
 });
 

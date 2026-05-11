@@ -36,6 +36,9 @@ class SiteNavbar extends HTMLElement {
           <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
             <button id="fountainsBtn">Water Fountains</button>
           </li>
+          <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
+            <button id="formReports">Reports</button>
+          </li>
           <li
             class="animate-pulse bg-blue-600 text-white p-2 rounded-lg duration-50"
           >
