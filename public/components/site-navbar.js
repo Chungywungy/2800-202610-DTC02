@@ -49,6 +49,17 @@ class SiteNavbar extends HTMLElement {
             </button>
           </li>
         </ul>
+
+        <!-- PROFILE BUTTON CONTAINER -->
+        <ul id="authControlContainer" class="shrink-0 flex pl-4 py-5">
+          <button
+            id="profileBtn"
+            class="hidden bg-blue-600 text-white p-2 px-4 rounded-lg cursor-pointer"
+          >
+            Profile
+          </button>
+        </ul>
+
         <!-- LOGIN/LOGOUT CONTAINER -->
         <ul id="authControlContainer" class="shrink-0 flex px-4 py-5">
           <button
@@ -225,6 +236,7 @@ async function checkUserAuth() {
   if (data.loggedIn) {
     document.getElementById("logInBtn").classList.toggle("hidden");
     document.getElementById("logOutBtn").classList.toggle("hidden");
+    document.getElementById("profileBtn").classList.toggle("hidden");
   }
 }
 document.getElementById("logInBtn").addEventListener("click", () => {
