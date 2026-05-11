@@ -114,11 +114,25 @@ window.submitReport = async function (lat, lng, address) {
         formText,
       }),
     });
+
     const data = await res.json();
-    if (data.success) {
-      map.closePopup();
-      alert("Report submitted!");
+
+    // NOT LOGGED IN
+    if (res.status === 401) {
+      alert("You must be logged in to submit feedback");
+      return;
     }
+
+    // OTHER SERVER ERROR
+    if (!res.ok) {
+      alert(data.error || "Failed to submit report");
+      return;
+    }
+
+    // SUCCESS
+    map.closePopup();
+    alert("Report submitted!");
+
   } catch (error) {
     console.log(error);
     alert("Failed to submit report");
@@ -558,6 +572,9 @@ const toggleReportMarkers = async () => {
   if (!userData.loggedIn) {
     alert("You must be logged in to view and submit feedback reports");
     button.parentElement.classList.remove("active");
+    button.parentElement.classList.remove("bg-red-800");
+    button.parentElement.classList.remove("text-white");
+    button.parentElement.classList.add("bg-white");
     return;
   }
 
