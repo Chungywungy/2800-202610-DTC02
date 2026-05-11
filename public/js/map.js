@@ -433,6 +433,23 @@ const shadeMap = new ShadeMap({
     return geojson.features;
   },
 }).addTo(map);
+
+
+/**
+ * Event listener for map clicks to determine if the clicked location is in the sun or shade. It converts the clicked latitude and longitude to container pixel coordinates, checks the shade status using the ShadeMap's isPositionInSun method, and logs the result to the console. This allows users to interactively check the shading conditions at specific points on the map.
+ */
+map.on("click", async (e) => {
+  if (!shadeMap) return;
+
+  const point = map.latLngToContainerPoint(e.latlng);
+
+  const inTheSun = await shadeMap.isPositionInSun(
+    point.x,
+    point.y,
+  );
+
+  console.log(inTheSun ? "Sunny" : "Shaded");
+});
 /** * Shade API Integration Section (end)
  * Contains: fetching data and creating shade layer
  */
