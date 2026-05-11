@@ -25,6 +25,59 @@ map.on("click", (e) => {
   tempComponent.loadTemperature(lat, lng);
 });
 
+// for form submission
+map.on("dblclick", (e) => {
+  const { lat, lng } = e.latlng;
+
+  const popupContent = `    
+    <div class="w-64">
+      <h3 class="text-lg font-semibold mb-2">Report an issue</h3>
+
+      <textarea id="reportText" placeholder="Describe the issue (e.g. this bus stop needs shade)" 
+        rows="3" class="w-full p-2 mb-2 border border-gray-300 rounded"></textarea>
+      <button onclick="submitReport(${lat}, ${lng})" 
+        class="w-full p-2 bg-blue-900 text-white rounded cursor-pointer hover:bg-blue-800">
+        Submit Report
+      </button>
+    </div>
+  `;
+
+  L.popup({
+    minWidth: 260,
+    maxWidth: 260,
+  })
+    .setLatLng(e.latlng)
+    .setContent(popupContent)
+    .openOn(map);
+});
+
+window.submitReport = async function(lat, lng) {
+  const address = document.getElementById("reportAddress").value;
+  const formText = document.getElementById("reportText").value;
+
+  if (!address || !formText) {
+    alert("Please fill in all fields");
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/reports", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address, lat, lng, formText }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      map.closePopup();
+      alert("Report submitted!");
+    }
+  } catch (error) {
+    console.log(error);
+    alert("Failed to submit report");
+  }
+};  
+
+
 // Display water fountains
 let fountainMarkers = [];
 let fountainData = [];
@@ -431,4 +484,3 @@ document
 document
   .getElementById("transitBtn")
   .addEventListener("click", toggleTransitMarkers);
-
