@@ -514,6 +514,7 @@ const reportIcon = L.divIcon({
   iconAnchor: [16, 32],
 });
 
+// Display the users reports as pins on map 
 const fetchReports = async () => {
   reportData = [];
   try {

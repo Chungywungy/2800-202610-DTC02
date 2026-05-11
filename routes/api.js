@@ -240,12 +240,31 @@ router.post("/reports", async (req, res) => {
 });
 
 router.get("/reports", async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({
+      error: "You must be logged in to view reports",
+    });
+  }
+
   try {
-    const reports = await formsModel.find({});
+    let reports;
+
+    if (req.session.user.role === "planner") {
+      // planners/admins see all reports
+      reports = await formsModel.find({});
+    } else {
+      // regular users only see their own reports
+      reports = await formsModel.find({
+        username: req.session.user.username,
+      });
+    }
+
     res.json(reports);
   } catch (error) {
     console.log("Error fetching reports:", error);
-    res.status(500).json({ error: "Failed to fetch reports" });
+    res.status(500).json({
+      error: "Failed to fetch reports",
+    });
   }
 });
 
