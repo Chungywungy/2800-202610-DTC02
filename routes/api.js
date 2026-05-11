@@ -1,5 +1,6 @@
 // import all dependencies
 const express = require("express");
+const { formsModel } = require("../mongodbAtlas");
 
 // create instance of express (but with the .Router() method)
 const router = express.Router();
@@ -211,6 +212,29 @@ router.get("/user", (req, res) => {
     res.json({ loggedIn: true, user: req.session.user });
   } else {
     res.json({ loggedIn: false });
+  }
+});
+
+router.post("/reports", async (req, res) => {
+  if (!req.session.user) {
+    return res
+      .status(401)
+      .json({ error: "You must be logged in to submit a report" });
+  }
+
+  try {
+    const { lat, lng, formText } = req.body;
+    const newReport = new formsModel({
+      username: req.session.user.username,
+      lat,
+      lng,
+      formText,
+    });
+    await newReport.save();
+    res.json({ success: true });
+  } catch (error) {
+    console.log("Error saving report:", error);
+    res.status(500).json({ error: "Failed to save report" });
   }
 });
 

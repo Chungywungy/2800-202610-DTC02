@@ -14,6 +14,15 @@ const userSchema = new mongoose.Schema({
 
 const userModel = mongoose.model(`users`, userSchema);
 
+const formSchema = new mongoose.Schema({
+  username: String,
+  lat: Number,
+  lng: Number,
+  formText: String,
+});
+
+const formsModel = mongoose.model(`forms`, formSchema);
+
 async function connectToDatabase() {
   try {
     await mongoose.connect(process.env.MONGODB_URI, { dbName: "test" });
@@ -23,4 +32,4 @@ async function connectToDatabase() {
   }
 }
 
-module.exports = { connectToDatabase, userModel };
+module.exports = { connectToDatabase, userModel, formsModel };

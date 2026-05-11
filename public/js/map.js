@@ -31,13 +31,13 @@ map.on("dblclick", (e) => {
 
   const popupContent = `    
     <div class="w-64">
-      <h3 class="text-lg font-semibold mb-2">Report an issue</h3>
+      <h3 class="text-lg font-semibold mb-2">Share your feedback</h3>
 
       <textarea id="reportText" placeholder="Describe the issue (e.g. this bus stop needs shade)" 
         rows="3" class="w-full p-2 mb-2 border border-gray-300 rounded"></textarea>
       <button onclick="submitReport(${lat}, ${lng})" 
         class="w-full p-2 bg-blue-900 text-white rounded cursor-pointer hover:bg-blue-800">
-        Submit Report
+        Submit Feedback
       </button>
     </div>
   `;
@@ -52,10 +52,9 @@ map.on("dblclick", (e) => {
 });
 
 window.submitReport = async function(lat, lng) {
-  const address = document.getElementById("reportAddress").value;
   const formText = document.getElementById("reportText").value;
 
-  if (!address || !formText) {
+  if (!formText) {
     alert("Please fill in all fields");
     return;
   }
@@ -64,7 +63,7 @@ window.submitReport = async function(lat, lng) {
     const res = await fetch("/api/reports", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address, lat, lng, formText }),
+      body: JSON.stringify({ lat, lng, formText }),
     });
     const data = await res.json();
     if (data.success) {
@@ -76,7 +75,6 @@ window.submitReport = async function(lat, lng) {
     alert("Failed to submit report");
   }
 };  
-
 
 // Display water fountains
 let fountainMarkers = [];
