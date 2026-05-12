@@ -48,7 +48,7 @@ class SiteNavbar extends HTMLElement {
               tabindex="-1"
               class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shrink-0 shadow"
             >
-              <li><button id="profileBtn" class="hidden">Profile</button></li>
+              <li><button id="profileBtn" class="hidden" onclick="profileModal.showModal()">Profile</button></li>
               <li><a>Settings</a></li>
               <li><button id="logInBtn">Login</button></li>
               <li><button id="logOutBtn" class="hidden">Logout</button></li>
@@ -57,6 +57,19 @@ class SiteNavbar extends HTMLElement {
         </div>
       </div>
     </section>
+
+    <dialog id="profileModal" class="modal">
+          <div class="modal-box">
+            <h3 class="text-lg font-bold">Hello!</h3>
+            <p class="py-4">Press ESC key or click the button below to close</p>
+            <div class="modal-action">
+              <form method="dialog">
+                <!-- if there is a button in form, it will close the modal -->
+                <button class="btn">Close</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
 
     <!-- FILTERS -->
     <section id="filterBarContainer" class="flex bg-white">
@@ -284,9 +297,9 @@ document.getElementById("logOutBtn").addEventListener("click", () => {
   window.location.href = "/auth/logout";
 });
 
-document.getElementById("profileBtn").addEventListener("click", () => {
-  window.location.href = "/profile";
-});
+// document.getElementById("profileBtn").addEventListener("click", () => {
+//   window.location.href = "/profile";
+// });
 
 checkUserAuth();
 
