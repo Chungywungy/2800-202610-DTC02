@@ -102,6 +102,12 @@ class SiteNavbar extends HTMLElement {
           Water
           <span class="material-symbols-outlined"> water_drops </span>
         </button>
+         <!-- FORMS -->
+        <button class="btn" id="formReports">
+          Reports
+          <span class="material-symbols-outlined"> flag </span>
+        </button>
+
       </ul>
     </section>
 
