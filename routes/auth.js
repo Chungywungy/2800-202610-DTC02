@@ -90,15 +90,16 @@ router.post("/register", async (req, res) => {
   });
 
   await formulaModel.insertOne({
-  username: requestedUsername,
+    username: requestedUsername,
 
-  formula: {
-    waterFountains: 0.25,
-    washrooms: 0.25,
-    parks: 0.25,
-    communityCentres: 0.25,
-  },
-});
+    formula: {
+      waterFountains: 0.2,
+      washrooms: 0.2,
+      parks: 0.2,
+      communityCentres: 0.2,
+      transit: 0.2,
+    },
+  });
 
   return res
     .status(200)

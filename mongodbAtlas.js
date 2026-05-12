@@ -31,6 +31,7 @@ const formulaSchema = new mongoose.Schema({
     washrooms: Number,
     parks: Number,
     communityCentres: Number,
+    transit: Number,
   },
 });
 

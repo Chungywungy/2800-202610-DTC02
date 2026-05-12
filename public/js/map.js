@@ -384,11 +384,11 @@ const inVancouver = (lat, lng) => {
 };
 
 const fetchTransitStops = async () => {
-  console.log("Fetching transit stops...");
+  // console.log("Fetching transit stops...");
   try {
     const res = await fetch("/data/stops.geojson");
     transitData = await res.json();
-    console.log("Loaded stops:", transitData.features.length);
+    // console.log("Loaded stops:", transitData.features.length);
   } catch (error) {
     console.log("Error:", error);
   }
@@ -791,18 +791,19 @@ const fetchNeighborhoods = async () => {
 };
 
 const getScoreColor = (score) => {
-  if (score >= 200) return "#97C459";
-  if (score >= 100) return "#F5C4B3";
-  if (score >= 50) return "#EF9F27";
+  if (score >= 75) return "#97C459";
+  if (score >= 50) return "#F5C4B3";
+  if (score >= 25) return "#EF9F27";
   return "#E24B4A";
 };
 
 // Fetch formula from db, either default or user specified
 let heatScoreFormula = {
-  waterFountains: 0.25,
-  washrooms: 0.25,
-  parks: 0.25,
-  communityCentres: 0.25,
+  waterFountains: 0.2,
+  washrooms: 0.2,
+  parks: 0.2,
+  communityCentres: 0.2,
+  transit: 0.2,
 };
 
 const fetchHeatScoreFormula = async () => {
@@ -937,11 +938,15 @@ const createNeighborhoodGeom = () => {
 
     const parkScore = stats.parks / maxParks;
 
+    const transitScore = stats.transit / maxTransit;
+
+
     const totalScore =
       fountainScore * heatScoreFormula.waterFountains +
       washroomScore * heatScoreFormula.washrooms +
       parkScore * heatScoreFormula.parks +
-      centreScore * heatScoreFormula.communityCentres;
+      centreScore * heatScoreFormula.communityCentres +
+      transitScore * heatScoreFormula.transit;
 
     const geom = L.geoJSON(stats.neighborhood.geom, {
       style: {
