@@ -48,7 +48,7 @@ class SiteNavbar extends HTMLElement {
               tabindex="-1"
               class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shrink-0 shadow"
             >
-              <li><a>Profile</a></li>
+              <li><button id="profileBtn" class="hidden">Profile</button></li>
               <li><a>Settings</a></li>
               <li><button id="logInBtn">Login</button></li>
               <li><button id="logOutBtn" class="hidden">Logout</button></li>
@@ -202,7 +202,12 @@ customElements.define("site-navbar", SiteNavbar);
 
 document.querySelectorAll("#navContainer button").forEach((btn) => {
   btn.addEventListener("click", () => {
-    if (btn.id === "helpBtn" || btn.id === "logInBtn" || btn.id === "logOutBtn")
+    if (
+      btn.id === "helpBtn" ||
+      btn.id === "logInBtn" ||
+      btn.id === "logOutBtn" ||
+      btn.id === "profileBtn"
+    )
       return;
     btn.classList.toggle("bg-success");
     btn.classList.toggle("active");
@@ -268,6 +273,7 @@ async function checkUserAuth() {
   if (data.loggedIn) {
     document.getElementById("logInBtn").classList.toggle("hidden");
     document.getElementById("logOutBtn").classList.toggle("hidden");
+    document.getElementById("profileBtn").classList.toggle("hidden");
   }
 }
 document.getElementById("logInBtn").addEventListener("click", () => {
@@ -276,6 +282,10 @@ document.getElementById("logInBtn").addEventListener("click", () => {
 
 document.getElementById("logOutBtn").addEventListener("click", () => {
   window.location.href = "/auth/logout";
+});
+
+document.getElementById("profileBtn").addEventListener("click", () => {
+  window.location.href = "/profile";
 });
 
 checkUserAuth();
