@@ -32,7 +32,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // IMPORTANT: Change to true when deploying
+      secure: true, // IMPORTANT: Change to true when deploying
+      sameSite: "lax",
     },
   }),
 );
