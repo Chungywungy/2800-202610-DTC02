@@ -1,0 +1,4 @@
+/* Removes scroll bar */
+#filterContainer::-webkit-scrollbar {
+  display: none;
+}

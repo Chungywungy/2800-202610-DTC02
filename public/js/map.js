@@ -33,7 +33,7 @@ map.on("contextmenu", async (e) => {
 
   try {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
     );
 
     const data = await response.json();
@@ -182,7 +182,7 @@ const createFormMarkers = () => {
 
 const toggleForms = () => {
   const button = document.getElementById("formReports");
-  if (!button.parentElement.classList.contains("active")) {
+  if (!button.classList.contains("active")) {
     formMarkers.forEach((marker) => {
       map.removeLayer(marker);
     });
@@ -249,7 +249,7 @@ const createFountainMarkers = () => {
 
 const toggleFountainMarkers = () => {
   const button = document.getElementById("fountainsBtn");
-  if (!button.parentElement.classList.contains("active")) {
+  if (!button.classList.contains("active")) {
     fountainMarkers.forEach((marker) => {
       map.removeLayer(marker);
     });
@@ -303,7 +303,7 @@ const createParkGeom = async () => {
  */
 export const toggleParkGeom = () => {
   const button = document.getElementById("parksBtn");
-  if (!button.parentElement.classList.contains("active")) {
+  if (!button.classList.contains("active")) {
     parkGeom.forEach((geom) => {
       map.removeLayer(geom);
     });
@@ -363,7 +363,7 @@ const createWashroomMarkers = () => {
 
 const toggleWashroomMarkers = () => {
   const button = document.getElementById("publicWashroomsBtn");
-  if (button.parentElement.classList.contains("active")) {
+  if (button.classList.contains("active")) {
     washroomMarkers.forEach((marker) => {
       marker.addTo(map);
     });
@@ -422,7 +422,7 @@ const createTransitLayer = () => {
 
 const toggleTransitMarkers = () => {
   const button = document.getElementById("transitBtn");
-  if (button.parentElement.classList.contains("active")) {
+  if (button.classList.contains("active")) {
     if (!transitLayer) createTransitLayer();
     transitLayer.addTo(map);
   } else {
@@ -483,7 +483,7 @@ const createCommunityCentreMarkers = () => {
  */
 const toggleCommunityCentreMarkers = () => {
   const button = document.getElementById("communityCentresBtn");
-  if (button.parentElement.classList.contains("active")) {
+  if (button.classList.contains("active")) {
     communityCentresMarkers.forEach((marker) => {
       marker.addTo(map);
     });
@@ -570,14 +570,12 @@ const toggleReportMarkers = async () => {
 
   if (!userData.loggedIn) {
     alert("You must be logged in to view and submit feedback reports");
-    button.parentElement.classList.remove("active");
-    button.parentElement.classList.remove("bg-red-800");
-    button.parentElement.classList.remove("text-white");
-    button.parentElement.classList.add("bg-white");
+    button.classList.remove("active");
+    button.classList.remove("bg-success");
     return;
   }
 
-  if (button.parentElement.classList.contains("active")) {
+  if (button.classList.contains("active")) {
     await fetchReports();
     reportMarkers.forEach((marker) => marker.addTo(map));
   } else {
@@ -631,7 +629,7 @@ async function createTreesMarkers(treesGeoCluster) {
 }
 
 async function toggleTreesMarkers() {
-  const isActive = treesBtn.parentElement.classList.contains("active");
+  const isActive = treesBtn.classList.contains("active");
   if (isActive) {
     const treesGeoCluster = await fetchTreeClusters();
     createTreesMarkers(treesGeoCluster);
@@ -656,14 +654,14 @@ const treesBtn = document.getElementById("treesBtn");
 // Event Listener: Map movement (zoom in and zoom out)
 map.on("zoomend", () => {
   // check if treesBtn is clicked:
-  const treesBtnIsToggled = treesBtn.parentElement.classList.contains("active");
+  const treesBtnIsToggled = treesBtn.classList.contains("active");
   if (treesBtnIsToggled) debouncedToggleTreeMarkers();
 });
 
 // Event Listener: Map movement (map movement)
 map.on("moveend", () => {
   // check if treesBtn is clicked:
-  const treesBtnIsToggled = treesBtn.parentElement.classList.contains("active");
+  const treesBtnIsToggled = treesBtn.classList.contains("active");
   console.log(treesBtnIsToggled);
   if (treesBtnIsToggled) debouncedToggleTreeMarkers();
 });
@@ -692,5 +690,4 @@ document
 document
   .getElementById("formReports")
   .addEventListener("click", toggleReportMarkers);
-
 fetchReports();
