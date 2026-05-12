@@ -1,3 +1,6 @@
+ 
+
+
 // Vancouver coordinates
 const bounds = [
   [49.18, -123.25],
@@ -768,6 +771,13 @@ const fetchNeighborhoods = async () => {
   createNeighborhoodGeom();
 };
 
+const getScoreColor = (score) => {
+  if (score >= 200) return "#97C459";
+  if (score >= 100) return "#F5C4B3";
+  if (score >= 50) return "#EF9F27";
+  return "#E24B4A";
+};
+
 /**
  * Create neighborhood geometry layers
  */
@@ -777,11 +787,62 @@ const createNeighborhoodGeom = () => {
   for (let i = 0; i < neighborhoodData.length; i++) {
     const neighborhood = neighborhoodData[i];
 
-    // geo shape
-    const geom = L.geoJSON(neighborhood.geom);
+    
+    // Count amenities inside this neighbourhood
+    let fountains = 0;
+    let washrooms = 0;
+    let centres = 0;
+    let transit = 0;
+    let parks = 0;
 
-    // popup name
-    geom.bindPopup(neighborhood.name);
+    fountainData.forEach(f => {
+      if (window.turf.booleanPointInPolygon([f.geo_point_2d.lon, f.geo_point_2d.lat], neighborhood.geom)) fountains++;
+    });
+
+    washroomData.forEach(w => {
+      if (window.turf.booleanPointInPolygon([w.geo_point_2d.lon, w.geo_point_2d.lat], neighborhood.geom)) washrooms++;
+    });
+
+    communityCentresData.forEach(c => {
+      if (window.turf.booleanPointInPolygon([c.geo_point_2d.lon, c.geo_point_2d.lat], neighborhood.geom)) centres++;
+    });
+
+    if (transitData) {
+      transitData.features.forEach(stop => {
+        if (window.turf.booleanPointInPolygon(stop.geometry.coordinates, neighborhood.geom)) transit++;
+      });
+    }
+
+    parkData.forEach(p => {
+      try {
+        if (p.geom) {
+          const centroid = window.turf.centroid(p.geom);
+          if (window.turf.booleanPointInPolygon(centroid.geometry.coordinates, neighborhood.geom)) parks++;
+        }
+      } catch (e) {}
+    });
+
+    // place holder will obtain formula from mongodb
+    const totalScore = fountains + washrooms + centres + transit + parks;
+
+    const geom = L.geoJSON(neighborhood.geom, {
+      style: {
+        fillColor: getScoreColor(totalScore),
+        fillOpacity: 0.4,
+        color: "#333",
+        weight: 1
+      }
+    });
+
+    geom.bindPopup(`
+      <b>${neighborhood.name}</b><br>
+      Fountains: ${fountains}<br>
+      Washrooms: ${washrooms}<br>
+      Community Centres: ${centres}<br>
+      Transit Stops: ${transit}<br>
+      Parks: ${parks}<br>
+      <b>Total Resources: ${totalScore}</b>
+    `);
 
     neighborhoodGeom.push(geom);
   }
@@ -803,9 +864,6 @@ const toggleNeighborhoodGeom = () => {
     });
   }
 };
-
-fetchNeighborhoods();
-
 
 // Event Listener: Map movement (zoom in and zoom out)
 map.on("zoomend", () => {
@@ -846,9 +904,19 @@ document
 document
   .getElementById("formReports")
   .addEventListener("click", toggleReportMarkers);
-fetchReports();
 document
   .getElementById("scoreBtn")
   .addEventListener("click", toggleNeighborhoodGeom);
-fetchNeighborhoods();
+fetchReports();
 
+// Wait for all data before fetching neighborhoods
+(async () => {
+  await Promise.all([
+    fetchParks(),
+    fetchWaterFountains(),
+    fetchPublicWashrooms(),
+    fetchTransitStops(),
+    fetchCommunityCentres(),
+  ]);
+  fetchNeighborhoods();
+})();
