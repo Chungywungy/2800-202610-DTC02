@@ -60,8 +60,8 @@ class SiteNavbar extends HTMLElement {
 
     <!-- FILTERS -->
     <section id="filterBarContainer" class="flex bg-white">
+      <!-- SCROLLABLE TOGGLE FILTER MARKERS -->
       <ul
-        <!-- SCROLLABLE TOGGLE FILTER MARKERS -->
         id="filterContainer"
         class="flex flex-1 justify-start mx-5 my-2 gap-5 lg:justify-center overflow-x-auto overflow-y-hidden"
         style="-ms-overflow-style: none; scrollbar-width: none"
