@@ -1,3 +1,5 @@
+import { map } from "../js/map.js";
+
 /**
  * Profile modal component
  * Create a <site-profile> tag to implement
@@ -23,7 +25,7 @@ class SiteProfile extends HTMLElement {
                   <th>Username</th>
                   <th>Report</th>
                   <th>Address</th>
-                  <th>Map?</th>
+                  <th>Map View</th>
                 </tr>
               </thead>
               <tbody id="reports">
@@ -100,11 +102,12 @@ async function fetchReports() {
 }
 
 /**
- * Display user reports in a table
+ * Display user reports in a table. Used Copilot to learn how to store variables in HTML elements
  */
 async function displayReports() {
   const reports = await fetchReports();
   const reportsDiv = document.getElementById("reports");
+  const profileModal = document.getElementById("profileModal");
 
   reports.forEach((report) => {
     const reportItem = document.createElement("tr");
@@ -114,10 +117,36 @@ async function displayReports() {
       <td>${report.username}</td>
       <td>${report.formText}</td>
       <td>${report.address}</td>
-      <td>${report.lat}, ${report.lng}</td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-sm" 
+          data-lat="${report.lat}"
+          data-lng="${report.lng}"
+        >
+          View
+        </button>
+      </td>
     `;
     reportsDiv.appendChild(reportItem);
   });
+
+  // Add listener on each "View" button
+  // Reads lat and lng from inline data on button element, closes profileModal, zooms to location
+  reportsDiv
+    .querySelectorAll("button[data-lat][data-lng]")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        const lat = Number(button.dataset.lat);
+        const lng = Number(button.dataset.lng);
+
+        profileModal.close();
+        map.flyTo([lat, lng], 15, {
+          animate: true,
+          duration: 1,
+        });
+      });
+    });
 }
 
 const user = await fetchUser();
@@ -135,6 +164,7 @@ document
 
 // Close profileModal is the user clicks/taps outside the modal
 document.getElementById("profileModal").addEventListener("click", (e) => {
+  const profileModal = document.getElementById("profileModal");
   if (e.target === profileModal) {
     profileModal.close();
   }
