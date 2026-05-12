@@ -145,7 +145,7 @@ router.get("/public-trees", async (req, res) => {
 
   // A request to this endpoint must include a zoom level and radius
   const zoom = Math.min(parseInt(req.query.zoom) || 13, 18); // the zoom level (fetched using map.getZoom() ), 18 is the max limit for leaflet at block-level view
-  const isStreetLevel = (zoom == 18);
+  const isStreetLevel = zoom == 18;
   const radius = isStreetLevel ? 5 : Math.max(80 - zoom * 4, 30); // the max cluster radius size: the smaller the more markers, shrinks as zoom increases, floor of 20
 
   // Bounding box - only returns results from the passed bbox (best practice: should return the map's bounds / viewport screen) default to Vancouver
@@ -222,7 +222,7 @@ router.post("/reports", async (req, res) => {
       .status(401)
       .json({ error: "You must be logged in to submit a report" });
   }
-  
+
   try {
     const { lat, lng, address, formText } = req.body;
     const newReport = new formsModel({
@@ -266,6 +266,20 @@ router.get("/reports", async (req, res) => {
     res.status(500).json({
       error: "Failed to fetch reports",
     });
+  }
+});
+
+router.get("/neighborhoods", async (req, res) => {
+  try {
+    const results = await fetch(
+      `https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/local-area-boundary/records?limit=100`,
+    );
+    const resultsJSON = await results.json();
+
+    res.json(resultsJSON);
+  } catch (error) {
+    console.log("Error fetching parks:", error);
+    res.status(500).json({ error: "Failed to fetch parks" });
   }
 });
 

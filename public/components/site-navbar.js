@@ -66,10 +66,18 @@ class SiteNavbar extends HTMLElement {
         class="flex flex-1 justify-start mx-5 my-2 gap-5 lg:justify-center overflow-x-auto overflow-y-hidden"
         style="-ms-overflow-style: none; scrollbar-width: none"
       >
-        <!-- HELP / TUTORIAL -->
-        <button class="btn btn-warning sticky left-0" id="helpBtn">
-          <span class="material-symbols-outlined"> help </span>
-        </button>
+        <!-- CONTROL CONTAINER -->
+        <div class="sticky left-0 flex gap-5 w-fit bg-white">
+          <!-- HELP / TUTORIAL -->
+          <button class="btn btn-warning" id="helpBtn">
+            <span class="material-symbols-outlined"> help </span>
+          </button>
+          <!-- NEIGHBORHOOD -->
+          <button class="btn" id="scoreBtn">
+            Score
+            <span class="material-symbols-outlined"> location_city </span>
+          </button>
+        </div>
         <!-- DIVIDER -->
         <div class="shrink-0 border-l border-slate-400"></div>
         <!-- TREES -->
@@ -102,7 +110,7 @@ class SiteNavbar extends HTMLElement {
           Water
           <span class="material-symbols-outlined"> water_drops </span>
         </button>
-         <!-- FORMS -->
+        <!-- FORMS -->
         <button class="btn" id="formReports">
           Reports
           <span class="material-symbols-outlined"> flag </span>
