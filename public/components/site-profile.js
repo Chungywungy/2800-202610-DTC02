@@ -31,22 +31,58 @@ class SiteProfile extends HTMLElement {
             </table>
           </div>
 
-          <div class="modal-action">
-            <form method="dialog">
-              <button class="btn">Close</button>
-            </form>
+          <div class="flex justify-between items-end">
+            <button class="btn bg-red-500 text-white" onclick="deleteProfileModal.showModal()">Delete Account</button>
+            <div class="modal-action">
+              <form method="dialog">
+                <button class="btn">Close</button>
+              </form>
+            </div>
           </div>
+        </div>
+      </dialog>
+
+      <dialog id="deleteProfileModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+          <h3 class="text-lg font-bold">Are you sure?</h3>
+          <p class="py-4">Account deletion cannot be undone.</p>
+
+          <form method="dialog" class="flex justify-between items-end">
+          <button id="confirmDeleteAccount" class="btn bg-red-500 text-white">Yes, delete my account</button>
+            <button class="btn">No</button>
+          </form>
         </div>
       </dialog>
     `;
   }
 }
 
+async function fetchUser() {
+  try {
+    const result = await fetch("/api/user");
+    const resultJSON = await result.json();
+    return resultJSON.user;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function deleteAccount() {
+  try {
+    const user = await fetchUser();
+    const result = await fetch(`/api/deleteAccount/${user.username}`);
+    const resultJSON = await result.json();
+
+    window.location.href = "/auth/logout";
+  } catch (error) {
+    console.error("Error deleting account", error);
+  }
+}
+
 async function fetchReports() {
   try {
     const result = await fetch("/api/reports");
-    const resultJSON = await result.json();
-    return resultJSON;
+    return await result.json();
   } catch (error) {
     console.log(error);
   }
@@ -71,4 +107,11 @@ async function displayReports() {
 }
 
 displayReports();
+
 customElements.define("site-profile", SiteProfile);
+
+document
+  .getElementById("confirmDeleteAccount")
+  .addEventListener("click", () => {
+    deleteAccount();
+  });

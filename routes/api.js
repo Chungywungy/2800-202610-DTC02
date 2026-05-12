@@ -1,6 +1,7 @@
 // import all dependencies
 const express = require("express");
 const { formsModel } = require("../mongodbAtlas");
+const { userModel } = require("../mongodbAtlas");
 
 // create instance of express (but with the .Router() method)
 const router = express.Router();
@@ -215,13 +216,26 @@ router.get("/user", (req, res) => {
   }
 });
 
+router.get("/deleteAccount/:user", async (req, res) => {
+  try {
+    const deletedAccount = await userModel.findOneAndDelete({
+      username: req.params.user,
+    });
+
+    res.json(deletedAccount);
+  } catch (error) {
+    console.log(error);
+    res.status(403).send("Error deleting account");
+  }
+});
+
 router.post("/reports", async (req, res) => {
   if (!req.session.user) {
     return res
       .status(401)
       .json({ error: "You must be logged in to submit a report" });
   }
-  
+
   try {
     const { lat, lng, address, formText } = req.body;
     const newReport = new formsModel({
