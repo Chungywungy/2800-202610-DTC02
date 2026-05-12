@@ -11,8 +11,6 @@ export const map = L.map("map", {
   maxBoundsViscosity: 1.0,
 }).fitBounds(bounds);
 
-map.doubleClickZoom.disable();
-
 // Display map
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   minZoom: 12,
@@ -27,15 +25,15 @@ map.on("click", (e) => {
   tempComponent.loadTemperature(lat, lng);
 });
 
-// for form submission, dbl click to open form and fill with location information
-map.on("dblclick", async (e) => {
+// for form submission, right click on desktop, press and hold for mobile
+map.on("contextmenu", async (e) => {
   const { lat, lng } = e.latlng;
 
   let address = "Unknown location";
 
   try {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
     );
 
     const data = await response.json();
@@ -88,7 +86,8 @@ map.on("dblclick", async (e) => {
   L.popup({
     minWidth: 260,
     maxWidth: 260,
-    autoPan: false,
+    closeOnClick: false,
+    autoClose: true,
   })
     .setLatLng(e.latlng)
     .setContent(popupContent)
@@ -132,7 +131,6 @@ window.submitReport = async function (lat, lng, address) {
     // SUCCESS
     map.closePopup();
     alert("Report submitted!");
-
   } catch (error) {
     console.log(error);
     alert("Failed to submit report");
@@ -514,7 +512,7 @@ const reportIcon = L.divIcon({
   iconAnchor: [16, 32],
 });
 
-// Display the users reports as pins on map 
+// Display the users reports as pins on map
 const fetchReports = async () => {
   reportData = [];
   try {
