@@ -301,7 +301,7 @@ const createParkGeom = async () => {
 /**
  * Toggle park geometry when the Parks button in the navbar is clicked. Used in site-navbar.js
  */
-export const toggleParkGeom = () => {
+const toggleParkGeom = () => {
   const button = document.getElementById("parksBtn");
   if (!button.classList.contains("active")) {
     parkGeom.forEach((geom) => {
@@ -313,6 +313,7 @@ export const toggleParkGeom = () => {
     });
   }
 };
+
 
 fetchParks();
 fetchWaterFountains();
@@ -741,6 +742,71 @@ const debounce = (fn, delay = 1000) => {
 const debouncedToggleTreeMarkers = debounce(toggleTreesMarkers);
 const treesBtn = document.getElementById("treesBtn");
 
+// Fetching neighborhoods
+// Raw neighborhood data from opendata.vancouver.ca
+let neighborhoodData = [];
+
+// Neighborhood geometry
+let neighborhoodGeom = [];
+
+/**
+ * Fetch raw neighborhood data from backend route
+ */
+const fetchNeighborhoods = async () => {
+  neighborhoodData = [];
+
+  try {
+    const results = await fetch("/api/neighborhoods");
+    const resultsJSON = await results.json();
+
+    // actual records array
+    neighborhoodData = resultsJSON.results;
+  } catch (error) {
+    console.log(error);
+  }
+
+  createNeighborhoodGeom();
+};
+
+/**
+ * Create neighborhood geometry layers
+ */
+const createNeighborhoodGeom = () => {
+  neighborhoodGeom = [];
+
+  for (let i = 0; i < neighborhoodData.length; i++) {
+    const neighborhood = neighborhoodData[i];
+
+    // geo shape
+    const geom = L.geoJSON(neighborhood.geom);
+
+    // popup name
+    geom.bindPopup(neighborhood.name);
+
+    neighborhoodGeom.push(geom);
+  }
+};
+
+/**
+ * Toggle neighborhood geometry on map
+ */
+const toggleNeighborhoodGeom = () => {
+  const button = document.getElementById("scoreBtn");
+
+  if (!button.classList.contains("active")) {
+    neighborhoodGeom.forEach((geom) => {
+      map.removeLayer(geom);
+    });
+  } else {
+    neighborhoodGeom.forEach((geom) => {
+      geom.addTo(map);
+    });
+  }
+};
+
+fetchNeighborhoods();
+
+
 // Event Listener: Map movement (zoom in and zoom out)
 map.on("zoomend", () => {
   // check if treesBtn is clicked:
@@ -781,3 +847,8 @@ document
   .getElementById("formReports")
   .addEventListener("click", toggleReportMarkers);
 fetchReports();
+document
+  .getElementById("scoreBtn")
+  .addEventListener("click", toggleNeighborhoodGeom);
+fetchNeighborhoods();
+
