@@ -8,6 +8,10 @@ router.get("/", (req, res) => {
   res.redirect("/home");
 });
 
+router.get("/test", (req, res) => {
+  res.sendFile("test.html", { root: "public" });
+});
+
 router.get("/home", (req, res) => {
   res.sendFile("index.html", { root: "public" });
 });

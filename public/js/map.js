@@ -601,7 +601,7 @@ async function fetchTreeClusters() {
 
   // fetch the tree clusters from our backend server
   const result = await fetch(
-    `http://localhost:5500/api/public-trees?zoom=${zoom}&bbox=${bbox}`,
+    `/api/public-trees?zoom=${zoom}&bbox=${bbox}`,
   );
   const treesGeoCluster = await result.json();
   return treesGeoCluster.results;

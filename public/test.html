@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Heat Score Formula Test</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- DAISYUI -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="p-6 max-w-md w-full bg-white rounded-xl shadow space-y-4">
+      <h2 class="text-xl font-bold">Heat Score Formula Test</h2>
+
+      <!-- WATER FOUNTAIN SETTINGS CONTAINER -->
+      <div id="waterFountainContainer" class="flex flex-col gap-1">
+        <h1>Water Fountain</h1>
+        <label class="flex w-full gap-3 items-center">
+          <input
+            id="waterFountains"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="40"
+            class="range range-info range-xs w-4/5"
+            oninput="
+              document.getElementById('waterFountainsText').value = (
+                this.value / 100
+              ).toFixed(2)
+            "
+          />
+          <input
+            type="number"
+            id="waterFountainsText"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.20"
+            class="input input-bordered w-1/5"
+            oninput="
+              this.previousElementSibling.value = Math.round(this.value * 100)
+            "
+          />
+        </label>
+      </div>
+
+      <!-- WASHROOM SETTINGS CONTAINER -->
+      <div id="washroomsContainer" class="flex flex-col gap-1">
+        <h1>Washrooms</h1>
+        <label class="flex w-full gap-3 items-center">
+          <input
+            id="washrooms"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="40"
+            class="range range-warning range-xs w-4/5"
+            oninput="
+              document.getElementById('washroomsText').value = (
+                this.value / 100
+              ).toFixed(2)
+            "
+          />
+          <input
+            type="number"
+            id="washroomsText"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.20"
+            class="input input-bordered w-1/5"
+            oninput="
+              this.previousElementSibling.value = Math.round(this.value * 100)
+            "
+          />
+        </label>
+      </div>
+
+      <!-- PARKS SETTINGS CONTAINER -->
+      <div id="parksContainer" class="flex flex-col gap-1">
+        <h1>Parks</h1>
+        <label class="flex w-full gap-3 items-center">
+          <input
+            id="parks"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="40"
+            class="range range-success range-xs w-4/5"
+            oninput="
+              document.getElementById('parksText').value = (
+                this.value / 100
+              ).toFixed(2)
+            "
+          />
+          <input
+            type="number"
+            id="parksText"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.20"
+            class="input input-bordered w-1/5"
+            oninput="
+              this.previousElementSibling.value = Math.round(this.value * 100)
+            "
+          />
+        </label>
+      </div>
+
+      <!-- COMMUNITY CENTRES SETTINGS CONTAINER -->
+      <div id="communityCentresContainer" class="flex flex-col gap-1">
+        <h1>Community Centres</h1>
+        <label class="flex w-full gap-3 items-center">
+          <input
+            id="communityCentres"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="40"
+            class="range range-secondary range-xs w-4/5"
+            oninput="
+              document.getElementById('communityCentresText').value = (
+                this.value / 100
+              ).toFixed(2)
+            "
+          />
+          <input
+            type="number"
+            id="communityCentresText"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.20"
+            class="input input-bordered w-1/5"
+            oninput="
+              this.previousElementSibling.value = Math.round(this.value * 100)
+            "
+          />
+        </label>
+      </div>
+
+      <!-- TRANSIT SETTINGS CONTAINER -->
+      <div id="communityCentresContainer" class="flex flex-col gap-1">
+        <h1>Transit</h1>
+        <label class="flex w-full gap-3 items-center">
+          <input
+            id="transit"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="40"
+            class="range range-primary range-xs w-4/5"
+            oninput="
+              document.getElementById('transitText').value = (
+                this.value / 100
+              ).toFixed(2)
+            "
+          />
+          <input
+            type="number"
+            id="transitText"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.20"
+            class="input input-bordered w-1/5"
+            oninput="
+              this.previousElementSibling.value = Math.round(this.value * 100)
+            "
+          />
+        </label>
+      </div>
+
+      <p class="font-semibold">
+        Total:
+        <span id="totalWeight">100%</span>
+      </p>
+
+      <button id="saveFormulaBtn" class="btn btn-primary w-full">
+        Save Formula
+      </button>
+
+      <button id="resetFormula" class="btn btn-primary w-full">
+        Reset Formula
+      </button>
+
+      <p id="formulaMessage" class="text-sm"></p>
+    </div>
+
+    <script>
+      const waterFountainsInput = document.getElementById("waterFountainsText");
+      const washroomsInput = document.getElementById("washroomsText");
+      const parksInput = document.getElementById("parksText");
+      const communityCentresInput = document.getElementById(
+        "communityCentresText",
+      );
+      const transitInput = document.getElementById("transitText");
+
+      const totalWeight = document.getElementById("totalWeight");
+      const formulaMessage = document.getElementById("formulaMessage");
+      const saveFormulaBtn = document.getElementById("saveFormulaBtn");
+
+      function getFormula() {
+        return {
+          waterFountains: Number(waterFountainsInput.value),
+          washrooms: Number(washroomsInput.value),
+          parks: Number(parksInput.value),
+          communityCentres: Number(communityCentresInput.value),
+          transit: Number(transitInput.value),
+        };
+      }
+
+      function updateTotal() {
+        const formula = getFormula();
+
+        const total =
+          formula.waterFountains +
+          formula.washrooms +
+          formula.parks +
+          formula.communityCentres +
+          formula.transit;
+
+        totalWeight.innerText = `${Math.round(total * 100)}%`;
+
+        if (Math.abs(total - 1) > 0.001) {
+          totalWeight.className = "text-red-500 font-bold";
+          saveFormulaBtn.disabled = true;
+          formulaMessage.innerText = "Weights must total 100%.";
+        } else {
+          totalWeight.className = "text-green-600 font-bold";
+          saveFormulaBtn.disabled = false;
+          formulaMessage.innerText = "";
+        }
+      }
+
+      waterFountains.addEventListener("input", updateTotal);
+      washrooms.addEventListener("input", updateTotal);
+      parks.addEventListener("input", updateTotal);
+      communityCentres.addEventListener("input", updateTotal);
+      transit.addEventListener("input", updateTotal);
+
+      saveFormulaBtn.addEventListener("click", async () => {
+        const formula = getFormula();
+
+        const total =
+          formula.waterFountains +
+          formula.washrooms +
+          formula.parks +
+          formula.communityCentres +
+          formula.transit;
+
+        if (Math.abs(total - 1) > 0.001) {
+          formulaMessage.innerText = "Weights must total 100%.";
+          return;
+        }
+
+        const response = await fetch("/api/updateHeatScoreFormula", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formula),
+        });
+
+        const data = await response.json();
+
+        formulaMessage.innerText = response.ok ? "Formula saved!" : data.error;
+        console.log(data);
+        updateSliders(data);
+      });
+
+      // updateTotal();
+
+      // function updateSliders(data) {
+      //   const sliders = [
+      //     "waterFountains",
+      //     "washrooms",
+      //     "parks",
+      //     "communityCentres",
+      //     "transit",
+      //   ];
+
+      //   data.formula.forEach((sliderName, sliderValue) => {
+      //     document.getElementById(`${sliderName}Text`).value = sliderValue; // changes the textbox
+      //     document.getElementById(sliderName).value = sliderValue; // changes the slider
+      //   });
+      // }
+
+async function loadFormula() {
+  const response = await fetch("/api/heatScoreFormula");
+  const data = await response.json();
+
+  console.log(data);
+
+  updateSliders(data.formula);
+}
+
+loadFormula();
+      function updateSliders(formula) {
+  Object.entries(formula).forEach(([sliderName, sliderValue]) => {
+
+    // update textbox
+    document.getElementById(`${sliderName}Text`).value =
+      sliderValue.toFixed(2);
+
+    // update slider
+    document.getElementById(sliderName).value =
+      sliderValue * 100;
+  });
+
+  updateTotal();
+}
+
+    </script>
+  </body>
+</html>
