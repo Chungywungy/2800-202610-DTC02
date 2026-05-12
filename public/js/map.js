@@ -9,10 +9,10 @@ const bounds = [
 
 // setup map boundaries, can remove this export if fetching from backend
 export const map = L.map("map", {
-  maxBounds: bounds,
+  // maxBounds: bounds,
   maxBoundsViscosity: 1.0,
   maxBoundsViscosity: 1.0,
-}).fitBounds(bounds);
+})
 
 // Display map
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -888,41 +888,51 @@ treesBtn.addEventListener("click", toggleTreesMarkers);
  * Contains: fetching data, toggling markers, creating markers
  */
 
+
+let userMarker = null;
+let userCircle = null;
+
 /**
- * Geolocation API to get user's current location and display it on the map. Also adds an accuracy circle and a center dot to indicate the user's location. If geolocation fails, logs the error to the console.
+ * Use the Geolocation API to track the user's location and display it on the map with a marker and accuracy circle. The marker and circle are updated whenever the user's position changes. If there's an error (e.g., permission denied), it logs the error message to the console.
  * Reference: MDN Web Docs (https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API/Using_the_Geolocation_API)
+ * @param {Object} position - The position object returned by the Geolocation API, containing the user's current coordinates and accuracy.
+ * @param {Object} error - The error object returned by the Geolocation API if there's an issue retrieving the user's location.
  */
-navigator.geolocation.getCurrentPosition(
+const watchId = navigator.geolocation.watchPosition(
   (position) => {
     const { latitude, longitude, accuracy } = position.coords;
+    const latlng = [latitude, longitude];
 
-    map.setView([latitude, longitude], 15);
+    if (!userMarker) {
+      // Create the marker and circle
+      map.setView(latlng, 15);
 
-    // Accuracy circle
-    L.circle([latitude, longitude], {
-      radius: accuracy,
-      color: "#4A90D9",
-      fillColor: "#4A90D9",
-      fillOpacity: 0.15
-    }).addTo(map);
+      userCircle = L.circle(latlng, {
+        radius: accuracy,
+        color: "#4A90D9",
+        fillColor: "#4A90D9",
+        fillOpacity: 0.15
+      }).addTo(map);
 
-    // Center dot
-    L.circleMarker([latitude, longitude], {
-      radius: 8,
-      color: "#fff",
-      fillColor: "#4A90D9",
-      fillOpacity: 1,
-      weight: 2
-    }).addTo(map);
+      userMarker = L.circleMarker(latlng, {
+        radius: 8,
+        color: "#fff",
+        fillColor: "#4A90D9",
+        fillOpacity: 1,
+        weight: 2
+      }).addTo(map);
+
+    } else {
+      // Update position
+      userMarker.setLatLng(latlng);
+      userCircle.setLatLng(latlng);
+      userCircle.setRadius(accuracy);
+    }
   },
   (error) => {
     console.warn("Geolocation error:", error.message);
   },
-  {
-    enableHighAccuracy: true,  // uses GPS if available
-    timeout: 10000,            // give up after 10 seconds
-    maximumAge: 0              // don't use a cached position
-  }
+  { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
 );
 
 document

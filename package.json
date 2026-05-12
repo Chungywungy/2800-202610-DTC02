@@ -15,7 +15,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "build": "cd client && npm install && npm run build",
+    "start": "cd server && node server.js"
   },
   "repository": {
     "type": "git",
