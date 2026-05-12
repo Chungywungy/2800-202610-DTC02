@@ -350,6 +350,40 @@ async function fetchTreeClusters() {
   const treesGeoCluster = await result.json();
   return treesGeoCluster.results;
 }
+function getTreeIcon(treeClusterCount) {
+  return L.divIcon({
+    className: "",
+    html: `<span class="material-symbols-outlined" style="
+      font-size: 20px;
+      color: #2d6a4f;
+      display: block;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+    ">park</span>`,
+    iconSize: [20, 20],
+    iconAnchor: [10, 20],
+    popupAnchor: [0, -22],
+  });
+}
+
+function getTreesIcon(treeClusterCount) {
+  return L.divIcon({
+    className: "",
+    html: `
+      <div class="bg-white/50 rounded-full p-4 w-fit indicator">
+        <span class="indicator-item badge badge-success">${treeClusterCount}</span>
+
+        <span
+          class="material-symbols-outlined"
+          style="font-size: 20px; color: #2d6a4f; display: block"
+          >forest</span
+        >
+      </div>
+    `,
+    iconSize: [20, 20],
+    iconAnchor: [10, 20],
+    popupAnchor: [0, -22],
+  });
+}
 
 async function createTreesMarkers(treesGeoCluster) {
   // Remove all cluster markers in the layer group
@@ -357,15 +391,16 @@ async function createTreesMarkers(treesGeoCluster) {
 
   treesGeoCluster.forEach((geoClusterData) => {
     const { lat, lon } = Object.values(geoClusterData)[0].cluster_centroid; // unpacks the data
-    const countOfTreesInCluster = geoClusterData.count;
+    const treeClusterCount = geoClusterData.count;
 
-    L.circleMarker([lat, lon], {
-      radius: 30,
-      color: "green",
-      fillColor: "#228B22",
-      fillOpacity: 0.6,
-    })
-      .bindPopup(`${countOfTreesInCluster} trees`)
+    // dynamic marker visualization based on cluster size
+    let treeMarker;
+
+    if (treeClusterCount === 1) treeMarker = getTreeIcon();
+    else treeMarker = getTreesIcon(treeClusterCount);
+
+    L.marker([lat, lon], { icon: treeMarker })
+      .bindPopup(`${treeClusterCount} trees`)
       .addTo(treeLayerGroup);
   });
 
@@ -398,14 +433,14 @@ const treesBtn = document.getElementById("treesBtn");
 // Event Listener: Map movement (zoom in and zoom out)
 map.on("zoomend", () => {
   // check if treesBtn is clicked:
-  const treesBtnIsToggled = treesBtn.parentElement.classList.contains("active");
+  const treesBtnIsToggled = treesBtn.classList.contains("active");
   if (treesBtnIsToggled) debouncedToggleTreeMarkers();
 });
 
 // Event Listener: Map movement (map movement)
 map.on("moveend", () => {
   // check if treesBtn is clicked:
-  const treesBtnIsToggled = treesBtn.parentElement.classList.contains("active");
+  const treesBtnIsToggled = treesBtn.classList.contains("active");
   console.log(treesBtnIsToggled);
   if (treesBtnIsToggled) debouncedToggleTreeMarkers();
 });
