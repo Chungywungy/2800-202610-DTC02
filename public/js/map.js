@@ -931,6 +931,7 @@ const watchId = navigator.geolocation.watchPosition(
   },
   (error) => {
     console.warn("Geolocation error:", error.message);
+    map.setView([49.2827, -123.1207], 12); // Default to Vancouver if geolocation fails
   },
   { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
 );
