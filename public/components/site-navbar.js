@@ -297,10 +297,6 @@ document.getElementById("logOutBtn").addEventListener("click", () => {
   window.location.href = "/auth/logout";
 });
 
-// document.getElementById("profileBtn").addEventListener("click", () => {
-//   window.location.href = "/profile";
-// });
-
 checkUserAuth();
 
 document.addEventListener("DOMContentLoaded", loadTutorial());
