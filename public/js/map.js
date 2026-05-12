@@ -411,7 +411,7 @@ map.on("moveend", () => {
 });
 
 // treesBtn listener: On initial click, we toggle the createTreesMarkers
-treesBtn.addEventListener("click", await debouncedToggleTreeMarkers);
+treesBtn.addEventListener("click", toggleTreesMarkers);
 
 /**
  * Trees API Integration Section (end)
