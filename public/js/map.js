@@ -9,10 +9,10 @@ const bounds = [
 
 // setup map boundaries, can remove this export if fetching from backend
 export const map = L.map("map", {
-  // maxBounds: bounds,
+  maxBounds: bounds,
   maxBoundsViscosity: 1.0,
   maxBoundsViscosity: 1.0,
-})
+}).fitBounds(bounds);
 
 // Display map
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {

@@ -4,7 +4,6 @@
 
 // import all dependencies
 const express = require("express");
-const path = require("path");
 // const mongoose = require("mongoose"); dont need
 const session = require("express-session");
 const { connectToDatabase } = require("./mongodbAtlas");
@@ -20,7 +19,7 @@ const app = express();
 // declare all middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("public", { index: false }));
 app.use(
   session({
     store: new FileStore({
@@ -33,8 +32,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true, // IMPORTANT: Change to true when deploying
-      sameSite: "lax",
+      secure: false, // IMPORTANT: Change to true when deploying
     },
   }),
 );
