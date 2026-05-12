@@ -888,6 +888,43 @@ treesBtn.addEventListener("click", toggleTreesMarkers);
  * Contains: fetching data, toggling markers, creating markers
  */
 
+/**
+ * Geolocation API to get user's current location and display it on the map. Also adds an accuracy circle and a center dot to indicate the user's location. If geolocation fails, logs the error to the console.
+ * Reference: MDN Web Docs (https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API/Using_the_Geolocation_API)
+ */
+navigator.geolocation.getCurrentPosition(
+  (position) => {
+    const { latitude, longitude, accuracy } = position.coords;
+
+    map.setView([latitude, longitude], 15);
+
+    // Accuracy circle
+    L.circle([latitude, longitude], {
+      radius: accuracy,
+      color: "#4A90D9",
+      fillColor: "#4A90D9",
+      fillOpacity: 0.15
+    }).addTo(map);
+
+    // Center dot
+    L.circleMarker([latitude, longitude], {
+      radius: 8,
+      color: "#fff",
+      fillColor: "#4A90D9",
+      fillOpacity: 1,
+      weight: 2
+    }).addTo(map);
+  },
+  (error) => {
+    console.warn("Geolocation error:", error.message);
+  },
+  {
+    enableHighAccuracy: true,  // uses GPS if available
+    timeout: 10000,            // give up after 10 seconds
+    maximumAge: 0              // don't use a cached position
+  }
+);
+
 document
   .getElementById("fountainsBtn")
   .addEventListener("click", toggleFountainMarkers);
