@@ -1,6 +1,3 @@
- 
-
-
 // Vancouver coordinates
 const bounds = [
   [49.18, -123.25],
@@ -317,7 +314,6 @@ const toggleParkGeom = () => {
   }
 };
 
-
 fetchParks();
 fetchWaterFountains();
 
@@ -388,11 +384,11 @@ const inVancouver = (lat, lng) => {
 };
 
 const fetchTransitStops = async () => {
-  console.log("Fetching transit stops...");
+  // console.log("Fetching transit stops...");
   try {
     const res = await fetch("/data/stops.geojson");
     transitData = await res.json();
-    console.log("Loaded stops:", transitData.features.length);
+    // console.log("Loaded stops:", transitData.features.length);
   } catch (error) {
     console.log("Error:", error);
   }
@@ -745,6 +741,29 @@ const debounce = (fn, delay = 1000) => {
 const debouncedToggleTreeMarkers = debounce(toggleTreesMarkers);
 const treesBtn = document.getElementById("treesBtn");
 
+// Event Listener: Map movement (zoom in and zoom out)
+map.on("zoomend", () => {
+  // check if treesBtn is clicked:
+  const treesBtnIsToggled = treesBtn.classList.contains("active");
+  if (treesBtnIsToggled) debouncedToggleTreeMarkers();
+});
+
+// Event Listener: Map movement (map movement)
+map.on("moveend", () => {
+  // check if treesBtn is clicked:
+  const treesBtnIsToggled = treesBtn.classList.contains("active");
+  console.log(treesBtnIsToggled);
+  if (treesBtnIsToggled) debouncedToggleTreeMarkers();
+});
+
+// treesBtn listener: On initial click, we toggle the createTreesMarkers
+treesBtn.addEventListener("click", toggleTreesMarkers);
+
+/**
+ * Trees API Integration Section (end)
+ * Contains: fetching data, toggling markers, creating markers
+ */
+
 // Fetching neighborhoods
 // Raw neighborhood data from opendata.vancouver.ca
 let neighborhoodData = [];
@@ -772,82 +791,187 @@ const fetchNeighborhoods = async () => {
 };
 
 const getScoreColor = (score) => {
-  if (score >= 200) return "#97C459";
-  if (score >= 100) return "#F5C4B3";
-  if (score >= 50) return "#EF9F27";
+  if (score >= 75) return "#97C459";
+  if (score >= 50) return "#F5C4B3";
+  if (score >= 25) return "#EF9F27";
   return "#E24B4A";
 };
 
+// Fetch formula from db, either default or user specified
+let heatScoreFormula = {
+  waterFountains: 0.2,
+  washrooms: 0.2,
+  parks: 0.2,
+  communityCentres: 0.2,
+  transit: 0.2,
+};
+
+const fetchHeatScoreFormula = async () => {
+  try {
+    const result = await fetch("/api/heatScoreFormula");
+    if (!result.ok) {
+      console.log("Using default formula");
+      return;
+    }
+
+    const resultJSON = await result.json();
+
+    if (resultJSON && resultJSON.formula) {
+      heatScoreFormula = resultJSON.formula;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  createNeighborhoodGeom();
+};
 /**
  * Create neighborhood geometry layers
  */
+
 const createNeighborhoodGeom = () => {
   neighborhoodGeom = [];
 
+  const neighborhoodStats = [];
+
+  // PASS 1: gather counts for every neighborhood
   for (let i = 0; i < neighborhoodData.length; i++) {
     const neighborhood = neighborhoodData[i];
 
-    
-    // Count amenities inside this neighbourhood
     let fountains = 0;
     let washrooms = 0;
     let centres = 0;
     let transit = 0;
     let parks = 0;
 
-    fountainData.forEach(f => {
-      if (window.turf.booleanPointInPolygon([f.geo_point_2d.lon, f.geo_point_2d.lat], neighborhood.geom)) fountains++;
+    fountainData.forEach((f) => {
+      if (
+        window.turf.booleanPointInPolygon(
+          [f.geo_point_2d.lon, f.geo_point_2d.lat],
+          neighborhood.geom,
+        )
+      ) {
+        fountains++;
+      }
     });
 
-    washroomData.forEach(w => {
-      if (window.turf.booleanPointInPolygon([w.geo_point_2d.lon, w.geo_point_2d.lat], neighborhood.geom)) washrooms++;
+    washroomData.forEach((w) => {
+      if (
+        window.turf.booleanPointInPolygon(
+          [w.geo_point_2d.lon, w.geo_point_2d.lat],
+          neighborhood.geom,
+        )
+      ) {
+        washrooms++;
+      }
     });
 
-    communityCentresData.forEach(c => {
-      if (window.turf.booleanPointInPolygon([c.geo_point_2d.lon, c.geo_point_2d.lat], neighborhood.geom)) centres++;
+    communityCentresData.forEach((c) => {
+      if (
+        window.turf.booleanPointInPolygon(
+          [c.geo_point_2d.lon, c.geo_point_2d.lat],
+          neighborhood.geom,
+        )
+      ) {
+        centres++;
+      }
     });
 
     if (transitData) {
-      transitData.features.forEach(stop => {
-        if (window.turf.booleanPointInPolygon(stop.geometry.coordinates, neighborhood.geom)) transit++;
+      transitData.features.forEach((stop) => {
+        if (
+          window.turf.booleanPointInPolygon(
+            stop.geometry.coordinates,
+            neighborhood.geom,
+          )
+        ) {
+          transit++;
+        }
       });
     }
 
-    parkData.forEach(p => {
+    parkData.forEach((p) => {
       try {
         if (p.geom) {
           const centroid = window.turf.centroid(p.geom);
-          if (window.turf.booleanPointInPolygon(centroid.geometry.coordinates, neighborhood.geom)) parks++;
+
+          if (
+            window.turf.booleanPointInPolygon(
+              centroid.geometry.coordinates,
+              neighborhood.geom,
+            )
+          ) {
+            parks++;
+          }
         }
       } catch (e) {}
     });
 
-    // place holder will obtain formula from mongodb
-    const totalScore = fountains + washrooms + centres + transit + parks;
+    neighborhoodStats.push({
+      neighborhood,
+      fountains,
+      washrooms,
+      centres,
+      transit,
+      parks,
+    });
+  }
 
-    const geom = L.geoJSON(neighborhood.geom, {
+  // FIND GLOBAL MAXES
+  const maxFountains = Math.max(...neighborhoodStats.map((n) => n.fountains));
+
+  const maxWashrooms = Math.max(...neighborhoodStats.map((n) => n.washrooms));
+
+  const maxCentres = Math.max(...neighborhoodStats.map((n) => n.centres));
+
+  const maxTransit = Math.max(...neighborhoodStats.map((n) => n.transit));
+
+  const maxParks = Math.max(...neighborhoodStats.map((n) => n.parks));
+
+  // PASS 2: create normalized weighted scores
+  neighborhoodStats.forEach((stats) => {
+    const fountainScore = stats.fountains / maxFountains;
+
+    const washroomScore = stats.washrooms / maxWashrooms;
+
+    const centreScore = stats.centres / maxCentres;
+
+    const parkScore = stats.parks / maxParks;
+
+    const transitScore = stats.transit / maxTransit;
+
+
+    const totalScore =
+      fountainScore * heatScoreFormula.waterFountains +
+      washroomScore * heatScoreFormula.washrooms +
+      parkScore * heatScoreFormula.parks +
+      centreScore * heatScoreFormula.communityCentres +
+      transitScore * heatScoreFormula.transit;
+
+    const geom = L.geoJSON(stats.neighborhood.geom, {
       style: {
-        fillColor: getScoreColor(totalScore),
+        fillColor: getScoreColor(totalScore * 100),
         fillOpacity: 0.4,
         color: "#333",
-        weight: 1
-      }
+        weight: 1,
+      },
     });
 
     geom.bindPopup(`
-      <b>${neighborhood.name}</b><br>
-      Fountains: ${fountains}<br>
-      Washrooms: ${washrooms}<br>
-      Community Centres: ${centres}<br>
-      Transit Stops: ${transit}<br>
-      Parks: ${parks}<br>
-      <b>Total Resources: ${totalScore}</b>
+      <b>${stats.neighborhood.name}</b><br>
+      Fountains: ${stats.fountains}<br>
+      Washrooms: ${stats.washrooms}<br>
+      Community Centres: ${stats.centres}<br>
+      Transit Stops: ${stats.transit}<br>
+      Parks: ${stats.parks}<br><br>
+
+      <b>Normalized Heat Score:</b>
+      ${(totalScore * 100).toFixed(1)}
     `);
 
     neighborhoodGeom.push(geom);
-  }
+  });
 };
-
 /**
  * Toggle neighborhood geometry on map
  */
@@ -864,29 +988,6 @@ const toggleNeighborhoodGeom = () => {
     });
   }
 };
-
-// Event Listener: Map movement (zoom in and zoom out)
-map.on("zoomend", () => {
-  // check if treesBtn is clicked:
-  const treesBtnIsToggled = treesBtn.classList.contains("active");
-  if (treesBtnIsToggled) debouncedToggleTreeMarkers();
-});
-
-// Event Listener: Map movement (map movement)
-map.on("moveend", () => {
-  // check if treesBtn is clicked:
-  const treesBtnIsToggled = treesBtn.classList.contains("active");
-  console.log(treesBtnIsToggled);
-  if (treesBtnIsToggled) debouncedToggleTreeMarkers();
-});
-
-// treesBtn listener: On initial click, we toggle the createTreesMarkers
-treesBtn.addEventListener("click", toggleTreesMarkers);
-
-/**
- * Trees API Integration Section (end)
- * Contains: fetching data, toggling markers, creating markers
- */
 
 document
   .getElementById("fountainsBtn")
@@ -910,7 +1011,7 @@ document
 fetchReports();
 
 // Wait for all data before fetching neighborhoods
-(async () => {
+async function fetchAll() {
   await Promise.all([
     fetchParks(),
     fetchWaterFountains(),
@@ -918,5 +1019,7 @@ fetchReports();
     fetchTransitStops(),
     fetchCommunityCentres(),
   ]);
-  fetchNeighborhoods();
-})();
+  await fetchNeighborhoods();
+}
+
+fetchAll();

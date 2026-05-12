@@ -1,6 +1,7 @@
 // import all dependencies
 const express = require("express");
-const { formsModel } = require("../mongodbAtlas");
+const { formsModel, formulaModel } = require("../mongodbAtlas");
+
 
 // create instance of express (but with the .Router() method)
 const router = express.Router();
@@ -282,5 +283,25 @@ router.get("/neighborhoods", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch parks" });
   }
 });
+
+router.get("/heatScoreFormula", async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json();
+  }
+
+  try {
+    let formula;
+      formula = await formulaModel.findOne({
+        username: req.session.user.username,
+      });
+    res.json(formula);
+  } catch (error) {
+    console.log("Error fetching formula:", error);
+    res.status(500).json({
+      error: "Failed to fetch formula",
+    });
+  }
+});
+
 
 module.exports = router;

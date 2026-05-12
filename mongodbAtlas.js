@@ -24,6 +24,19 @@ const formSchema = new mongoose.Schema({
 
 const formsModel = mongoose.model(`forms`, formSchema);
 
+const formulaSchema = new mongoose.Schema({
+  username: String,
+  formula: {
+    waterFountains: Number,
+    washrooms: Number,
+    parks: Number,
+    communityCentres: Number,
+    transit: Number,
+  },
+});
+
+const formulaModel = mongoose.model(`formula`, formulaSchema);
+
 async function connectToDatabase() {
   try {
     await mongoose.connect(process.env.MONGODB_URI, { dbName: "test" });
@@ -33,4 +46,4 @@ async function connectToDatabase() {
   }
 }
 
-module.exports = { connectToDatabase, userModel, formsModel };
+module.exports = { connectToDatabase, userModel, formsModel, formulaModel };
