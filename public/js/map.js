@@ -455,7 +455,7 @@ async function createTreesMarkers(treesGeoCluster) {
     else treeMarker = getTreesIcon(treeClusterCount);
 
     L.marker([lat, lon], { icon: treeMarker })
-      .bindPopup(`${treeClusterCount} ${treeClusterCount}`)
+      .bindPopup(`${treeClusterCount} trees`)
       .addTo(treeLayerGroup);
   });
 
