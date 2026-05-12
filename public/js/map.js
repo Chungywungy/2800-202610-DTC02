@@ -81,7 +81,7 @@ const createFountainMarkers = () => {
 
 export const toggleFountainMarkers = () => {
   const button = document.getElementById("fountainsBtn");
-  if (!button.parentElement.classList.contains("active")) {
+  if (!button.classList.contains("active")) {
     fountainMarkers.forEach((marker) => {
       map.removeLayer(marker);
     });
@@ -135,7 +135,7 @@ const createParkGeom = async () => {
  */
 export const toggleParkGeom = () => {
   const button = document.getElementById("parksBtn");
-  if (!button.parentElement.classList.contains("active")) {
+  if (!button.classList.contains("active")) {
     parkGeom.forEach((geom) => {
       map.removeLayer(geom);
     });
@@ -195,7 +195,7 @@ const createWashroomMarkers = () => {
 
 const toggleWashroomMarkers = () => {
   const button = document.getElementById("publicWashroomsBtn");
-  if (button.parentElement.classList.contains("active")) {
+  if (button.classList.contains("active")) {
     washroomMarkers.forEach((marker) => {
       marker.addTo(map);
     });
@@ -254,7 +254,7 @@ const createTransitLayer = () => {
 
 const toggleTransitMarkers = () => {
   const button = document.getElementById("transitBtn");
-  if (button.parentElement.classList.contains("active")) {
+  if (button.classList.contains("active")) {
     if (!transitLayer) createTransitLayer();
     transitLayer.addTo(map);
   } else {
@@ -315,7 +315,7 @@ const createCommunityCentreMarkers = () => {
  */
 const toggleCommunityCentreMarkers = () => {
   const button = document.getElementById("communityCentresBtn");
-  if (button.parentElement.classList.contains("active")) {
+  if (button.classList.contains("active")) {
     communityCentresMarkers.forEach((marker) => {
       marker.addTo(map);
     });
@@ -373,7 +373,7 @@ async function createTreesMarkers(treesGeoCluster) {
 }
 
 async function toggleTreesMarkers() {
-  const isActive = treesBtn.parentElement.classList.contains("active");
+  const isActive = treesBtn.classList.contains("active");
   if (isActive) {
     const treesGeoCluster = await fetchTreeClusters();
     createTreesMarkers(treesGeoCluster);
@@ -431,4 +431,3 @@ document
 document
   .getElementById("transitBtn")
   .addEventListener("click", toggleTransitMarkers);
-
