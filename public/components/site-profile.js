@@ -11,8 +11,8 @@ class SiteProfile extends HTMLElement {
 
   createProfileModal() {
     this.innerHTML = `
-      <dialog id="profileModal" class="modal">
-        <div class="modal-box">
+      <dialog id="profileModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box w-11/12 max-w-5xl">
           <h3 class="text-lg font-bold">Hello!</h3>
           <p class="py-4">Press ESC key or click the button below to close</p>
           <div class="modal-action">

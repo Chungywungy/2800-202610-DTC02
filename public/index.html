@@ -30,23 +30,22 @@
       src="https://unpkg.com/leaflet-shadow-simulator/dist/leaflet-shadow-simulator.umd.min.js"
       defer
     ></script>
-    <!-- components -->
-    <script
-      type="module"
-      src="./components/temperature-container.js"
-      defer
-    ></script>
     <!-- Buildings -->
     <script src="https://unpkg.com/osmtogeojson/osmtogeojson.js" defer></script>
     <!-- components -->
     <script type="module" src="./components/site-navbar.js" defer></script>
     <script type="module" src="js/map.js" defer></script>
+    <script
+      type="module"
+      src="./components/temperature-container.js"
+      defer
+    ></script>
+    <script type="module" src="./components/site-profile.js" defer></script>
     <link rel="stylesheet" href="./css/index.css" />
   </head>
   <body>
-    <site-navbar>
-      <site-profile></site-profile>
-    </site-navbar>
+    <site-navbar></site-navbar>
+    <site-profile></site-profile>
 
     <div id="map" class="h-screen w-screen relative">
       <!-- TEMPERATURE COMPONENT -->
