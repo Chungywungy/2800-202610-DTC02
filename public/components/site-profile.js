@@ -13,7 +13,7 @@ class SiteProfile extends HTMLElement {
     this.innerHTML = `
       <dialog id="profileModal" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box w-11/12 max-w-5xl">
-          <h3 class="text-lg font-bold">Hello!</h3>
+          <h3 class="text-lg font-bold">Hello ${user.username}!</h3>
           <p class="py-4">Press ESC key or click the button below to close</p>
 
           <div class="overflow-x-auto">
@@ -57,6 +57,10 @@ class SiteProfile extends HTMLElement {
   }
 }
 
+/**
+ * Fetch the user account details
+ * @returns user account details JSON
+ */
 async function fetchUser() {
   try {
     const result = await fetch("/api/user");
@@ -67,10 +71,13 @@ async function fetchUser() {
   }
 }
 
-async function deleteAccount() {
+/**
+ * Delete user account
+ * @param {*} username current session's username
+ */
+async function deleteAccount(username) {
   try {
-    const user = await fetchUser();
-    const result = await fetch(`/api/deleteAccount/${user.username}`);
+    const result = await fetch(`/api/deleteAccount/${username}`);
     const resultJSON = await result.json();
 
     window.location.href = "/auth/logout";
@@ -79,6 +86,10 @@ async function deleteAccount() {
   }
 }
 
+/**
+ * Fetch user reports from the backend
+ * @returns user reports JSON
+ */
 async function fetchReports() {
   try {
     const result = await fetch("/api/reports");
@@ -88,6 +99,9 @@ async function fetchReports() {
   }
 }
 
+/**
+ * Display user reports in a table
+ */
 async function displayReports() {
   const reports = await fetchReports();
   const reportsDiv = document.getElementById("reports");
@@ -106,12 +120,22 @@ async function displayReports() {
   });
 }
 
+const user = await fetchUser();
+
 displayReports();
 
 customElements.define("site-profile", SiteProfile);
 
+// If user clicks/taps "Yes, delete my account", delete account
 document
   .getElementById("confirmDeleteAccount")
   .addEventListener("click", () => {
-    deleteAccount();
+    deleteAccount(user.username);
   });
+
+// Close profileModal is the user clicks/taps outside the modal
+document.getElementById("profileModal").addEventListener("click", (e) => {
+  if (e.target === profileModal) {
+    profileModal.close();
+  }
+});
