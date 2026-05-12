@@ -350,6 +350,16 @@ async function fetchTreeClusters() {
   const treesGeoCluster = await result.json();
   return treesGeoCluster.results;
 }
+
+function getClusterColor(treeClusterCount) {
+  if (treeClusterCount >= 1000) return "#1b4332";
+  if (treeClusterCount >= 500) return "#2d6a4f";
+  if (treeClusterCount >= 100) return "#40916c";
+  if (treeClusterCount >= 50) return "#52b788";
+  if (treeClusterCount >= 10) return "#74c69d";
+  return "#95d5b2";
+}
+
 function getTreeIcon(treeClusterCount) {
   const size = 40;
   return L.divIcon({
@@ -420,7 +430,7 @@ function getTreesIcon(treeClusterCount) {
   return L.divIcon({
     className: "",
     html: `
-      <div class="bg-white/50 rounded-full p-4 w-fit indicator">
+      <div class="text-white bg-[${getClusterColor(treeClusterCount)}]/90 rounded-full p-4 w-fit indicator">
         ${treeClusterCount}
       </div>
     `,
@@ -445,7 +455,7 @@ async function createTreesMarkers(treesGeoCluster) {
     else treeMarker = getTreesIcon(treeClusterCount);
 
     L.marker([lat, lon], { icon: treeMarker })
-      .bindPopup(`${treeClusterCount} trees`)
+      .bindPopup(`${treeClusterCount} ${treeClusterCount}`)
       .addTo(treeLayerGroup);
   });
 

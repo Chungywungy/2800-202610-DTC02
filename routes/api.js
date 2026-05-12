@@ -143,8 +143,9 @@ router.get("/public-trees", async (req, res) => {
   ];
 
   // A request to this endpoint must include a zoom level and radius
-  const zoom = Math.min(parseInt(req.query.zoom) || 13, 16); // the zoom level (fetched using map.getZoom() ), cap at 16
-  const radius = Math.max(80 - zoom * 4, 20); // the max cluster radius size: the smaller the more markers, shrinks as zoom increases, floor of 20
+  const zoom = Math.min(parseInt(req.query.zoom) || 13, 18); // the zoom level (fetched using map.getZoom() ), 18 is the max limit for leaflet at block-level view
+  const isStreetLevel = (zoom == 18);
+  const radius = isStreetLevel ? 5 : Math.max(80 - zoom * 4, 30); // the max cluster radius size: the smaller the more markers, shrinks as zoom increases, floor of 20
 
   // Bounding box - only returns results from the passed bbox (best practice: should return the map's bounds / viewport screen) default to Vancouver
   const bbox = req.query.bbox || "49.20,-123.22,49.36,-122.98";
