@@ -1,5 +1,7 @@
 // import all dependencies
 const express = require("express");
+const { formsModel, formulaModel } = require("../mongodbAtlas");
+
 
 // create instance of express (but with the .Router() method)
 const router = express.Router();
@@ -148,8 +150,9 @@ router.get("/public-trees", async (req, res) => {
   ];
 
   // A request to this endpoint must include a zoom level and radius
-  const zoom = Math.min(parseInt(req.query.zoom) || 13, 16); // the zoom level (fetched using map.getZoom() ), cap at 16
-  const radius = Math.max(80 - zoom * 4, 20); // the max cluster radius size: the smaller the more markers, shrinks as zoom increases, floor of 20
+  const zoom = Math.min(parseInt(req.query.zoom) || 13, 18); // the zoom level (fetched using map.getZoom() ), 18 is the max limit for leaflet at block-level view
+  const isStreetLevel = zoom == 18;
+  const radius = isStreetLevel ? 5 : Math.max(80 - zoom * 4, 30); // the max cluster radius size: the smaller the more markers, shrinks as zoom increases, floor of 20
 
   // Bounding box - only returns results from the passed bbox (best practice: should return the map's bounds / viewport screen) default to Vancouver
   const bbox = req.query.bbox || "49.20,-123.22,49.36,-122.98";
@@ -218,5 +221,92 @@ router.get("/user", (req, res) => {
     res.json({ loggedIn: false });
   }
 });
+
+router.post("/reports", async (req, res) => {
+  if (!req.session.user) {
+    return res
+      .status(401)
+      .json({ error: "You must be logged in to submit a report" });
+  }
+
+  try {
+    const { lat, lng, address, formText } = req.body;
+    const newReport = new formsModel({
+      username: req.session.user.username,
+      lat,
+      lng,
+      address,
+      formText,
+    });
+    await newReport.save();
+    res.json({ success: true });
+  } catch (error) {
+    console.log("Error saving report:", error);
+    res.status(500).json({ error: "Failed to save report" });
+  }
+});
+
+router.get("/reports", async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({
+      error: "You must be logged in to view reports",
+    });
+  }
+
+  try {
+    let reports;
+
+    if (req.session.user.role === "planner") {
+      // planners/admins see all reports
+      reports = await formsModel.find({});
+    } else {
+      // regular users only see their own reports
+      reports = await formsModel.find({
+        username: req.session.user.username,
+      });
+    }
+
+    res.json(reports);
+  } catch (error) {
+    console.log("Error fetching reports:", error);
+    res.status(500).json({
+      error: "Failed to fetch reports",
+    });
+  }
+});
+
+router.get("/neighborhoods", async (req, res) => {
+  try {
+    const results = await fetch(
+      `https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/local-area-boundary/records?limit=100`,
+    );
+    const resultsJSON = await results.json();
+
+    res.json(resultsJSON);
+  } catch (error) {
+    console.log("Error fetching parks:", error);
+    res.status(500).json({ error: "Failed to fetch parks" });
+  }
+});
+
+router.get("/heatScoreFormula", async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json();
+  }
+
+  try {
+    let formula;
+      formula = await formulaModel.findOne({
+        username: req.session.user.username,
+      });
+    res.json(formula);
+  } catch (error) {
+    console.log("Error fetching formula:", error);
+    res.status(500).json({
+      error: "Failed to fetch formula",
+    });
+  }
+});
+
 
 module.exports = router;

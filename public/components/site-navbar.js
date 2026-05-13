@@ -11,60 +11,113 @@ class SiteNavbar extends HTMLElement {
 
   createNavbar() {
     this.innerHTML = `
-    <nav id="navContainers" class="absolute z-2000 flex w-full bg-slate-500">
-      <div
-        id="navContainer"
-        class="flex w-full justify-start md:justify-center mx-4"
-      >
-        <!-- SCROLLABLE TOGGLE FILTER MARKERS -->
-        <ul class="flex px-4 py-5 gap-3 overflow-x-scroll flex-1">
-          <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
-            <button id="treesBtn">Trees</button>
-          </li>
-          <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
-            <button id="parksBtn">Parks</button>
-          </li>
-          <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
-            <button id="communityCentresBtn">Community Centres</button>
-          </li>
-          <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
-            <button id="publicWashroomsBtn">Public Washrooms</button>
-          </li>
-          <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
-            <button id="transitBtn">Transit</button>
-          </li>
-          <li class="shrink-0 bg-white p-2 rounded-lg duration-50">
-            <button id="fountainsBtn">Water Fountains</button>
-          </li>
-          <li
-            class="animate-pulse bg-blue-600 text-white p-2 rounded-lg duration-50"
+  <nav id="navContainer" class="absolute z-2000 flex flex-col w-full">
+    <section id="navbarContainer">
+      <div class="navbar bg-base-100 shadow-sm">
+        <div class="flex-1">
+          <!-- PROJECT TITLE -->
+          <a class="btn btn-ghost text-xl">
+            <!-- PROJECT LOGO -->
+            <span class="material-symbols-outlined"> beach_access </span> find
+            your cool</a
           >
-            <button
-              id="helpBtn"
-              data-modal-target="filterModal"
-              data-modal-toggle="default-modal"
-              class="px-4 font-bold"
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <!-- SEARCH BAR -->
+          <input
+            type="text"
+            placeholder="Search"
+            class="input input-bordered w-24 md:w-auto"
+          />
+          <!-- AVATAR DROPDOWN -->
+          <div class="dropdown dropdown-end">
+            <div
+              tabindex="0"
+              role="button"
+              class="btn btn-ghost btn-circle avatar"
             >
-              ?
-            </button>
-          </li>
-        </ul>
-        <!-- LOGIN/LOGOUT CONTAINER -->
-        <ul id="authControlContainer" class="shrink-0 flex px-4 py-5">
-          <button
-            id="logInBtn"
-            class="bg-blue-600 text-white p-2 px-4 rounded-lg cursor-pointer"
-          >
-            Login
-          </button>
-          <button
-            id="logOutBtn"
-            class="hidden bg-blue-600 text-white p-2 px-4 rounded-lg cursor-pointer"
-          >
-            Logout
-          </button>
-        </ul>
+              <div class="w-10 rounded-full">
+                <!-- IMAGES -->
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src="https://preview.redd.it/serious-cat-meme-unedited-version-from-2003-found-by-v0-90prc33ob1ze1.jpeg?width=2560&format=pjpg&auto=webp&s=69718ad34727ec7c70e26b28fedf38886cee7b3e"
+                />
+              </div>
+            </div>
+            <ul
+              tabindex="-1"
+              class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shrink-0 shadow"
+            >
+              <li><a>Profile</a></li>
+              <li><a>Settings</a></li>
+              <li><button id="logInBtn">Login</button></li>
+              <li><button id="logOutBtn" class="hidden">Logout</button></li>
+            </ul>
+          </div>
+        </div>
       </div>
+    </section>
+
+    <!-- FILTERS -->
+    <section id="filterBarContainer" class="flex bg-white">
+      <!-- SCROLLABLE TOGGLE FILTER MARKERS -->
+      <ul
+        id="filterContainer"
+        class="flex flex-1 justify-start mx-5 my-2 gap-5 lg:justify-center overflow-x-auto overflow-y-hidden"
+        style="-ms-overflow-style: none; scrollbar-width: none"
+      >
+        <!-- CONTROL CONTAINER -->
+        <div class="sticky left-0 flex gap-5 w-fit bg-white">
+          <!-- HELP / TUTORIAL -->
+          <button class="btn btn-warning" id="helpBtn">
+            <span class="material-symbols-outlined"> help </span>
+          </button>
+          <!-- NEIGHBORHOOD -->
+          <button class="btn" id="scoreBtn">
+            Score
+            <span class="material-symbols-outlined"> location_city </span>
+          </button>
+        </div>
+        <!-- DIVIDER -->
+        <div class="shrink-0 border-l border-slate-400"></div>
+        <!-- TREES -->
+        <button class="btn" id="treesBtn">
+          Trees
+          <span class="material-symbols-outlined"> park </span>
+        </button>
+        <!-- PARKS -->
+        <button class="btn" id="parksBtn">
+          Parks
+          <span class="material-symbols-outlined"> playground </span>
+        </button>
+        <!-- COMMUNITY CENTRES -->
+        <button class="btn" id="communityCentresBtn">
+          Community Centres
+          <span class="material-symbols-outlined"> family_group </span>
+        </button>
+        <!-- WASHROOMS -->
+        <button class="btn" id="publicWashroomsBtn">
+          Washrooms
+          <span class="material-symbols-outlined"> wc </span>
+        </button>
+        <!-- TRANSIT -->
+        <button class="btn" id="transitBtn">
+          Transit
+          <span class="material-symbols-outlined"> bus_map_pin </span>
+        </button>
+        <!-- WATER -->
+        <button class="btn" id="fountainsBtn">
+          Water
+          <span class="material-symbols-outlined"> water_drops </span>
+        </button>
+        <!-- FORMS -->
+        <button class="btn" id="formReports">
+          Reports
+          <span class="material-symbols-outlined"> flag </span>
+        </button>
+
+      </ul>
+    </section>
 
       <!-- Filter Help Modal -->
 
@@ -159,10 +212,8 @@ document.querySelectorAll("#navContainer button").forEach((btn) => {
   btn.addEventListener("click", () => {
     if (btn.id === "helpBtn" || btn.id === "logInBtn" || btn.id === "logOutBtn")
       return;
-    btn.parentElement.classList.toggle("bg-red-800");
-    btn.parentElement.classList.toggle("bg-white");
-    btn.parentElement.classList.toggle("text-white");
-    btn.parentElement.classList.toggle("active");
+    btn.classList.toggle("bg-success");
+    btn.classList.toggle("active");
   });
 });
 
