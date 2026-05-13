@@ -600,9 +600,7 @@ async function fetchTreeClusters() {
   ]; // normalize the bounds into a format that the API accepts
 
   // fetch the tree clusters from our backend server
-  const result = await fetch(
-    `/api/public-trees?zoom=${zoom}&bbox=${bbox}`,
-  );
+  const result = await fetch(`/api/public-trees?zoom=${zoom}&bbox=${bbox}`);
   const treesGeoCluster = await result.json();
   return treesGeoCluster.results;
 }
@@ -790,12 +788,12 @@ const fetchNeighborhoods = async () => {
   createNeighborhoodGeom();
 };
 
-const getScoreColor = (score) => {
-  if (score >= 75) return "#97C459";
-  if (score >= 50) return "#F5C4B3";
-  if (score >= 25) return "#EF9F27";
-  return "#E24B4A";
-};
+// const getScoreColor = (score) => {
+//   if (score >= 75) return "#97C459";
+//   if (score >= 50) return "#F5C4B3";
+//   if (score >= 25) return "#EF9F27";
+//   return "#E24B4A";
+// };
 
 // Fetch formula from db, either default or user specified
 let heatScoreFormula = {
@@ -822,8 +820,6 @@ const fetchHeatScoreFormula = async () => {
   } catch (error) {
     console.log(error);
   }
-
-  createNeighborhoodGeom();
 };
 /**
  * Create neighborhood geometry layers
@@ -928,8 +924,8 @@ const createNeighborhoodGeom = () => {
 
   const maxParks = Math.max(...neighborhoodStats.map((n) => n.parks));
 
-  // PASS 2: create normalized weighted scores
-  neighborhoodStats.forEach((stats) => {
+  // PASS 2: calculate all scores first
+  const scoredNeighborhoods = neighborhoodStats.map((stats) => {
     const fountainScore = stats.fountains / maxFountains;
 
     const washroomScore = stats.washrooms / maxWashrooms;
@@ -940,7 +936,6 @@ const createNeighborhoodGeom = () => {
 
     const transitScore = stats.transit / maxTransit;
 
-
     const totalScore =
       fountainScore * heatScoreFormula.waterFountains +
       washroomScore * heatScoreFormula.washrooms +
@@ -948,9 +943,32 @@ const createNeighborhoodGeom = () => {
       centreScore * heatScoreFormula.communityCentres +
       transitScore * heatScoreFormula.transit;
 
+    return {
+      ...stats,
+      totalScore,
+    };
+  });
+
+  // sort highest to lowest
+  scoredNeighborhoods.sort((a, b) => b.totalScore - a.totalScore);
+
+  // create polygons with ranked colors
+  scoredNeighborhoods.forEach((stats, index) => {
+    let fillColor;
+
+    if (index < 5) {
+      fillColor = "#97C459"; // green
+    } else if (index < 10) {
+      fillColor = "#F5E663"; // yellow
+    } else if (index < 15) {
+      fillColor = "#EF9F27"; // orange
+    } else {
+      fillColor = "#E24B4A"; // red
+    }
+
     const geom = L.geoJSON(stats.neighborhood.geom, {
       style: {
-        fillColor: getScoreColor(totalScore * 100),
+        fillColor: fillColor,
         fillOpacity: 0.4,
         color: "#333",
         weight: 1,
@@ -958,16 +976,18 @@ const createNeighborhoodGeom = () => {
     });
 
     geom.bindPopup(`
-      <b>${stats.neighborhood.name}</b><br>
-      Fountains: ${stats.fountains}<br>
-      Washrooms: ${stats.washrooms}<br>
-      Community Centres: ${stats.centres}<br>
-      Transit Stops: ${stats.transit}<br>
-      Parks: ${stats.parks}<br><br>
+    <b>${stats.neighborhood.name}</b><br>
+    Rank: ${index + 1}<br><br>
 
-      <b>Normalized Heat Score:</b>
-      ${(totalScore * 100).toFixed(1)}
-    `);
+    Fountains: ${stats.fountains}<br>
+    Washrooms: ${stats.washrooms}<br>
+    Community Centres: ${stats.centres}<br>
+    Transit Stops: ${stats.transit}<br>
+    Parks: ${stats.parks}<br><br>
+
+    <b>Normalized Heat Score:</b>
+    ${(stats.totalScore * 100).toFixed(1)}
+  `);
 
     neighborhoodGeom.push(geom);
   });
@@ -1018,7 +1038,9 @@ async function fetchAll() {
     fetchPublicWashrooms(),
     fetchTransitStops(),
     fetchCommunityCentres(),
+    fetchHeatScoreFormula(),
   ]);
+
   await fetchNeighborhoods();
 }
 

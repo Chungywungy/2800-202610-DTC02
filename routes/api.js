@@ -303,5 +303,36 @@ router.get("/heatScoreFormula", async (req, res) => {
   }
 });
 
+router.post("/updateHeatScoreFormula", async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(401).json({ error: "You must be logged in." });
+    }
+
+    const username = req.session.user.username;
+
+    const updatedFormula = await formulaModel.findOneAndUpdate(
+      { username: username },
+      {
+        username: username,
+        formula: {
+          waterFountains: req.body.waterFountains,
+          washrooms: req.body.washrooms,
+          parks: req.body.parks,
+          communityCentres: req.body.communityCentres,
+          transit: req.body.transit,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+
+    res.json(updatedFormula);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Could not save formula." });
+  }
+});
 
 module.exports = router;
