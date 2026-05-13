@@ -1,8 +1,6 @@
 // import all dependencies
 const express = require("express");
-const { formsModel } = require("../mongodbAtlas");
-const { userModel } = require("../mongodbAtlas");
-const { formsModel, formulaModel } = require("../mongodbAtlas");
+const { formsModel, userModel, formulaModel } = require("../mongodbAtlas");
 
 const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-4-6";
