@@ -237,10 +237,7 @@ const createFountainMarkers = () => {
     let lonValue = result.geo_point_2d["lon"];
     let latValue = result.geo_point_2d["lat"];
     const marker = L.marker([latValue, lonValue], { icon: fountainIcon });
-    let fountainInfo = result.name.replace(
-      "Fountain location:\n",
-      "Water Fountain: ",
-    );
+    let fountainInfo = `<b>${result.name}</b><br><button onclick="routeTo(${latValue}, ${lonValue})" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>`;
     marker.bindPopup(fountainInfo);
     fountainMarkers.push(marker);
   }
@@ -292,7 +289,14 @@ const createParkGeom = async () => {
   for (let i = 0; i < parkData.length; i++) {
     const park = parkData[i];
     const geom = L.geoJSON(park.geom);
-    geom.bindPopup(park.park_name);
+
+    // Get the center of the park boundary for routing
+    const center = geom.getBounds().getCenter();
+
+    geom.bindPopup(`
+      ${park.park_name}<br><br>
+      <button onclick="routeTo(${center.lat}, ${center.lng})" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>
+    `);
     parkGeom.push(geom);
   }
 };
@@ -354,7 +358,7 @@ const createWashroomMarkers = () => {
     let lonValue = result.geo_point_2d["lon"];
     let latValue = result.geo_point_2d["lat"];
     const marker = L.marker([latValue, lonValue], { icon: washroomIcon });
-    let washroomInfo = `<b>${result.park_name}</b><br>${result.type}<br>Summer: ${result.summer_hours}<br>Wheelchair: ${result.wheelchair_access}`;
+    let washroomInfo = `<b>${result.park_name}</b><br>${result.type}<br>Summer: ${result.summer_hours}<br>Wheelchair: ${result.wheelchair_access}<br><button onclick="routeTo(${latValue}, ${lonValue})" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>`;
     marker.bindPopup(washroomInfo);
     washroomMarkers.push(marker);
   }
@@ -410,10 +414,13 @@ const createTransitLayer = () => {
     },
     onEachFeature: (feature, layer) => {
       const p = feature.properties;
+      const [lng, lat] = feature.geometry.coordinates;
+
       layer.bindPopup(`
         <b>${p.name}</b><br>
         Stop code: ${p.code}<br>
-        Wheelchair: ${p.wheelchair_boarding === "1" ? "Yes" : "No"}
+        Wheelchair: ${p.wheelchair_boarding === "1" ? "Yes" : "No"}<br><br>
+        <button onclick="routeTo(${lat}, ${lng}, 'transit')" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>
       `);
     },
   });
@@ -468,10 +475,9 @@ const createCommunityCentreMarkers = () => {
     let lonValue = result.geo_point_2d["lon"];
     let latValue = result.geo_point_2d["lat"];
     const marker = L.marker([latValue, lonValue], { icon: centreIcon });
-    let centreInfo = result.name.replace(
-      "Community Centre location:\n",
-      "Community Centre: ",
-    );
+    let centreInfo = `Location: <b>${result.name}</b><br>
+      <br><button onclick="routeTo(${latValue}, ${lonValue})" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>`;
+
     marker.bindPopup(centreInfo);
     communityCentresMarkers.push(marker);
   }
@@ -1169,6 +1175,7 @@ const createNeighborhoodGeom = () => {
   for (let i = 0; i < neighborhoodData.length; i++) {
     const neighborhood = neighborhoodData[i];
 
+    // Count amenities inside this neighbourhood
     let fountains = 0;
     let washrooms = 0;
     let centres = 0;
@@ -1181,6 +1188,8 @@ const createNeighborhoodGeom = () => {
           [f.geo_point_2d.lon, f.geo_point_2d.lat],
           neighborhood.geom,
         )
+      )
+        fountains++;
       ) {
         fountains++;
       }
@@ -1192,6 +1201,8 @@ const createNeighborhoodGeom = () => {
           [w.geo_point_2d.lon, w.geo_point_2d.lat],
           neighborhood.geom,
         )
+      )
+        washrooms++;
       ) {
         washrooms++;
       }
@@ -1203,6 +1214,8 @@ const createNeighborhoodGeom = () => {
           [c.geo_point_2d.lon, c.geo_point_2d.lat],
           neighborhood.geom,
         )
+      )
+        centres++;
       ) {
         centres++;
       }
@@ -1215,6 +1228,8 @@ const createNeighborhoodGeom = () => {
             stop.geometry.coordinates,
             neighborhood.geom,
           )
+        )
+          transit++;
         ) {
           transit++;
         }
@@ -1231,6 +1246,8 @@ const createNeighborhoodGeom = () => {
               centroid.geometry.coordinates,
               neighborhood.geom,
             )
+          )
+            parks++;
           ) {
             parks++;
           }
@@ -1317,6 +1334,116 @@ const toggleNeighborhoodGeom = () => {
       geom.addTo(map);
     });
   }
+};
+
+// Event Listener: Map movement (zoom in and zoom out)
+map.on("zoomend", () => {
+  // check if treesBtn is clicked:
+  const treesBtnIsToggled = treesBtn.classList.contains("active");
+  if (treesBtnIsToggled) debouncedToggleTreeMarkers();
+});
+
+// Event Listener: Map movement (map movement)
+map.on("moveend", () => {
+  // check if treesBtn is clicked:
+  const treesBtnIsToggled = treesBtn.classList.contains("active");
+  console.log(treesBtnIsToggled);
+  if (treesBtnIsToggled) debouncedToggleTreeMarkers();
+});
+
+// treesBtn listener: On initial click, we toggle the createTreesMarkers
+treesBtn.addEventListener("click", toggleTreesMarkers);
+
+/**
+ * Trees API Integration Section (end)
+ * Contains: fetching data, toggling markers, creating markers
+ */
+
+let userMarker = null; // global variable to hold the user's location marker
+let userCircle = null; // global variable to hold the user's location accuracy circle
+
+/**
+ * Use the Geolocation API to track the user's location and display it on the map with a marker and accuracy circle. The marker and circle are updated whenever the user's position changes. If there's an error (e.g., permission denied), it logs the error message to the console.
+ * Reference: MDN Web Docs (https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API/Using_the_Geolocation_API)
+ * @param {Object} position - The position object returned by the Geolocation API, containing the user's current coordinates and accuracy.
+ * @param {Object} error - The error object returned by the Geolocation API if there's an issue retrieving the user's location.
+ */
+const watchId = navigator.geolocation.watchPosition(
+  (position) => {
+    const { latitude, longitude, accuracy } = position.coords;
+    const latlng = [latitude, longitude];
+
+    if (!userMarker) {
+      // Create the marker and circle
+      map.setView(latlng, 15);
+
+      userCircle = L.circle(latlng, {
+        radius: accuracy,
+        color: "#4A90D9",
+        fillColor: "#4A90D9",
+        fillOpacity: 0.15,
+      }).addTo(map);
+
+      userMarker = L.circleMarker(latlng, {
+        radius: 8,
+        color: "#fff",
+        fillColor: "#4A90D9",
+        fillOpacity: 1,
+        weight: 2,
+      }).addTo(map);
+    } else {
+      // Update position
+      userMarker.setLatLng(latlng);
+      userCircle.setLatLng(latlng);
+      userCircle.setRadius(accuracy);
+    }
+  },
+  (error) => {
+    console.warn("Geolocation error:", error.message);
+    map.setView([49.2827, -123.1207], 12); // Default to Vancouver if geolocation fails
+  },
+  { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
+);
+
+let routingControl = null; // global variable to hold the routing control instance
+/**
+ * Use Leaflet Routing Machine to calculate and display a route from the user's current location to a specified destination (latitude and longitude). If the user's location is not available, it shows an alert. If there's an existing route displayed, it removes it before creating a new one. The route is displayed on the map without the turn-by-turn panel, and users cannot add extra waypoints.
+ * @param {number} destinationLat - The latitude of the destination.
+ * @param {number} destinationLon - The longitude of the destination.
+ * @returns {void}
+ * Reference: Leaflet Routing Machine (https://www.liedman.net/leaflet-routing-machine/)
+ */
+window.routeTo = function (destinationLat, destinationLon) {
+  if (!userMarker) {
+    alert("Your location is not available yet.");
+    return;
+  }
+
+  const userLatLng = userMarker.getLatLng();
+
+  // Remove existing route if there is one
+  if (routingControl) {
+    map.removeControl(routingControl);
+    routingControl = null;
+  }
+
+  routingControl = L.Routing.control({
+    waypoints: [
+      L.latLng(userLatLng.lat, userLatLng.lng),
+      L.latLng(destinationLat, destinationLon),
+    ],
+    router: L.Routing.osrmv1({
+      serviceUrl: "https://router.project-osrm.org/route/v1",
+      profile: "foot",
+    }),
+
+    routeWhileDragging: false,
+    show: false, // hides the turn-by-turn panel
+    addWaypoints: false, // prevents user from adding extra waypoints
+    lineOptions: {
+      styles: [{ color: "#4A90D9", weight: 10, opacity: 0.8 }],
+    },
+  }).addTo(map);
 };
 
 document
