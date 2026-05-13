@@ -536,7 +536,10 @@ const createReportMarkers = () => {
   for (let i = 0; i < reportData.length; i++) {
     const report = reportData[i];
 
-    const marker = L.marker([report.lat, report.lng], { icon: reportIcon });
+    const marker = L.marker([report.lat, report.lng], {
+      icon: reportIcon,
+      id: report._id,
+    });
 
     marker.bindPopup(`
       <div class="w-64">

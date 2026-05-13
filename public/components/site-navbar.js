@@ -48,7 +48,7 @@ class SiteNavbar extends HTMLElement {
               tabindex="-1"
               class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shrink-0 shadow"
             >
-              <li><a>Profile</a></li>
+              <li><button id="profileBtn" class="hidden" onclick="profileModal.showModal()">Profile</button></li>
               <li><a>Settings</a></li>
               <li><button id="logInBtn">Login</button></li>
               <li><button id="logOutBtn" class="hidden">Logout</button></li>
@@ -260,6 +260,7 @@ document.querySelectorAll("#filterContainer button").forEach((btn) => {
       btn.id === "helpBtn" ||
       btn.id === "logInBtn" ||
       btn.id === "logOutBtn" ||
+      btn.id === "profileBtn" ||
       btn.id === "summaryBtn" ||
       btn.id === "generateSummaryBtn" ||
       btn.id === "closeSummaryBtn"
@@ -334,6 +335,7 @@ async function checkUserAuth() {
   if (data.loggedIn) {
     document.getElementById("logInBtn").classList.toggle("hidden");
     document.getElementById("logOutBtn").classList.toggle("hidden");
+    document.getElementById("profileBtn").classList.toggle("hidden");
 
     const summaryButton = document.getElementById("summaryBtn");
     if (data.user?.role === "planner") {

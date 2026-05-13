@@ -1,5 +1,7 @@
 // import all dependencies
 const express = require("express");
+const { formsModel } = require("../mongodbAtlas");
+const { userModel } = require("../mongodbAtlas");
 const { formsModel, formulaModel } = require("../mongodbAtlas");
 
 const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
@@ -642,6 +644,19 @@ router.get("/user", (req, res) => {
     res.json({ loggedIn: true, user: req.session.user });
   } else {
     res.json({ loggedIn: false });
+  }
+});
+
+router.get("/deleteAccount/:user", async (req, res) => {
+  try {
+    const deletedAccount = await userModel.findOneAndDelete({
+      username: req.params.user,
+    });
+
+    res.json(deletedAccount);
+  } catch (error) {
+    console.log(error);
+    res.status(403).send("Error deleting account");
   }
 });
 
