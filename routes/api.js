@@ -504,6 +504,11 @@ router.get("/", async (req, res) => {
   res.json(data);
 });
 
+// fetch shade key for shade api
+router.get("/key", async (req, res) => {
+  res.json({ key: process.env.SHADE_API });
+});
+
 // fetch community centres data
 router.get("/community-centres", async (req, res) => {
   try {

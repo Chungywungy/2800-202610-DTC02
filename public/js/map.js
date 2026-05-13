@@ -1002,6 +1002,99 @@ treesBtn.addEventListener("click", toggleTreesMarkers);
  * Contains: fetching data, toggling markers, creating markers
  */
 
+/**
+ * Shade API Integration Section (start)
+ * Contains: fetching data and creating shade layer
+ */
+const res = await fetch("/api/key");
+const { key } = await res.json();
+console.log("Shade API Key:", key);
+
+const buildingCache = new Map();
+
+/**
+ * Returns a larger area than the current view, so zoom changes still hit the cache
+ * @param {*} bounds 
+ * @returns North, west, south, east rounded to 2 decimal places and expanded by 0.01 degrees (about 1km) to create a buffer around the current view. This helps ensure that small movements or zoom changes still hit the same cache entry and reduces redundant API calls.
+ */
+const getPaddedBounds = (bounds) => {
+  const round = (n) => Math.round(n * 100) / 100; // 2 decimal places (~1km chunks)
+  return {
+    north: round(bounds.getNorth() + 0.01),
+    south: round(bounds.getSouth() - 0.01),
+    east: round(bounds.getEast() + 0.01),
+    west: round(bounds.getWest() - 0.01),
+  };
+};
+
+
+/**
+ * Initialize the ShadeMap layer with the provided API key and configuration. The getFeatures function fetches building data from the Overpass API based on the current map bounds and zoom level, converts it to GeoJSON format, and caches the results to optimize performance. The layer is added to the map to visualize shaded areas representing building heights.
+ */
+const shadeMap = new ShadeMap({
+  apiKey: key,
+  date: new Date(),
+  color: "#01112f",
+  opacity: 0.7,
+
+  getFeatures: async () => {
+    if (map.getZoom() < 15) return [];
+
+    const bounds = map.getBounds();
+    const padded = getPaddedBounds(bounds);
+    const cacheKey = `${padded.south},${padded.west},${padded.north},${padded.east}`;
+
+    // Return cached data if available
+    if (buildingCache.has(cacheKey)) {
+      console.log("Cache hit for bounds:", cacheKey);
+      return buildingCache.get(cacheKey);
+    }
+
+    const north = bounds.getNorth();
+    const south = bounds.getSouth();
+    const east = bounds.getEast();
+    const west = bounds.getWest();
+
+    const query = `https://overpass-api.de/api/interpreter?data=%2F*%0AThis%20has%20been%20generated%20by%20the%20overpass-turbo%20wizard.%0AThe%20original%20search%20was%3A%0A%E2%80%9Cbuilding%E2%80%9D%0A*%2F%0A%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3B%0A%2F%2F%20gather%20results%0A%28%0A%20%20%2F%2F%20query%20part%20for%3A%20%E2%80%9Cbuilding%E2%80%9D%0A%20%20way%5B%22building%22%5D%28${padded.south}%2C${padded.west}%2C${padded.north}%2C${padded.east}%29%3B%0A%29%3B%0A%2F%2F%20print%20results%0Aout%20body%3B%0A%3E%3B%0Aout%20skel%20qt%3B`;
+
+    const response = await fetch(query);
+    const json = await response.json();
+    const geojson = osmtogeojson(json);
+
+    geojson.features.forEach((feature) => {
+      if (!feature.properties) feature.properties = {};
+      const levels = feature.properties["building:levels"];
+      feature.properties.height = levels ? levels * 3 : 6;
+    });
+
+    // Store in cache before returning
+    buildingCache.set(cacheKey, geojson.features);
+    console.log(
+      `Fetched and cached ${geojson.features.length} building features for bounds: ${cacheKey}`,
+    );
+    return geojson.features;
+  },
+}).addTo(map);
+
+
+/**
+ * Event listener for map clicks to determine if the clicked location is in the sun or shade. It converts the clicked latitude and longitude to container pixel coordinates, checks the shade status using the ShadeMap's isPositionInSun method, and logs the result to the console. This allows users to interactively check the shading conditions at specific points on the map.
+ */
+map.on("click", async (e) => {
+  if (!shadeMap) return;
+
+  const point = map.latLngToContainerPoint(e.latlng);
+
+  const inTheSun = await shadeMap.isPositionInSun(
+    point.x,
+    point.y,
+  );
+
+  console.log(inTheSun ? "Sunny" : "Shaded");
+});
+/** * Shade API Integration Section (end)
+ * Contains: fetching data and creating shade layer
+ */
 // Fetching neighborhoods
 // Raw neighborhood data from opendata.vancouver.ca
 let neighborhoodData = [];
