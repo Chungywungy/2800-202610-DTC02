@@ -238,10 +238,7 @@ const createFountainMarkers = () => {
     let lonValue = result.geo_point_2d["lon"];
     let latValue = result.geo_point_2d["lat"];
     const marker = L.marker([latValue, lonValue], { icon: fountainIcon });
-    let fountainInfo = result.name.replace(
-      "Fountain location:\n",
-      "Water Fountain: ",
-    );
+    let fountainInfo = `<b>${result.name}</b><br><button onclick="routeTo(${latValue}, ${lonValue})" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>`;
     marker.bindPopup(fountainInfo);
     fountainMarkers.push(marker);
   }
@@ -293,7 +290,14 @@ const createParkGeom = async () => {
   for (let i = 0; i < parkData.length; i++) {
     const park = parkData[i];
     const geom = L.geoJSON(park.geom);
-    geom.bindPopup(park.park_name);
+
+    // Get the center of the park boundary for routing
+    const center = geom.getBounds().getCenter();
+
+    geom.bindPopup(`
+      ${park.park_name}<br><br>
+      <button onclick="routeTo(${center.lat}, ${center.lng})" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>
+    `);
     parkGeom.push(geom);
   }
 };
@@ -355,7 +359,7 @@ const createWashroomMarkers = () => {
     let lonValue = result.geo_point_2d["lon"];
     let latValue = result.geo_point_2d["lat"];
     const marker = L.marker([latValue, lonValue], { icon: washroomIcon });
-    let washroomInfo = `<b>${result.park_name}</b><br>${result.type}<br>Summer: ${result.summer_hours}<br>Wheelchair: ${result.wheelchair_access}<br><button onclick="routeTo(${latValue}, ${lonValue})">Get Directions</button>`;
+    let washroomInfo = `<b>${result.park_name}</b><br>${result.type}<br>Summer: ${result.summer_hours}<br>Wheelchair: ${result.wheelchair_access}<br><button onclick="routeTo(${latValue}, ${lonValue})" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>`;
     marker.bindPopup(washroomInfo);
     washroomMarkers.push(marker);
   }
@@ -411,10 +415,13 @@ const createTransitLayer = () => {
     },
     onEachFeature: (feature, layer) => {
       const p = feature.properties;
+      const [lng, lat] = feature.geometry.coordinates;
+
       layer.bindPopup(`
         <b>${p.name}</b><br>
         Stop code: ${p.code}<br>
-        Wheelchair: ${p.wheelchair_boarding === "1" ? "Yes" : "No"}
+        Wheelchair: ${p.wheelchair_boarding === "1" ? "Yes" : "No"}<br><br>
+        <button onclick="routeTo(${lat}, ${lng}, 'transit')" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>
       `);
     },
   });
@@ -469,10 +476,9 @@ const createCommunityCentreMarkers = () => {
     let lonValue = result.geo_point_2d["lon"];
     let latValue = result.geo_point_2d["lat"];
     const marker = L.marker([latValue, lonValue], { icon: centreIcon });
-    let centreInfo = result.name.replace(
-      "Community Centre location:\n",
-      "Community Centre: ",
-    );
+    let centreInfo = `Location: <b>${result.name}</b><br>
+      <br><button onclick="routeTo(${latValue}, ${lonValue})" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>`;
+
     marker.bindPopup(centreInfo);
     communityCentresMarkers.push(marker);
   }
@@ -967,7 +973,7 @@ let routingControl = null; // global variable to hold the routing control instan
  * @returns {void}
  * Reference: Leaflet Routing Machine (https://www.liedman.net/leaflet-routing-machine/)
  */
-window.routeTo = function(destinationLat, destinationLon) {
+window.routeTo = function (destinationLat, destinationLon) {
   if (!userMarker) {
     alert("Your location is not available yet.");
     return;
@@ -986,23 +992,19 @@ window.routeTo = function(destinationLat, destinationLon) {
       L.latLng(userLatLng.lat, userLatLng.lng),
       L.latLng(destinationLat, destinationLon),
     ],
+    router: L.Routing.osrmv1({
+      serviceUrl: "https://router.project-osrm.org/route/v1",
+      profile: "foot",
+    }),
+
     routeWhileDragging: false,
     show: false, // hides the turn-by-turn panel
     addWaypoints: false, // prevents user from adding extra waypoints
     lineOptions: {
-      styles: [{ color: "#4A90D9", weight: 10, opacity: 0.8,  }],
+      styles: [{ color: "#4A90D9", weight: 10, opacity: 0.8 }],
     },
-    createMarker: (i, waypoint, n) => {
-    // i = index (0 = start, n-1 = end)
-    if (i === 0) {
-      // Start marker — return null to use existing userMarker
-      return null;
-    }
-    // End marker — use custom icon
-    return L.marker(waypoint.latLng, { icon: washroomIcon });
-  }
   }).addTo(map);
-}
+};
 
 document
   .getElementById("fountainsBtn")
