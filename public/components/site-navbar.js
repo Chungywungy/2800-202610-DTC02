@@ -254,7 +254,7 @@ class SiteNavbar extends HTMLElement {
 
 customElements.define("site-navbar", SiteNavbar);
 
-document.querySelectorAll("#navContainer button").forEach((btn) => {
+document.querySelectorAll("#filterContainer button").forEach((btn) => {
   btn.addEventListener("click", () => {
     if (
       btn.id === "helpBtn" ||

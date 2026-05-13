@@ -844,9 +844,7 @@ async function fetchTreeClusters() {
   ]; // normalize the bounds into a format that the API accepts
 
   // fetch the tree clusters from our backend server
-  const result = await fetch(
-    `http://localhost:5500/api/public-trees?zoom=${zoom}&bbox=${bbox}`,
-  );
+  const result = await fetch(`/api/public-trees?zoom=${zoom}&bbox=${bbox}`);
   const treesGeoCluster = await result.json();
   return treesGeoCluster.results;
 }
@@ -1020,7 +1018,7 @@ const buildingCache = new Map();
 
 /**
  * Returns a larger area than the current view, so zoom changes still hit the cache
- * @param {*} bounds 
+ * @param {*} bounds
  * @returns North, west, south, east rounded to 2 decimal places and expanded by 0.01 degrees (about 1km) to create a buffer around the current view. This helps ensure that small movements or zoom changes still hit the same cache entry and reduces redundant API calls.
  */
 const getPaddedBounds = (bounds) => {
@@ -1032,7 +1030,6 @@ const getPaddedBounds = (bounds) => {
     west: round(bounds.getWest() - 0.01),
   };
 };
-
 
 /**
  * Initialize the ShadeMap layer with the provided API key and configuration. The getFeatures function fetches building data from the Overpass API based on the current map bounds and zoom level, converts it to GeoJSON format, and caches the results to optimize performance. The layer is added to the map to visualize shaded areas representing building heights.
@@ -1082,7 +1079,6 @@ const shadeMap = new ShadeMap({
   },
 }).addTo(map);
 
-
 /**
  * Event listener for map clicks to determine if the clicked location is in the sun or shade. It converts the clicked latitude and longitude to container pixel coordinates, checks the shade status using the ShadeMap's isPositionInSun method, and logs the result to the console. This allows users to interactively check the shading conditions at specific points on the map.
  */
@@ -1091,10 +1087,7 @@ map.on("click", async (e) => {
 
   const point = map.latLngToContainerPoint(e.latlng);
 
-  const inTheSun = await shadeMap.isPositionInSun(
-    point.x,
-    point.y,
-  );
+  const inTheSun = await shadeMap.isPositionInSun(point.x, point.y);
 
   console.log(inTheSun ? "Sunny" : "Shaded");
 });
@@ -1190,9 +1183,6 @@ const createNeighborhoodGeom = () => {
         )
       )
         fountains++;
-      ) {
-        fountains++;
-      }
     });
 
     washroomData.forEach((w) => {
@@ -1203,9 +1193,6 @@ const createNeighborhoodGeom = () => {
         )
       )
         washrooms++;
-      ) {
-        washrooms++;
-      }
     });
 
     communityCentresData.forEach((c) => {
@@ -1216,9 +1203,6 @@ const createNeighborhoodGeom = () => {
         )
       )
         centres++;
-      ) {
-        centres++;
-      }
     });
 
     if (transitData) {
@@ -1230,9 +1214,6 @@ const createNeighborhoodGeom = () => {
           )
         )
           transit++;
-        ) {
-          transit++;
-        }
       });
     }
 
@@ -1248,9 +1229,6 @@ const createNeighborhoodGeom = () => {
             )
           )
             parks++;
-          ) {
-            parks++;
-          }
         }
       } catch (e) {}
     });
