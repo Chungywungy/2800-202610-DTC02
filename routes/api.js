@@ -3,7 +3,7 @@ const express = require("express");
 const { formsModel, formulaModel } = require("../mongodbAtlas");
 
 const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
-const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-3-5-sonnet-latest";
+const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-4-6";
 const NEIGHBORHOOD_DATA_URL =
   "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/local-area-boundary/records?limit=100";
 
@@ -261,7 +261,8 @@ function buildFallbackSummary(reports, scopeLabel, neighborhoodName) {
 
 async function summarizeWithAI(payload) {
   if (!CLAUDE_API_KEY) {
-    return null;
+    return "Claude API Key bad";
+    // return null;
   }
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -300,8 +301,70 @@ async function summarizeWithAI(payload) {
     return null;
   }
 
+  const parseMaybeJson = (text) => {
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const stripCodeFence = (text) => {
+    const fencedMatch = text.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+    return fencedMatch ? fencedMatch[1].trim() : text;
+  };
+
+  const parseSummaryObject = (text) => {
+    const cleaned = stripCodeFence(String(text || "").trim());
+
+    // 1) Direct JSON parse
+    let parsed = parseMaybeJson(cleaned);
+
+    // 2) If the full payload has extra text, parse the first JSON object slice
+    if (!parsed) {
+      const firstBrace = cleaned.indexOf("{");
+      const lastBrace = cleaned.lastIndexOf("}");
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        parsed = parseMaybeJson(cleaned.slice(firstBrace, lastBrace + 1));
+      }
+    }
+
+    // 3) If model returned a JSON string, parse again (may be fenced)
+    if (typeof parsed === "string") {
+      parsed = parseMaybeJson(stripCodeFence(parsed.trim()));
+    }
+
+    // 4) If wrapped in { summary: "..." }, unwrap summary
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      !Array.isArray(parsed) &&
+      typeof parsed.summary === "string"
+    ) {
+      const summaryParsed = parseMaybeJson(
+        stripCodeFence(parsed.summary.trim()),
+      );
+      if (summaryParsed && typeof summaryParsed === "object") {
+        parsed = summaryParsed;
+      }
+    }
+
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return null;
+    }
+
+    const hasRequiredShape =
+      typeof parsed.overview === "string" &&
+      Array.isArray(parsed.highlights) &&
+      Array.isArray(parsed.recommendedActions) &&
+      Array.isArray(parsed.topTopics) &&
+      Array.isArray(parsed.topNeighborhoods);
+
+    return hasRequiredShape ? parsed : null;
+  };
+
   try {
-    return JSON.parse(content);
+    return parseSummaryObject(content);
   } catch (error) {
     return null;
   }
