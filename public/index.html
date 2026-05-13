@@ -42,13 +42,17 @@
     <script src="https://unpkg.com/osmtogeojson/osmtogeojson.js" defer></script>
     <!-- components -->
     <script type="module" src="./components/site-navbar.js" defer></script>
+    <script type="module" src="./components/speed-dial.js" defer></script>
     <script type="module" src="js/map.js" defer></script>
+    <script src="js/score.js" defer></script>
     <link rel="stylesheet" href="./css/index.css" />
   </head>
   <body>
     <site-navbar></site-navbar>
 
     <div id="map" class="h-screen w-screen relative">
+      <!-- SPEED DIAL COMPONENT -->
+      <speed-dial></speed-dial>
       <!-- TEMPERATURE COMPONENT -->
       <temperature-container></temperature-container>
     </div>
