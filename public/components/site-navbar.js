@@ -66,10 +66,18 @@ class SiteNavbar extends HTMLElement {
         class="flex flex-1 justify-start mx-5 my-2 gap-5 lg:justify-center overflow-x-auto overflow-y-hidden"
         style="-ms-overflow-style: none; scrollbar-width: none"
       >
-        <!-- HELP / TUTORIAL -->
-        <button class="btn btn-warning sticky left-0" id="helpBtn">
-          <span class="material-symbols-outlined"> help </span>
-        </button>
+        <!-- CONTROL CONTAINER -->
+        <div class="sticky left-0 flex gap-5 w-fit bg-white">
+          <!-- HELP / TUTORIAL -->
+          <button class="btn btn-warning" id="helpBtn">
+            <span class="material-symbols-outlined"> help </span>
+          </button>
+          <!-- NEIGHBOURHOOD -->
+          <button class="btn" id="scoreBtn">
+            Score
+            <span class="material-symbols-outlined"> location_city </span>
+          </button>
+        </div>
         <!-- DIVIDER -->
         <div class="shrink-0 border-l border-slate-400"></div>
         <!-- TREES -->
@@ -102,10 +110,16 @@ class SiteNavbar extends HTMLElement {
           Water
           <span class="material-symbols-outlined"> water_drops </span>
         </button>
-         <!-- FORMS -->
+        <!-- FORMS -->
         <button class="btn" id="formReports">
           Reports
           <span class="material-symbols-outlined"> flag </span>
+        </button>
+
+        <!-- AI SUMMARY -->
+        <button class="btn hidden" id="summaryBtn">
+          AI Summary
+          <span class="material-symbols-outlined"> smart_toy </span>
         </button>
 
       </ul>
@@ -115,7 +129,7 @@ class SiteNavbar extends HTMLElement {
 
       <div
         id="filterModal"
-        class="hidden fixed inset-0 flex justify-center bg-black/50"
+        class="hidden fixed inset-0 justify-center bg-black/50"
       >
         <div
           class="fixed z-[2000] flex flex-col items-center mt-[140px] md:mt-18"
@@ -164,7 +178,7 @@ class SiteNavbar extends HTMLElement {
       <!-- Weather Help Modal -->
       <div
         id="weatherModal"
-        class="hidden fixed inset-0 bg-black/50 items-end justify-end flex"
+        class="hidden fixed inset-0 bg-black/50 items-end justify-end"
       >
         <div class="z-[2000] flex flex-col mb-30 mr-30">
           <div class="bg-white rounded-lg shadow-lg p-6 -top-48">
@@ -193,6 +207,46 @@ class SiteNavbar extends HTMLElement {
           </div>
         </div>
       </div>
+
+      <!-- AI Summary Modal -->
+      <div
+        id="summaryModal"
+        class="hidden fixed inset-0 bg-black/50 items-center justify-center"
+      >
+        <div class="z-[2000] w-11/12 max-w-4xl rounded-2xl bg-base-100 p-6 shadow-2xl">
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 class="text-2xl font-bold">AI report overview</h2>
+              <p class="text-sm opacity-70">
+                Summaries only heat, cooling, and infrastructure-related reports.
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <select id="summaryScope" class="select select-bordered select-sm w-full sm:w-48">
+                <option value="all">Citywide</option>
+                <option value="neighborhood">By neighbourhood</option>
+              </select>
+
+              <select
+                id="summaryNeighborhood"
+                class="select select-bordered select-sm w-full sm:w-56 hidden"
+              ></select>
+
+              <button id="generateSummaryBtn" class="btn btn-primary btn-sm">
+                Generate summary
+              </button>
+            </div>
+          </div>
+
+          <div id="summaryStatus" class="mt-4 text-sm opacity-75"></div>
+          <div id="summaryOutput" class="mt-4 space-y-4 max-h-[60vh] overflow-y-auto pr-1"></div>
+
+          <div class="modal-action">
+            <button id="closeSummaryBtn" class="btn">Close</button>
+          </div>
+        </div>
+      </div>
     </nav>
     `;
   }
@@ -200,13 +254,16 @@ class SiteNavbar extends HTMLElement {
 
 customElements.define("site-navbar", SiteNavbar);
 
-document.querySelectorAll("#navContainer button").forEach((btn) => {
+document.querySelectorAll("#filterContainer button").forEach((btn) => {
   btn.addEventListener("click", () => {
     if (
       btn.id === "helpBtn" ||
       btn.id === "logInBtn" ||
       btn.id === "logOutBtn" ||
-      btn.id === "profileBtn"
+      btn.id === "profileBtn" ||
+      btn.id === "summaryBtn" ||
+      btn.id === "generateSummaryBtn" ||
+      btn.id === "closeSummaryBtn"
     )
       return;
     btn.classList.toggle("bg-success");
@@ -219,6 +276,7 @@ document.querySelectorAll("#navContainer button").forEach((btn) => {
  */
 document.getElementById("helpBtn").addEventListener("click", () => {
   document.getElementById("filterModal").classList.remove("hidden");
+  document.getElementById("filterModal").classList.add("flex");
 });
 
 /**
@@ -226,6 +284,7 @@ document.getElementById("helpBtn").addEventListener("click", () => {
  */
 document.getElementById("closeHelpBtn").addEventListener("click", () => {
   document.getElementById("filterModal").classList.add("hidden");
+  document.getElementById("filterModal").classList.remove("flex");
 });
 
 /**
@@ -233,11 +292,14 @@ document.getElementById("closeHelpBtn").addEventListener("click", () => {
  */
 document.getElementById("nextBtnFilter").addEventListener("click", () => {
   document.getElementById("filterModal").classList.add("hidden");
+  document.getElementById("filterModal").classList.remove("flex");
   document.getElementById("weatherModal").classList.remove("hidden");
+  document.getElementById("weatherModal").classList.add("flex");
 });
 
 document.getElementById("weatherModal").addEventListener("click", () => {
   document.getElementById("weatherModal").classList.add("hidden");
+  document.getElementById("weatherModal").classList.remove("flex");
 });
 
 /**
@@ -274,6 +336,13 @@ async function checkUserAuth() {
     document.getElementById("logInBtn").classList.toggle("hidden");
     document.getElementById("logOutBtn").classList.toggle("hidden");
     document.getElementById("profileBtn").classList.toggle("hidden");
+
+    const summaryButton = document.getElementById("summaryBtn");
+    if (data.user?.role === "planner") {
+      summaryButton.classList.remove("hidden");
+    } else {
+      summaryButton.classList.add("hidden");
+    }
   }
 }
 document.getElementById("logInBtn").addEventListener("click", () => {
@@ -282,6 +351,23 @@ document.getElementById("logInBtn").addEventListener("click", () => {
 
 document.getElementById("logOutBtn").addEventListener("click", () => {
   window.location.href = "/auth/logout";
+});
+
+document.getElementById("summaryBtn").addEventListener("click", () => {
+  document.getElementById("summaryModal").classList.remove("hidden");
+  document.getElementById("summaryModal").classList.add("flex");
+});
+
+document.getElementById("closeSummaryBtn").addEventListener("click", () => {
+  document.getElementById("summaryModal").classList.add("hidden");
+  document.getElementById("summaryModal").classList.remove("flex");
+});
+
+document.getElementById("summaryModal").addEventListener("click", (event) => {
+  if (event.target === document.getElementById("summaryModal")) {
+    document.getElementById("summaryModal").classList.add("hidden");
+    document.getElementById("summaryModal").classList.remove("flex");
+  }
 });
 
 checkUserAuth();

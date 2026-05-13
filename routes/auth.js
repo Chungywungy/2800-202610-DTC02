@@ -1,6 +1,6 @@
 // import all dependencies
 const express = require("express");
-const { userModel } = require("../mongodbAtlas.js");
+const { userModel, formulaModel } = require("../mongodbAtlas.js");
 const bcrypt = require("bcrypt");
 
 const SALT_ROUNDS = 10; // Hashing strength
@@ -87,6 +87,18 @@ router.post("/register", async (req, res) => {
     email: requestedEmail.toLowerCase(),
     password: hashedPassword,
     role: requestedRole,
+  });
+
+  await formulaModel.insertOne({
+    username: requestedUsername,
+
+    formula: {
+      waterFountains: 0.2,
+      washrooms: 0.2,
+      parks: 0.2,
+      communityCentres: 0.2,
+      transit: 0.2,
+    },
   });
 
   return res
