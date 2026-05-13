@@ -9,6 +9,7 @@ export const map = L.map("map", {
   maxBounds: bounds,
   maxBoundsViscosity: 1.0,
   maxBoundsViscosity: 1.0,
+  zoomControl: false,
 }).fitBounds(bounds);
 
 // Display map
