@@ -15,7 +15,7 @@ class SiteNavbar extends HTMLElement {
         <input id="settingsDrawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content">
 
-          <nav id="navContainer" class="z-2000 flex flex-col w-full">
+          <nav id="navContainer" class="z-2000 absolute flex flex-col w-full">
             <section id="navbarContainer">
               <div class="navbar bg-base-100 shadow-sm">
                 <div class="flex-1">
