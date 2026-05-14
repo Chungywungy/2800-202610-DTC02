@@ -40,15 +40,21 @@
       href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"
     />
     <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js" defer></script>
+
+ 
+
     <!-- components -->
     <script type="module" src="./components/site-navbar.js" defer></script>
+    <script type="module" src="./components/speed-dial.js" defer></script>
     <script type="module" src="js/map.js" defer></script>
-    <script
+    <script src="js/score.js" defer></script>
+    <script type="module" src="./components/site-profile.js" defer></script>
+       <script
       type="module"
       src="./components/temperature-container.js"
       defer
     ></script>
-    <script type="module" src="./components/site-profile.js" defer></script>
+    
     <link rel="stylesheet" href="./css/index.css" />
   </head>
   <body>
@@ -56,6 +62,8 @@
     <site-profile></site-profile>
 
     <div id="map" class="h-screen w-screen relative">
+      <!-- SPEED DIAL COMPONENT -->
+      <speed-dial></speed-dial>
       <!-- TEMPERATURE COMPONENT -->
       <temperature-container></temperature-container>
     </div>
