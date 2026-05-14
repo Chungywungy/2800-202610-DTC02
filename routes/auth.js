@@ -38,6 +38,7 @@ router.post("/login", async (req, res) => {
     username: userFound.username,
     email: userFound.email,
     role: userFound.role,
+    verified: userFound.verified,
   };
   if (rememberMe) {
     req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; // 30 days
@@ -80,13 +81,31 @@ router.post("/register", async (req, res) => {
       .json({ message: "Password must be at least 6 characters." });
   }
 
+  // Verify city planner role requires @vancouver.ca email
+  if (
+    requestedRole === "planner" &&
+    !requestedEmail.toLowerCase().endsWith("@vancouver.ca")
+  ) {
+    return res.status(403).json({
+      message:
+        "Please register with a valid email address to create a city planner account.",
+    });
+  }
+
   const hashedPassword = await bcrypt.hash(requestedPassword, SALT_ROUNDS);
+
+  // Mock verification for city planners
+  let isVerified = false;
+  if (requestedRole === "planner") {
+    isVerified = true;
+  }
 
   const createdAccount = await userModel.insertOne({
     username: requestedUsername,
     email: requestedEmail.toLowerCase(),
     password: hashedPassword,
     role: requestedRole,
+    verified: isVerified,
   });
 
   await formulaModel.insertOne({

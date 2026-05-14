@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
     enum: ["resident", "planner"],
     default: "resident",
   },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const userModel = mongoose.model(`users`, userSchema);
