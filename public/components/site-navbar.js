@@ -419,9 +419,8 @@ class SiteNavbar extends HTMLElement {
       <!-- AI Summary Modal -->
       <div
         id="summaryModal"
-        class="hidden fixed inset-0 bg-black/50 items-center justify-center"
-      >
-        <div class="z-[2000] w-11/12 max-w-4xl rounded-2xl bg-base-100 p-6 shadow-2xl">
+class="hidden fixed inset-0 z-[9999] bg-black/50 items-center justify-center"      >
+        <div class="z-1000000000 w-11/12 max-w-4xl rounded-2xl bg-base-100 p-6 shadow-2xl">
           <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h2 class="text-2xl font-bold">AI report overview</h2>
@@ -581,4 +580,4 @@ document.getElementById("summaryModal").addEventListener("click", (event) => {
 
 checkUserAuth();
 
-document.addEventListener("DOMContentLoaded", loadTutorial());
+document.addEventListener("DOMContentLoaded", loadTutorial);
