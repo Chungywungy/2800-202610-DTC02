@@ -16,6 +16,45 @@ class SiteNavbar extends HTMLElement {
         <div class="drawer-content">
 
           <nav id="navContainer" class="z-2000 absolute flex flex-col w-full">
+<!-- HEATSCORE LEGEND MODAL -->
+<div
+  id="heatScoreLegend"
+class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 overflow-hidden">
+  <div class="flex items-center justify-between bg-base-200 px-4 py-2">
+    <h2 class="font-bold">Heat Score Legend</h2>
+
+    <button
+      id="minimizeLegendBtn"
+      class="btn btn-xs btn-ghost"
+    >
+      -
+    </button>
+  </div>
+
+  <div id="legendContent" class="space-y-2 text-sm p-4">
+    <div class="flex items-center gap-2">
+      <div class="w-5 h-5 rounded" style="background-color: #97C459"></div>
+      <span>1-5 : Very High Heat Score</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <div class="w-5 h-5 rounded" style="background-color: #F5E663"></div>
+      <span>6-10 : High Heat Score</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <div class="w-5 h-5 rounded" style="background-color: #EF9F27"></div>
+      <span>11-15 : Moderate Heat Score</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <div class="w-5 h-5 rounded" style="background-color: #E24B4A"></div>
+      <span>16+ : Low Heat Score</span>
+    </div>
+  </div>
+</div>
+<!-- HEATSCORE LEGEND MODAL END -->
+
             <section id="navbarContainer">
               <div class="navbar bg-base-100 shadow-sm">
                 <div class="flex-1">
@@ -579,6 +618,30 @@ document.getElementById("summaryModal").addEventListener("click", (event) => {
     document.getElementById("summaryModal").classList.remove("flex");
   }
 });
+
+
+
+// HEATSCORE LEGEND POPUP MODAL
+const scoreBtn = document.getElementById("scoreBtn");
+const heatScoreLegend = document.getElementById("heatScoreLegend");
+const minimizeLegendBtn = document.getElementById("minimizeLegendBtn");
+const legendContent = document.getElementById("legendContent");
+
+scoreBtn.addEventListener("click", () => {
+  heatScoreLegend.classList.toggle("hidden");
+});
+
+minimizeLegendBtn.addEventListener("click", () => {
+  legendContent.classList.toggle("hidden");
+
+  if (legendContent.classList.contains("hidden")) {
+    minimizeLegendBtn.textContent = "+";
+  } else {
+    minimizeLegendBtn.textContent = "-";
+  }
+});
+// HEATSCORE POPUP MODAL END
+
 
 checkUserAuth();
 
