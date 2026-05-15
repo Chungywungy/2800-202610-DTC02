@@ -24,7 +24,7 @@ class SiteProfile extends HTMLElement {
                 <tr>
                   <th id="sortUsername">Username <span id="usernameArrow">▼</span></th>
                   <th id="sortFormText">Report <span id="reportArrow">▼</span></th>
-                  <th>Address</th>
+                  <th id="sortAddress">Address <span id="addressArrow">▼</span></th>
                   <th>Map View</th>
                 </tr>
               </thead>
@@ -219,6 +219,38 @@ function sortReportFormTextZA() {
   displayReports();
 }
 
+function sortReportAddressAZ() {
+  reports.sort((a, b) => {
+    if (a.address[0].toLowerCase() > b.address[0].toLowerCase()) {
+      return 1;
+    }
+
+    if (a.address[0].toLowerCase() < b.address[0].toLowerCase()) {
+      return -1;
+    }
+
+    return 0;
+  });
+
+  displayReports();
+}
+
+function sortReportAddressZA() {
+  reports.sort((a, b) => {
+    if (a.address[0].toLowerCase() < b.address[0].toLowerCase()) {
+      return 1;
+    }
+
+    if (a.address[0].toLowerCase() > b.address[0].toLowerCase()) {
+      return -1;
+    }
+
+    return 0;
+  });
+
+  displayReports();
+}
+
 const user = await fetchUser();
 let reports = [];
 
@@ -270,6 +302,18 @@ document.getElementById("sortFormText").addEventListener("click", () => {
     sortDirection.innerText = "▼";
   } else {
     sortReportFormTextZA();
+    sortDirection.innerText = "▲";
+  }
+});
+
+document.getElementById("sortAddress").addEventListener("click", () => {
+  const sortDirection = document.getElementById("addressArrow");
+
+  if (sortDirection.innerText == "▲") {
+    sortReportAddressAZ();
+    sortDirection.innerText = "▼";
+  } else {
+    sortReportAddressZA();
     sortDirection.innerText = "▲";
   }
 });
