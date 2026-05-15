@@ -24,6 +24,7 @@ class SiteProfile extends HTMLElement {
             <div class="collapse-title font-semibold">User Reports</div>
             <div class="collapse-content text-sm">
               <div class="flex flex-col gap-2 sm:flex-row sm:items-center place-self-end">
+                <span class="font-semibold pr-2">Filter: </span>
                 <select id="reportScope" class="select select-bordered select-sm w-full sm:w-48">
                   <option value="all">Citywide</option>
                   <option value="neighborhood">By neighbourhood</option>
