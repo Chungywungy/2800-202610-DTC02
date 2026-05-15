@@ -108,6 +108,9 @@ async function displayReports() {
   const reports = await fetchReports();
   const reportsDiv = document.getElementById("reports");
   const profileModal = document.getElementById("profileModal");
+  const reportsBtn = document.getElementById("formReports");
+
+  reportsDiv.innerHTML = "";
 
   reports.forEach((report) => {
     const reportItem = document.createElement("tr");
@@ -139,7 +142,6 @@ async function displayReports() {
       button.addEventListener("click", async () => {
         const lat = Number(button.dataset.lat);
         const lng = Number(button.dataset.lng);
-        const reportsBtn = document.getElementById("formReports");
 
         profileModal.close();
         map.flyTo([lat, lng], 15, {
@@ -148,20 +150,26 @@ async function displayReports() {
         });
 
         if (!reportsBtn.classList.contains("active")) {
-          document.getElementById("formReports").classList.toggle("active");
-          document.getElementById("formReports").classList.toggle("bg-success");
+          reportsBtn.click();
         }
-
-        await toggleReportMarkers();
       });
     });
 }
 
 const user = await fetchUser();
+const profileModal = document.getElementById("profileModal");
 
 displayReports();
 
 customElements.define("site-profile", SiteProfile);
+
+// Refresh reports table when profile modal is opened to clear old listeners
+// Used Copilot to learn about event.newState
+profileModal.addEventListener("toggle", (e) => {
+  if (e.newState === "open") {
+    displayReports();
+  }
+});
 
 // If user clicks/taps "Yes, delete my account", delete account
 document
@@ -171,8 +179,7 @@ document
   });
 
 // Close profileModal is the user clicks/taps outside the modal (on the dialog)
-document.getElementById("profileModal").addEventListener("click", (e) => {
-  const profileModal = document.getElementById("profileModal");
+profileModal.addEventListener("click", (e) => {
   if (e.target === profileModal) {
     profileModal.close();
   }

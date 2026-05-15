@@ -986,7 +986,7 @@ map.on("zoomend", () => {
 map.on("moveend", () => {
   // check if treesBtn is clicked:
   const treesBtnIsToggled = treesBtn.classList.contains("active");
-  console.log(treesBtnIsToggled);
+  // console.log(treesBtnIsToggled);
   if (treesBtnIsToggled) debouncedToggleTreeMarkers();
 });
 
@@ -1340,7 +1340,7 @@ map.on("zoomend", () => {
 map.on("moveend", () => {
   // check if treesBtn is clicked:
   const treesBtnIsToggled = treesBtn.classList.contains("active");
-  console.log(treesBtnIsToggled);
+  // console.log(treesBtnIsToggled);
   if (treesBtnIsToggled) debouncedToggleTreeMarkers();
 });
 
