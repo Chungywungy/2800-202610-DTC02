@@ -13,9 +13,16 @@ export const map = L.map("map", {
 }).fitBounds(bounds);
 
 // Display map
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  minZoom: 12,
-}).addTo(map);
+L.tileLayer(
+  "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+  {
+    minZoom: 12,
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  },
+).addTo(map);
+
+map.getContainer().style.backgroundColor = "#eef7ff";
 
 // Replace temperature
 const tempComponent = document.querySelector("temperature-container");
