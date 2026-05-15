@@ -22,7 +22,7 @@ class SiteProfile extends HTMLElement {
             <table class="table">
               <thead>
                 <tr>
-                  <th>Username</th>
+                  <th id="sortUsername">Username <span id="usernameArrow">▼</span></th>
                   <th>Report</th>
                   <th>Address</th>
                   <th>Map View</th>
@@ -95,7 +95,7 @@ async function deleteAccount(username) {
 async function fetchReports() {
   try {
     const result = await fetch("/api/reports");
-    return await result.json();
+    reports = await result.json();
   } catch (error) {
     console.log(error);
   }
@@ -105,7 +105,6 @@ async function fetchReports() {
  * Display user reports in a table. Used Copilot to learn how to store variables in HTML elements
  */
 async function displayReports() {
-  const reports = await fetchReports();
   const reportsDiv = document.getElementById("reports");
   const profileModal = document.getElementById("profileModal");
   const reportsBtn = document.getElementById("formReports");
@@ -156,8 +155,42 @@ async function displayReports() {
     });
 }
 
-const user = await fetchUser();
+function sortReportUsernameAZ() {
+  reports.sort((a, b) => {
+    if (a.username > b.username) {
+      return 1;
+    }
 
+    if (a.username < b.username) {
+      return -1;
+    }
+
+    return 0;
+  });
+
+  displayReports();
+}
+
+function sortReportUsernameZA() {
+  reports.sort((a, b) => {
+    if (a.username < b.username) {
+      return 1;
+    }
+
+    if (a.username > b.username) {
+      return -1;
+    }
+
+    return 0;
+  });
+
+  displayReports();
+}
+
+const user = await fetchUser();
+let reports = [];
+
+fetchReports();
 displayReports();
 
 customElements.define("site-profile", SiteProfile);
@@ -182,5 +215,18 @@ document.getElementById("profileModal").addEventListener("click", (e) => {
   const profileModal = document.getElementById("profileModal");
   if (e.target === profileModal) {
     profileModal.close();
+  }
+});
+
+document.getElementById("sortUsername").addEventListener("click", () => {
+  // ▼▲
+  const sortDirection = document.getElementById("usernameArrow");
+
+  if (sortDirection.innerText == "▲") {
+    sortReportUsernameAZ();
+    sortDirection.innerText = "▼";
+  } else {
+    sortReportUsernameZA();
+    sortDirection.innerText = "▲";
   }
 });
