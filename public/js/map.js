@@ -537,10 +537,7 @@ const createReportMarkers = () => {
   for (let i = 0; i < reportData.length; i++) {
     const report = reportData[i];
 
-    const marker = L.marker([report.lat, report.lng], {
-      icon: reportIcon,
-      id: report._id,
-    });
+    const marker = L.marker([report.lat, report.lng], { icon: reportIcon });
 
     marker.bindPopup(`
       <div class="w-64">
@@ -571,7 +568,7 @@ const createReportMarkers = () => {
   }
 };
 
-const toggleReportMarkers = async () => {
+export const toggleReportMarkers = async () => {
   const button = document.getElementById("formReports");
 
   const res = await fetch("/api/user");

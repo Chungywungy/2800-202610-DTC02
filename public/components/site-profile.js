@@ -1,4 +1,4 @@
-import { map } from "../js/map.js";
+import { map, toggleReportMarkers } from "../js/map.js";
 
 /**
  * Profile modal component
@@ -136,15 +136,23 @@ async function displayReports() {
   reportsDiv
     .querySelectorAll("button[data-lat][data-lng]")
     .forEach((button) => {
-      button.addEventListener("click", () => {
+      button.addEventListener("click", async () => {
         const lat = Number(button.dataset.lat);
         const lng = Number(button.dataset.lng);
+        const reportsBtn = document.getElementById("formReports");
 
         profileModal.close();
         map.flyTo([lat, lng], 15, {
           animate: true,
           duration: 1,
         });
+
+        if (!reportsBtn.classList.contains("active")) {
+          document.getElementById("formReports").classList.toggle("active");
+          document.getElementById("formReports").classList.toggle("bg-success");
+        }
+
+        await toggleReportMarkers();
       });
     });
 }
@@ -162,7 +170,7 @@ document
     deleteAccount(user.username);
   });
 
-// Close profileModal is the user clicks/taps outside the modal
+// Close profileModal is the user clicks/taps outside the modal (on the dialog)
 document.getElementById("profileModal").addEventListener("click", (e) => {
   const profileModal = document.getElementById("profileModal");
   if (e.target === profileModal) {
