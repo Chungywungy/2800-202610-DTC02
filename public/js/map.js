@@ -318,9 +318,6 @@ const toggleParkGeom = () => {
   }
 };
 
-fetchParks();
-fetchWaterFountains();
-
 // Display public washrooms
 let washroomMarkers = [];
 let washroomData = [];
@@ -378,7 +375,6 @@ const toggleWashroomMarkers = () => {
   }
 };
 
-fetchPublicWashrooms();
 
 let transitLayer = null;
 let transitData = null;
@@ -436,8 +432,6 @@ const toggleTransitMarkers = () => {
     if (transitLayer) map.removeLayer(transitLayer);
   }
 };
-
-fetchTransitStops();
 
 let communityCentresMarkers = [];
 let communityCentresData = [];
@@ -499,8 +493,6 @@ const toggleCommunityCentreMarkers = () => {
     });
   }
 };
-
-fetchCommunityCentres();
 
 // Toggle pins for feedback report forms submitted
 let reportMarkers = [];
@@ -1474,6 +1466,8 @@ fetchReports();
 
 // Wait for all data before fetching neighborhoods
 async function fetchAll() {
+  document.querySelector("#spinningModalContainer").classList.remove("hidden");
+  document.querySelector("#spinningModalContainer").classList.add("flex");
   await Promise.all([
     fetchParks(),
     fetchWaterFountains(),
@@ -1484,6 +1478,8 @@ async function fetchAll() {
   ]);
 
   await fetchNeighborhoods();
+  document.querySelector("#spinningModalContainer").classList.remove("flex");
+  document.querySelector("#spinningModalContainer").classList.add("hidden");
 }
 
 fetchAll();

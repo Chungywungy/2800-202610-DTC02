@@ -12,6 +12,11 @@
       rel="stylesheet"
       type="text/css"
     />
+    <!-- LOTTIEFILES (animations) -->
+    <script
+      src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.14/dist/dotlottie-wc.js"
+      type="module"
+    ></script>
     <!-- GOOGLE COMPONENTS -->
     <link
       rel="stylesheet"
@@ -39,22 +44,24 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"
     />
-    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js" defer></script>
-
- 
+    <script
+      src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"
+      defer
+    ></script>
 
     <!-- components -->
     <script type="module" src="./components/site-navbar.js" defer></script>
+    <script type="module" src="./components/loading-spinner.js" defer></script>
     <script type="module" src="./components/speed-dial.js" defer></script>
     <script type="module" src="js/map.js" defer></script>
     <script src="js/score.js" defer></script>
     <script type="module" src="./components/site-profile.js" defer></script>
-       <script
+    <script
       type="module"
       src="./components/temperature-container.js"
       defer
     ></script>
-    
+
     <link rel="stylesheet" href="./css/index.css" />
   </head>
   <body>
@@ -68,4 +75,5 @@
       <temperature-container></temperature-container>
     </div>
   </body>
+  <loading-spinner-modal></loading-spinner-modal>
 </html>
