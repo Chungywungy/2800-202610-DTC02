@@ -27,12 +27,10 @@ class SiteNavbar extends HTMLElement {
                   >
                 </div>
                 <div class="flex gap-2 shrink-0">
-                  <!-- SEARCH BAR -->
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    class="input input-bordered w-24 md:w-auto"
-                  />
+                  <!-- HELP / TUTORIAL -->
+                  <button class="btn btn-warning mx-2" id="helpBtn">
+                    Help
+                  </button>
                   <!-- AVATAR DROPDOWN -->
                   <div class="dropdown dropdown-end z-100000">
                     <div
@@ -66,27 +64,18 @@ class SiteNavbar extends HTMLElement {
             </section>
 
             <!-- FILTERS -->
-            <section id="filterBarContainer" class="flex bg-white">
+            <section id="filterBarContainer" class="flex backdrop-blur-xs shadow-lg">
               <!-- SCROLLABLE TOGGLE FILTER MARKERS -->
               <ul
                 id="filterContainer"
                 class="flex flex-1 justify-start mx-5 my-2 gap-5 lg:justify-center overflow-x-auto overflow-y-hidden"
                 style="-ms-overflow-style: none; scrollbar-width: none"
               >
-                <!-- CONTROL CONTAINER -->
-                <div class="sticky left-0 flex gap-5 w-fit bg-white">
-                  <!-- HELP / TUTORIAL -->
-                  <button class="btn btn-warning" id="helpBtn">
-                    <span class="material-symbols-outlined"> help </span>
-                  </button>
-                  <!-- NEIGHBORHOOD -->
-                  <button class="btn" id="scoreBtn">
-                    Score
-                    <span class="material-symbols-outlined"> location_city </span>
-                  </button>
-                </div>
-                <!-- DIVIDER -->
-                <div class="shrink-0 border-l border-slate-400"></div>
+                <!-- NEIGHBORHOOD/SCORE  -->
+                <button class="btn" id="scoreBtn">
+                  Score
+                  <span class="material-symbols-outlined"> location_city </span>
+                </button>
                 <!-- TREES -->
                 <button class="btn" id="treesBtn">
                   Trees
