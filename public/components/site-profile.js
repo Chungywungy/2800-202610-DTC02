@@ -15,39 +15,52 @@ class SiteProfile extends HTMLElement {
     this.innerHTML = `
       <dialog id="profileModal" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box w-11/12 max-w-5xl">
-          <div class="flex justify-between">
-            <h3 class="text-lg font-bold">Hello ${user.username}!</h3>
+          <h3 class="text-lg font-bold">Hello ${user.username}!</h3>
+          <br>
 
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <select id="reportScope" class="select select-bordered select-sm w-full sm:w-48">
-                <option value="all">Citywide</option>
-                <option value="neighborhood">By neighbourhood</option>
-              </select>
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+            <input type="checkbox" />
 
-              <select
-                id="reportNeighborhood"
-                class="select select-bordered select-sm w-full sm:w-56 hidden"
-              ></select>
+            <div class="collapse-title font-semibold">User Reports</div>
+            <div class="collapse-content text-sm">
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-center place-self-end">
+                <select id="reportScope" class="select select-bordered select-sm w-full sm:w-48">
+                  <option value="all">Citywide</option>
+                  <option value="neighborhood">By neighbourhood</option>
+                </select>
+
+                <select
+                  id="reportNeighborhood"
+                  class="select select-bordered select-sm w-full sm:w-56 hidden"
+                ></select>
+              </div>
+              <br>
+              <div class="overflow-x-auto">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th><span id="sortUsername">Username <span id="usernameArrow">▼</span></span></th>
+                      <th><span id="sortFormText">Report <span id="reportArrow">▼</span></span></th>
+                      <th><span id="sortAddress">Address <span id="addressArrow">▼</span></span></th>
+                      <th>Map View</th>
+                    </tr>
+                  </thead>
+                  <tbody id="reports">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+            <input type="checkbox" />
+            <div class="collapse-title font-semibold">Delete Account</div>
+            <div class="collapse-content text-sm">
+              <button class="btn bg-red-500 text-white" onclick="deleteProfileModal.showModal()">Delete Account</button>
             </div>
           </div>
 
-          <div class="overflow-x-auto">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th><span id="sortUsername">Username <span id="usernameArrow">▼</span></span></th>
-                  <th><span id="sortFormText">Report <span id="reportArrow">▼</span></span></th>
-                  <th><span id="sortAddress">Address <span id="addressArrow">▼</span></span></th>
-                  <th>Map View</th>
-                </tr>
-              </thead>
-              <tbody id="reports">
-              </tbody>
-            </table>
-          </div>
-
-          <div class="flex justify-between items-end">
-            <button class="btn bg-red-500 text-white" onclick="deleteProfileModal.showModal()">Delete Account</button>
+          <div class="flex justify-end">
             <div class="modal-action">
               <form method="dialog">
                 <button class="btn">Close</button>
@@ -124,14 +137,10 @@ async function displayReports(neighbourhood = "all") {
 
   reportsDiv.innerHTML = "";
 
+  console.log(neighbourhood);
+
   reports.forEach((report) => {
     const reportItem = document.createElement("tr");
-
-    // if (neighbourhood !== "all") {
-
-    // }
-
-    console.log(neighbourhood);
 
     reportItem.classList.add("hover:bg-base-300");
     reportItem.innerHTML = `
@@ -410,7 +419,6 @@ document.getElementById("reportScope").addEventListener("change", async () => {
 // Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
 document.getElementById("reportNeighborhood").addEventListener("change", () => {
   if (document.getElementById("reportScope").value === "neighborhood") {
-    console.log(document.getElementById("reportNeighborhood").value);
     displayReports(document.getElementById("reportNeighborhood").value);
   }
 });
