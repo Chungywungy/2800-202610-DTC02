@@ -318,9 +318,6 @@ const toggleParkGeom = () => {
   }
 };
 
-fetchParks();
-fetchWaterFountains();
-
 // Display public washrooms
 let washroomMarkers = [];
 let washroomData = [];
@@ -378,8 +375,6 @@ const toggleWashroomMarkers = () => {
   }
 };
 
-fetchPublicWashrooms();
-
 let transitLayer = null;
 let transitData = null;
 
@@ -436,8 +431,6 @@ const toggleTransitMarkers = () => {
     if (transitLayer) map.removeLayer(transitLayer);
   }
 };
-
-fetchTransitStops();
 
 let communityCentresMarkers = [];
 let communityCentresData = [];
@@ -499,8 +492,6 @@ const toggleCommunityCentreMarkers = () => {
     });
   }
 };
-
-fetchCommunityCentres();
 
 // Toggle pins for feedback report forms submitted
 let reportMarkers = [];
