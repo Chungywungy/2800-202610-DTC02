@@ -157,7 +157,6 @@ async function displayReports() {
 }
 
 const user = await fetchUser();
-const profileModal = document.getElementById("profileModal");
 
 displayReports();
 
@@ -165,7 +164,7 @@ customElements.define("site-profile", SiteProfile);
 
 // Refresh reports table when profile modal is opened to clear old listeners
 // Used Copilot to learn about event.newState
-profileModal.addEventListener("toggle", (e) => {
+document.getElementById("profileModal").addEventListener("toggle", (e) => {
   if (e.newState === "open") {
     displayReports();
   }
@@ -179,7 +178,8 @@ document
   });
 
 // Close profileModal is the user clicks/taps outside the modal (on the dialog)
-profileModal.addEventListener("click", (e) => {
+document.getElementById("profileModal").addEventListener("click", (e) => {
+  const profileModal = document.getElementById("profileModal");
   if (e.target === profileModal) {
     profileModal.close();
   }
