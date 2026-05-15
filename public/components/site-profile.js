@@ -143,23 +143,25 @@ async function displayReports(neighbourhood = "all") {
   reports.forEach((report) => {
     const reportItem = document.createElement("tr");
 
-    reportItem.classList.add("hover:bg-base-300");
-    reportItem.innerHTML = `
-      <td>${report.username}</td>
-      <td>${report.formText}</td>
-      <td>${report.address}</td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-sm" 
-          data-lat="${report.lat}"
-          data-lng="${report.lng}"
-        >
-          View
-        </button>
-      </td>
-    `;
-    reportsDiv.appendChild(reportItem);
+    if (neighbourhood == "all" || report.address.includes(neighbourhood)) {
+      reportItem.classList.add("hover:bg-base-300");
+      reportItem.innerHTML = `
+          <td>${report.username}</td>
+          <td>${report.formText}</td>
+          <td>${report.address}</td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-sm" 
+              data-lat="${report.lat}"
+              data-lng="${report.lng}"
+            >
+              View
+            </button>
+          </td>
+        `;
+      reportsDiv.appendChild(reportItem);
+    }
   });
 
   // Add listener on each "View" button
@@ -350,7 +352,11 @@ customElements.define("site-profile", SiteProfile);
 // Used Copilot to learn about event.newState
 document.getElementById("profileModal").addEventListener("toggle", (e) => {
   if (e.newState === "open") {
-    displayReports();
+    if (document.getElementById("reportScope").value === "neighborhood") {
+      displayReports(document.getElementById("reportNeighborhood").value);
+    } else {
+      displayReports();
+    }
   }
 });
 
