@@ -15,16 +15,29 @@ class SiteProfile extends HTMLElement {
     this.innerHTML = `
       <dialog id="profileModal" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box w-11/12 max-w-5xl">
-          <h3 class="text-lg font-bold">Hello ${user.username}!</h3>
-          <p class="py-4">Press ESC key or click the button below to close</p>
+          <div class="flex justify-between">
+            <h3 class="text-lg font-bold">Hello ${user.username}!</h3>
+
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <select id="reportScope" class="select select-bordered select-sm w-full sm:w-48">
+                <option value="all">Citywide</option>
+                <option value="neighborhood">By neighbourhood</option>
+              </select>
+
+              <select
+                id="reportNeighborhood"
+                class="select select-bordered select-sm w-full sm:w-56 hidden"
+              ></select>
+            </div>
+          </div>
 
           <div class="overflow-x-auto">
             <table class="table">
               <thead>
                 <tr>
-                  <th id="sortUsername">Username <span id="usernameArrow">▼</span></th>
-                  <th id="sortFormText">Report <span id="reportArrow">▼</span></th>
-                  <th id="sortAddress">Address <span id="addressArrow">▼</span></th>
+                  <th><span id="sortUsername">Username <span id="usernameArrow">▼</span></span></th>
+                  <th><span id="sortFormText">Report <span id="reportArrow">▼</span></span></th>
+                  <th><span id="sortAddress">Address <span id="addressArrow">▼</span></span></th>
                   <th>Map View</th>
                 </tr>
               </thead>
@@ -104,7 +117,7 @@ async function fetchReports() {
 /**
  * Display user reports in a table. Used Copilot to learn how to store variables in HTML elements
  */
-async function displayReports() {
+async function displayReports(neighbourhood = "all") {
   const reportsDiv = document.getElementById("reports");
   const profileModal = document.getElementById("profileModal");
   const reportsBtn = document.getElementById("formReports");
@@ -113,6 +126,12 @@ async function displayReports() {
 
   reports.forEach((report) => {
     const reportItem = document.createElement("tr");
+
+    // if (neighbourhood !== "all") {
+
+    // }
+
+    console.log(neighbourhood);
 
     reportItem.classList.add("hover:bg-base-300");
     reportItem.innerHTML = `
@@ -251,6 +270,64 @@ function sortReportAddressZA() {
   displayReports();
 }
 
+// Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
+async function fetchNeighborhoodNames() {
+  try {
+    const result = await fetch("/api/neighborhoods");
+    const resultJSON = await result.json();
+
+    return [
+      ...new Set(
+        (resultJSON.results || [])
+          .map((neighborhood) => neighborhood.name)
+          .filter(Boolean),
+      ),
+    ].sort((left, right) => left.localeCompare(right));
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
+async function loadNeighborhoodOptions() {
+  const neighborhoodSelect = document.getElementById("reportNeighborhood");
+
+  if (!neighborhoodSelect) {
+    return;
+  }
+
+  const neighborhoods = await fetchNeighborhoodNames();
+  neighborhoodSelect.innerHTML = "";
+
+  if (!neighborhoods.length) {
+    neighborhoodSelect.innerHTML = `<option value="">Neighbourhoods unavailable</option>`;
+    neighborhoodSelect.disabled = true;
+    return;
+  }
+
+  neighborhoods.forEach((neighborhood) => {
+    const option = document.createElement("option");
+    option.value = neighborhood;
+    option.textContent = neighborhood.replace("Neighborhood", "Neighbourhood");
+    neighborhoodSelect.appendChild(option);
+  });
+
+  neighborhoodSelect.disabled = false;
+}
+
+// Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
+function toggleReportNeighborhoodSelect() {
+  const scope = document.getElementById("reportScope");
+  const neighborhoodSelect = document.getElementById("reportNeighborhood");
+
+  if (!scope || !neighborhoodSelect) {
+    return;
+  }
+
+  neighborhoodSelect.classList.toggle("hidden", scope.value !== "neighborhood");
+}
+
 const user = await fetchUser();
 let reports = [];
 
@@ -315,5 +392,25 @@ document.getElementById("sortAddress").addEventListener("click", () => {
   } else {
     sortReportAddressZA();
     sortDirection.innerText = "▲";
+  }
+});
+
+// Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
+document.getElementById("reportScope").addEventListener("change", async () => {
+  toggleReportNeighborhoodSelect();
+
+  if (
+    document.getElementById("reportScope").value === "neighborhood" &&
+    !document.getElementById("reportNeighborhood").options.length
+  ) {
+    await loadNeighborhoodOptions();
+  }
+});
+
+// Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
+document.getElementById("reportNeighborhood").addEventListener("change", () => {
+  if (document.getElementById("reportScope").value === "neighborhood") {
+    console.log(document.getElementById("reportNeighborhood").value);
+    displayReports(document.getElementById("reportNeighborhood").value);
   }
 });
