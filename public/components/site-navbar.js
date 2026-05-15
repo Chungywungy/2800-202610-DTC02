@@ -34,22 +34,22 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
   <div id="legendContent" class="space-y-2 text-sm p-4">
     <div class="flex items-center gap-2">
       <div class="w-5 h-5 rounded" style="background-color: #97C459"></div>
-      <span>1-5 : Very High Heat Score</span>
+      <span>Rank 1-5 : Very High Heat Score</span>
     </div>
 
     <div class="flex items-center gap-2">
       <div class="w-5 h-5 rounded" style="background-color: #F5E663"></div>
-      <span>6-10 : High Heat Score</span>
+      <span>Rank 6-10 : High Heat Score</span>
     </div>
 
     <div class="flex items-center gap-2">
       <div class="w-5 h-5 rounded" style="background-color: #EF9F27"></div>
-      <span>11-15 : Moderate Heat Score</span>
+      <span>Rank 11-15 : Moderate Heat Score</span>
     </div>
 
     <div class="flex items-center gap-2">
       <div class="w-5 h-5 rounded" style="background-color: #E24B4A"></div>
-      <span>16+ : Low Heat Score</span>
+      <span>Rank 16+ : Low Heat Score</span>
     </div>
   </div>
 </div>
