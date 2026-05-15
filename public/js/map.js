@@ -6,11 +6,8 @@ const bounds = [
 
 // setup map boundaries, can remove this export if fetching from backend
 export const map = L.map("map", {
-  maxBounds: bounds,
-  maxBoundsViscosity: 1.0,
-  maxBoundsViscosity: 1.0,
   zoomControl: false,
-}).fitBounds(bounds);
+}).setView([49.2827, -123.1207], 13)
 
 // Display map
 L.tileLayer(
