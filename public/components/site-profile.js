@@ -23,7 +23,7 @@ class SiteProfile extends HTMLElement {
               <thead>
                 <tr>
                   <th id="sortUsername">Username <span id="usernameArrow">▼</span></th>
-                  <th>Report</th>
+                  <th id="sortFormText">Report <span id="reportArrow">▼</span></th>
                   <th>Address</th>
                   <th>Map View</th>
                 </tr>
@@ -187,6 +187,38 @@ function sortReportUsernameZA() {
   displayReports();
 }
 
+function sortReportFormTextAZ() {
+  reports.sort((a, b) => {
+    if (a.formText[0].toLowerCase() > b.formText[0].toLowerCase()) {
+      return 1;
+    }
+
+    if (a.formText[0].toLowerCase() < b.formText[0].toLowerCase()) {
+      return -1;
+    }
+
+    return 0;
+  });
+
+  displayReports();
+}
+
+function sortReportFormTextZA() {
+  reports.sort((a, b) => {
+    if (a.formText[0].toLowerCase() < b.formText[0].toLowerCase()) {
+      return 1;
+    }
+
+    if (a.formText[0].toLowerCase() > b.formText[0].toLowerCase()) {
+      return -1;
+    }
+
+    return 0;
+  });
+
+  displayReports();
+}
+
 const user = await fetchUser();
 let reports = [];
 
@@ -219,7 +251,6 @@ document.getElementById("profileModal").addEventListener("click", (e) => {
 });
 
 document.getElementById("sortUsername").addEventListener("click", () => {
-  // ▼▲
   const sortDirection = document.getElementById("usernameArrow");
 
   if (sortDirection.innerText == "▲") {
@@ -227,6 +258,18 @@ document.getElementById("sortUsername").addEventListener("click", () => {
     sortDirection.innerText = "▼";
   } else {
     sortReportUsernameZA();
+    sortDirection.innerText = "▲";
+  }
+});
+
+document.getElementById("sortFormText").addEventListener("click", () => {
+  const sortDirection = document.getElementById("reportArrow");
+
+  if (sortDirection.innerText == "▲") {
+    sortReportFormTextAZ();
+    sortDirection.innerText = "▼";
+  } else {
+    sortReportFormTextZA();
     sortDirection.innerText = "▲";
   }
 });
