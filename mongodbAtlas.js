@@ -10,9 +10,36 @@ const userSchema = new mongoose.Schema({
     enum: ["resident", "planner"],
     default: "resident",
   },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const userModel = mongoose.model(`users`, userSchema);
+
+const formSchema = new mongoose.Schema({
+  username: String,
+  lat: Number,
+  lng: Number,
+  address: String,
+  formText: String,
+});
+
+const formsModel = mongoose.model(`forms`, formSchema);
+
+const formulaSchema = new mongoose.Schema({
+  username: String,
+  formula: {
+    waterFountains: Number,
+    washrooms: Number,
+    parks: Number,
+    communityCentres: Number,
+    transit: Number,
+  },
+});
+
+const formulaModel = mongoose.model(`formula`, formulaSchema);
 
 async function connectToDatabase() {
   try {
@@ -23,4 +50,4 @@ async function connectToDatabase() {
   }
 }
 
-module.exports = { connectToDatabase, userModel };
+module.exports = { connectToDatabase, userModel, formsModel, formulaModel };

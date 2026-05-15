@@ -42,6 +42,7 @@ app.use(
  * What happens is anytime one of the three routes are requested (/, /auth, /api)
  * it redirects to that folders directory
  */
+
 app.use("/", require("./routes/index"));
 app.use("/auth", require("./routes/auth"));
 app.use("/api", require("./routes/api"));
