@@ -1007,7 +1007,6 @@ treesBtn.addEventListener("click", toggleTreesMarkers);
  */
 const res = await fetch("/api/key");
 const { key } = await res.json();
-console.log("Shade API Key:", key);
 
 const buildingCache = new Map();
 
