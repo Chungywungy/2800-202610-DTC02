@@ -227,7 +227,9 @@ class SiteNavbar extends HTMLElement {
 
  <div class="p-6 max-w-md w-full bg-white rounded-xl shadow space-y-4">
       <h2 class="text-xl font-bold">Heat Score Formula</h2>
-
+<p class="text-center text-lg font-mono bg-base-200 rounded-lg p-2">
+  Heat Score = ∑ ((count ÷ max) × weight)
+</p>
       <!-- WATER FOUNTAIN SETTINGS CONTAINER -->
       <div id="waterFountainContainer" class="flex flex-col gap-1">
         <h1>Water Fountain</h1>
