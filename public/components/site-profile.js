@@ -420,6 +420,8 @@ document.getElementById("reportScope").addEventListener("change", async () => {
     !document.getElementById("reportNeighborhood").options.length
   ) {
     await loadNeighborhoodOptions();
+  } else {
+    displayReports();
   }
 });
 
