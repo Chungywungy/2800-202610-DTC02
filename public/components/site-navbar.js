@@ -169,7 +169,7 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
               <div
                 class=" z-[2000] flex flex-col items-center mt-[140px] md:mt-18"
               >
-                <div class="flex relative justify-center rounded-xl -mb-11">
+                <div class="flex relative pointer-events-none justify-center rounded-xl -mb-11">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="100px"
@@ -182,6 +182,19 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                 </div>
 
                 <div class="bg-white rounded-xl p-4">
+
+                <!-- PROGRESS BAR -->
+<div class="mt-4">
+  <div class="flex justify-between text-sm mb-1">
+    <span>1/6</span>
+  </div>
+
+  <progress
+    class="progress progress-primary w-full"
+    value="1"
+    max="6"
+  ></progress>
+</div>
                   <h2 class="text-2xl font-bold mb-4">How to Use the App</h2>
                   <p>
                     You can select a filter to render the locations on the map. <br />
@@ -192,6 +205,8 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                     <input type="checkbox" id="rememberMe" checked />
                     <label for="rememberMe">Enable first time user help</label>
                   </div>
+
+
 
 <div class="flex gap-3 mt-6">
   <button
@@ -216,16 +231,28 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
             <!-- Weather Help Modal -->
 <div
   id="weatherModal"
-  class="hidden fixed inset-0 bg-black/50 items-end justify-end flex"
+  class="hidden fixed inset-0 bg-black/50 items-end justify-start flex"
 >
-  <div class="z-[2000] flex flex-col mb-30 mr-30">
+  <div class="z-[2000] flex flex-col mb-20 ml-5">
     <div class="bg-white rounded-lg shadow-lg p-6">
+     <!-- PROGRESS BAR -->
+<div class="mt-4">
+  <div class="flex justify-between text-sm mb-1">
+    <span>2/6</span>
+  </div>
+
+  <progress
+    class="progress progress-primary w-full"
+    value="2"
+    max="6"
+  ></progress>
+</div>
       <h2 class="text-2xl font-bold mb-4">
-        Temperature and Heat Score
+        Temperature
       </h2>
 
       <p>
-        See the current temperature and heat score for your location.
+        See the current temperature for your location.
       </p>
 
       <div class="flex gap-3 mt-6">
@@ -245,7 +272,7 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
       </div>
     </div>
 
-    <div class="flex relative justify-end rounded-xl -mt-11">
+    <div class="flex relative pointer-events-none justify-start rounded-xl -mt-11">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="100px"
@@ -258,181 +285,256 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
     </div>
   </div>
 </div>
-
 <!-- Score Help Modal -->
 <div
   id="scoreTutorialModal"
-  class="hidden fixed inset-0 bg-black/50 items-center justify-center"
+  class="hidden fixed inset-0 bg-black/50 flex items-start justify-start"
 >
-  <div class="z-[2000] bg-white rounded-lg shadow-lg p-6 w-80">
-    <h2 class="text-2xl font-bold mb-4">Heat Score</h2>
+  <div class="z-[2000] flex flex-col items-start mt-24 ml-[15%]">
 
-    <p>
-      Turn on the Score layer to view neighbourhood heat vulnerability rankings.
-    </p>
-
-    <p class="mt-3">
-      Use the legend to understand what each colour means.
-    </p>
-
-    <div class="flex gap-3 mt-6">
-      <button
-        id="closeScoreBtn" class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+    <div class="flex relative pointer-events-none justify-start rounded-xl -mb-11 ml-10">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="100px"
+        viewBox="0 -960 960 960"
+        width="100px"
+        fill="white"
       >
-        Close
-      </button>
-
-      <button
-        id="nextBtnScore"
-        class="bg-blue-600 text-white px-4 py-2 rounded-lg"
-      >
-        Next
-      </button>
+        <path d="m280-400 200-201 200 201H280Z" />
+      </svg>
     </div>
+
+    <!-- CARD -->
+    <div class="bg-white rounded-lg shadow-lg p-6 w-80">
+     <!-- PROGRESS BAR -->
+<div class="mt-4">
+  <div class="flex justify-between text-sm mb-1">
+    <span>3/6</span>
+  </div>
+
+  <progress
+    class="progress progress-primary w-full"
+    value="3"
+    max="6"
+  ></progress>
+</div>
+      <h2 class="text-2xl font-bold mb-4">Heat Score</h2>
+
+      <p>
+        Turn on the Score layer to view neighbourhood heat vulnerability rankings.
+      </p>
+
+      <p class="mt-3">
+        Use the legend to understand what each colour means.
+      </p>
+
+      <div class="flex gap-3 mt-6">
+        <button
+          id="closeScoreBtn"
+          class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+        >
+          Close
+        </button>
+
+        <button
+          id="nextBtnScore"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <!-- Profile Help Modal -->
 <div
   id="profileTutorialModal"
-  class="hidden fixed inset-0 bg-black/50 items-start justify-end"
+  class="hidden fixed inset-0 bg-black/50 flex items-start justify-end"
 >
-  <div class="z-[2000] bg-white rounded-lg shadow-lg p-6 mt-24 mr-6 w-80">
-    <h2 class="text-2xl font-bold mb-4">Profile and Login</h2>
+  <div class="z-[2000] flex flex-col items-end mt-10 mr-3">
 
-    <p>
-      Click the profile icon in the top-right corner to log in or view your
-      profile.
-    </p>
-
-    <p class="mt-3">
-      Once logged in, you can access profile and Heat Score options.
-    </p>
-
-    <div class="flex gap-3 mt-6">
-      <button
-        id="closeProfileBtn"
-        class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+    <div class="flex relative pointer-events-none justify-end rounded-xl -mb-12 -mr-7">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="100px"
+        viewBox="0 -960 960 960"
+        width="100px"
+        fill="white"
       >
-        Close
-      </button>
-
-      <button
-        id="nextBtnProfile"
-        class="bg-blue-600 text-white px-4 py-2 rounded-lg"
-      >
-        Next
-      </button>
+        <path d="m280-400 200-201 200 201H280Z" />
+      </svg>
     </div>
+
+    <!-- CARD -->
+    <div class="bg-white rounded-lg shadow-lg p-6 w-80">
+     <!-- PROGRESS BAR -->
+<div class="mt-4">
+  <div class="flex justify-between text-sm mb-1">
+    <span>4/6</span>
+  </div>
+
+  <progress
+    class="progress progress-primary w-full"
+    value="4"
+    max="6"
+  ></progress>
+</div>
+      <h2 class="text-2xl font-bold mb-4">Profile and Login</h2>
+
+      <p>
+        Click the profile icon in the top-right corner to log in or view your
+        profile.
+      </p>
+
+      <p class="mt-3">
+        Once logged in, you can access profile and Heat Score options.
+      </p>
+
+      <div class="flex gap-3 mt-6">
+        <button
+          id="closeProfileBtn"
+          class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+        >
+          Close
+        </button>
+
+        <button
+          id="nextBtnProfile"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
-
 <!-- Heat Score Settings Help Modal -->
 <div
   id="settingsTutorialModal"
-  class="hidden fixed inset-0 bg-black/50 items-center justify-center"
+  class="hidden fixed inset-0 bg-black/50 flex items-start justify-end"
 >
-  <div class="z-[2000] bg-white rounded-lg shadow-lg p-6 w-80">
-    <h2 class="text-2xl font-bold mb-4">Heat Score Options</h2>
+  <div class="z-[2000] flex flex-col items-end mt-10 mr-3">
 
-    <p>
-      Logged-in users can open the Heat Score drawer from the profile menu.
-    </p>
-
-    <p class="mt-3">
-      Use the sliders to customize how each resource affects the score.
-    </p>
-
-    <div class="flex gap-3 mt-6">
-      <button
-        id="closeSettingsBtn"
-        class="bg-gray-500 tutorialCloseBtn text-white px-4 py-2 rounded-lg"
+    <div class="flex relative pointer-events-none justify-end rounded-xl -mb-12 -mr-7">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="100px"
+        viewBox="0 -960 960 960"
+        width="100px"
+        fill="white"
       >
-        Close
-      </button>
-
-      <button
-        id="nextBtnSettings"
-        class="bg-blue-600 text-white px-4 py-2 rounded-lg"
-      >
-        Next
-      </button>
+        <path d="m280-400 200-201 200 201H280Z" />
+      </svg>
     </div>
+
+    <!-- CARD -->
+    <div class="bg-white rounded-lg shadow-lg p-6 w-80">
+     <!-- PROGRESS BAR -->
+<div class="mt-4">
+  <div class="flex justify-between text-sm mb-1">
+    <span>5/6</span>
+  </div>
+
+  <progress
+    class="progress progress-primary w-full"
+    value="5"
+    max="6"
+  ></progress>
+</div>
+      <h2 class="text-2xl font-bold mb-4">Heat Score Options</h2>
+
+      <p>
+        Logged-in users can open the Heat Score drawer from the profile menu.
+      </p>
+
+      <p class="mt-3">
+        Use the sliders to customize how each resource affects the score.
+      </p>
+
+      <div class="flex gap-3 mt-6">
+        <button
+          id="closeSettingsBtn"
+          class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+        >
+          Close
+        </button>
+
+        <button
+          id="nextBtnSettings"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <!-- Report Help Modal -->
 <div
   id="reportTutorialModal"
-  class="hidden fixed inset-0 bg-black/50 items-center justify-center"
+  class="hidden fixed inset-0 bg-black/50 flex items-center justify-center"
 >
-  <div class="z-[2000] bg-white rounded-lg shadow-lg p-6 w-80">
-    <h2 class="text-2xl font-bold mb-4">Submit Reports</h2>
+  <div class="z-[2000] flex flex-col items-center">
 
-    <p>
-      You can submit community reports directly on the map.
-    </p>
+    <!-- CARD -->
+    <div class="bg-white rounded-lg shadow-lg p-6 w-80">
+     <!-- PROGRESS BAR -->
+<div class="mt-4">
+  <div class="flex justify-between text-sm mb-1">
+    <span>6/6</span>
+  </div>
 
-    <p class="mt-3">
-      <strong>Desktop:</strong> right-click on the map.
-    </p>
+  <progress
+    class="progress progress-primary w-full"
+    value="6"
+    max="6"
+  ></progress>
+</div>
+      <h2 class="text-2xl font-bold mb-4">Submit Reports</h2>
 
-    <p class="mt-3">
-      <strong>Mobile:</strong> press and hold on the map.
-    </p>
+      <p>
+        You can submit community reports directly on the map.
+      </p>
 
-    <div class="flex gap-3 mt-6">
-      <button
-        id="closeReportBtn"
-        class="bg-gray-500 tutorialCloseBtn text-white px-4 py-2 rounded-lg"
-      >
-        Close
-      </button>
+      <p class="mt-3">
+        <strong>Desktop:</strong> right-click on the map
+      </p>
 
-      <button
-        id="nextBtnReport"
-        class="bg-blue-600 text-white px-4 py-2 rounded-lg"
-      >
-        Next
-      </button>
+      <p class="mt-3">
+        <strong>Mobile:</strong> press and hold on the map
+      </p>
+
+      <div class="flex gap-3 mt-6">
+        <button
+          id="closeReportBtn"
+          class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+        >
+          Close
+        </button>
+
+
+      </div>
     </div>
+
+    <div class="flex relative pointer-events-none justify-center rounded-xl -mt-12">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="100px"
+        viewBox="0 -960 960 960"
+        width="100px"
+        fill="white"
+      >
+        <path d="M480-360 280-559h400L480-360Z" />
+      </svg>
+    </div>
+
   </div>
 </div>
-
-<!-- Done Help Modal -->
-<div
-  id="doneTutorialModal"
-  class="hidden fixed inset-0 bg-black/50 items-center justify-center"
->
-  <div class="z-[2000] bg-white rounded-lg shadow-lg p-6 w-80">
-    <h2 class="text-2xl font-bold mb-4">You're Ready!</h2>
-
-    <p>
-      You can now explore cooling resources, heat scores, and community reports
-      across Vancouver.
-    </p>
-
-    <div class="flex gap-3 mt-6">
-      <button
-        id="closeDoneBtn"
-        class="bg-gray-500 tutorialCloseBtn text-white px-4 py-2 rounded-lg"
-      >
-        Close
-      </button>
-
-      <button
-        id="finishTutorialBtn"
-        class="bg-blue-600 text-white px-4 py-2 rounded-lg"
-      >
-        Start Exploring
-      </button>
-    </div>
-  </div>
-</div>
-
-                </div>
-              </div>
-            </div>
             </nav>
           </div>
 
@@ -707,7 +809,6 @@ document.getElementById("helpBtn").addEventListener("click", () => {
   document.getElementById("filterModal").classList.remove("hidden");
 });
 
-
 /**
  * Tutorial logic / flow between modals
  */
@@ -747,17 +848,6 @@ document.getElementById("nextBtnProfile").addEventListener("click", () => {
 document.getElementById("nextBtnSettings").addEventListener("click", () => {
   document.getElementById("settingsTutorialModal").classList.add("hidden");
   document.getElementById("reportTutorialModal").classList.remove("hidden");
-});
-
-// REPORT -> DONE
-document.getElementById("nextBtnReport").addEventListener("click", () => {
-  document.getElementById("reportTutorialModal").classList.add("hidden");
-  document.getElementById("doneTutorialModal").classList.remove("hidden");
-});
-
-// DONE
-document.getElementById("finishTutorialBtn").addEventListener("click", () => {
-  document.getElementById("doneTutorialModal").classList.add("hidden");
 });
 
 
@@ -831,8 +921,6 @@ document.getElementById("summaryModal").addEventListener("click", (event) => {
   }
 });
 
-
-
 // HEATSCORE LEGEND POPUP MODAL
 const scoreBtn = document.getElementById("scoreBtn");
 const heatScoreLegend = document.getElementById("heatScoreLegend");
@@ -853,7 +941,6 @@ minimizeLegendBtn.addEventListener("click", () => {
   }
 });
 // HEATSCORE POPUP MODAL END
-
 
 checkUserAuth();
 
