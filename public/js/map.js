@@ -628,29 +628,6 @@ const toggleNeighborhoodGeom = () => {
   }
 };
 
-// Event Listener: Map movement (zoom in and zoom out)
-map.on("zoomend", () => {
-  // check if treesBtn is clicked:
-  const treesBtnIsToggled = treesBtn.classList.contains("active");
-  if (treesBtnIsToggled) debouncedToggleTreeMarkers();
-});
-
-// Event Listener: Map movement (map movement)
-map.on("moveend", () => {
-  // check if treesBtn is clicked:
-  const treesBtnIsToggled = treesBtn.classList.contains("active");
-  // console.log(treesBtnIsToggled);
-  if (treesBtnIsToggled) debouncedToggleTreeMarkers();
-});
-
-// treesBtn listener: On initial click, we toggle the createTreesMarkers
-treesBtn.addEventListener("click", toggleTreesMarkers);
-
-/**
- * Trees API Integration Section (end)
- * Contains: fetching data, toggling markers, creating markers
- */
-
 let userMarker = null; // global variable to hold the user's location marker
 let userCircle = null; // global variable to hold the user's location accuracy circle
 
