@@ -143,7 +143,12 @@ async function displayReports(neighbourhood = "all") {
   reports.forEach((report) => {
     const reportItem = document.createElement("tr");
 
-    if (neighbourhood == "all" || report.address.includes(neighbourhood)) {
+    if (
+      neighbourhood == "all" ||
+      report.address.includes(neighbourhood) ||
+      (neighbourhood === "Arbutus Ridge" &&
+        report.address.replaceAll("-", " ").includes(neighbourhood))
+    ) {
       reportItem.classList.add("hover:bg-base-300");
       reportItem.innerHTML = `
           <td>${report.username}</td>
@@ -326,6 +331,7 @@ async function loadNeighborhoodOptions() {
   });
 
   neighborhoodSelect.disabled = false;
+  displayReports(neighborhoodSelect.value);
 }
 
 // Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
@@ -420,6 +426,8 @@ document.getElementById("reportScope").addEventListener("change", async () => {
     !document.getElementById("reportNeighborhood").options.length
   ) {
     await loadNeighborhoodOptions();
+  } else if (document.getElementById("reportScope").value === "neighborhood") {
+    displayReports(document.getElementById("reportNeighborhood").value);
   } else {
     displayReports();
   }
