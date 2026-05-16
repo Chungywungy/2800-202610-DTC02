@@ -143,23 +143,30 @@ async function displayReports(neighbourhood = "all") {
   reports.forEach((report) => {
     const reportItem = document.createElement("tr");
 
-    reportItem.classList.add("hover:bg-base-300");
-    reportItem.innerHTML = `
-      <td>${report.username}</td>
-      <td>${report.formText}</td>
-      <td>${report.address}</td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-sm" 
-          data-lat="${report.lat}"
-          data-lng="${report.lng}"
-        >
-          View
-        </button>
-      </td>
-    `;
-    reportsDiv.appendChild(reportItem);
+    if (
+      neighbourhood == "all" ||
+      report.address.includes(neighbourhood) ||
+      (neighbourhood === "Arbutus Ridge" &&
+        report.address.replaceAll("-", " ").includes(neighbourhood))
+    ) {
+      reportItem.classList.add("hover:bg-base-300");
+      reportItem.innerHTML = `
+          <td>${report.username}</td>
+          <td>${report.formText}</td>
+          <td>${report.address}</td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-sm" 
+              data-lat="${report.lat}"
+              data-lng="${report.lng}"
+            >
+              View
+            </button>
+          </td>
+        `;
+      reportsDiv.appendChild(reportItem);
+    }
   });
 
   // Add listener on each "View" button
@@ -324,6 +331,7 @@ async function loadNeighborhoodOptions() {
   });
 
   neighborhoodSelect.disabled = false;
+  displayReports(neighborhoodSelect.value);
 }
 
 // Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
@@ -350,7 +358,11 @@ customElements.define("site-profile", SiteProfile);
 // Used Copilot to learn about event.newState
 document.getElementById("profileModal").addEventListener("toggle", (e) => {
   if (e.newState === "open") {
-    displayReports();
+    if (document.getElementById("reportScope").value === "neighborhood") {
+      displayReports(document.getElementById("reportNeighborhood").value);
+    } else {
+      displayReports();
+    }
   }
 });
 
@@ -414,6 +426,10 @@ document.getElementById("reportScope").addEventListener("change", async () => {
     !document.getElementById("reportNeighborhood").options.length
   ) {
     await loadNeighborhoodOptions();
+  } else if (document.getElementById("reportScope").value === "neighborhood") {
+    displayReports(document.getElementById("reportNeighborhood").value);
+  } else {
+    displayReports();
   }
 });
 
