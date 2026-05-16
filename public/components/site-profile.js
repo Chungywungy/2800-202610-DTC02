@@ -1,4 +1,4 @@
-import { toggleReportMarkers } from "../js/map.js";
+import { toggleReportMarkers } from "../js/report.js";
 import { map } from "../js/mapInit.js";
 
 /**
