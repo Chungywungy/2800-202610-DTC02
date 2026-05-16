@@ -1,4 +1,5 @@
-import { map, toggleReportMarkers } from "../js/map.js";
+import { toggleReportMarkers } from "../js/map.js";
+import { map } from "../js/mapInit.js";
 
 /**
  * Profile modal component
@@ -350,7 +351,7 @@ const user = await fetchUser();
 let reports = [];
 
 fetchReports();
-displayReports();
+// displayReports();
 
 customElements.define("site-profile", SiteProfile);
 
