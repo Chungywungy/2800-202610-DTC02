@@ -1,15 +1,8 @@
 import { map } from "./mapInit.js";
-import {
-  fetchWaterFountains,
-  createFountainMarkers,
-  toggleFountainMarkers,
-} from "./water.js";
+import { fetchWaterFountains, toggleFountainMarkers } from "./water.js";
 import { fetchParks, createParkGeom, toggleParkGeom } from "./parks.js";
-import {
-  fetchPublicWashrooms,
-  createWashroomMarkers,
-  toggleWashroomMarkers,
-} from "./washroom.js";
+import { fetchPublicWashrooms, toggleWashroomMarkers } from "./washroom.js";
+import { fetchTransitStops, toggleTransitMarkers } from "./transit.js";
 
 window.submitReport = async function (lat, lng, address) {
   const formText = document.getElementById("reportText").value;
@@ -106,63 +99,6 @@ const toggleForms = () => {
     formMarkers.forEach((marker) => {
       marker.addTo(map);
     });
-  }
-};
-
-let transitLayer = null;
-let transitData = null;
-
-const inVancouver = (lat, lng) => {
-  return lat >= 49.2 && lat <= 49.32 && lng >= -123.25 && lng <= -123.02;
-};
-
-const fetchTransitStops = async () => {
-  // console.log("Fetching transit stops...");
-  try {
-    const res = await fetch("/data/stops.geojson");
-    transitData = await res.json();
-    // console.log("Loaded stops:", transitData.features.length);
-  } catch (error) {
-    console.log("Error:", error);
-  }
-};
-
-const createTransitLayer = () => {
-  transitLayer = L.geoJSON(transitData, {
-    filter: (feature) => {
-      const [lng, lat] = feature.geometry.coordinates;
-      return inVancouver(lat, lng);
-    },
-    pointToLayer: (feature, latlng) => {
-      return L.circleMarker(latlng, {
-        radius: 5,
-        fillColor: "#A78BFA",
-        color: "#fff",
-        weight: 1.5,
-        fillOpacity: 0.9,
-      });
-    },
-    onEachFeature: (feature, layer) => {
-      const p = feature.properties;
-      const [lng, lat] = feature.geometry.coordinates;
-
-      layer.bindPopup(`
-        <b>${p.name}</b><br>
-        Stop code: ${p.code}<br>
-        Wheelchair: ${p.wheelchair_boarding === "1" ? "Yes" : "No"}<br><br>
-        <button onclick="routeTo(${lat}, ${lng}, 'transit')" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>
-      `);
-    },
-  });
-};
-
-const toggleTransitMarkers = () => {
-  const button = document.getElementById("transitBtn");
-  if (button.classList.contains("active")) {
-    if (!transitLayer) createTransitLayer();
-    transitLayer.addTo(map);
-  } else {
-    if (transitLayer) map.removeLayer(transitLayer);
   }
 };
 
@@ -829,7 +765,12 @@ let neighborhoodGeom = [];
 /**
  * Fetch raw neighborhood data from backend route
  */
-const fetchNeighborhoods = async (parkData, fountainData, washroomData) => {
+const fetchNeighborhoods = async (
+  parkData,
+  fountainData,
+  washroomData,
+  transitData,
+) => {
   neighborhoodData = [];
 
   try {
@@ -842,7 +783,7 @@ const fetchNeighborhoods = async (parkData, fountainData, washroomData) => {
     console.log(error);
   }
 
-  createNeighborhoodGeom(parkData, fountainData, washroomData);
+  createNeighborhoodGeom(parkData, fountainData, washroomData, transitData);
 };
 
 // const getScoreColor = (score) => {
@@ -882,7 +823,12 @@ const fetchHeatScoreFormula = async () => {
  * Create neighborhood geometry layers
  */
 
-const createNeighborhoodGeom = (parkData, fountainData, washroomData) => {
+const createNeighborhoodGeom = (
+  parkData,
+  fountainData,
+  washroomData,
+  transitData,
+) => {
   neighborhoodGeom = [];
 
   const neighborhoodStats = [];
@@ -1184,9 +1130,9 @@ document.getElementById("parksBtn").addEventListener("click", () => {
 document
   .getElementById("communityCentresBtn")
   .addEventListener("click", toggleCommunityCentreMarkers);
-document
-  .getElementById("transitBtn")
-  .addEventListener("click", toggleTransitMarkers);
+document.getElementById("transitBtn").addEventListener("click", () => {
+  toggleTransitMarkers(map);
+});
 document
   .getElementById("formReports")
   .addEventListener("click", toggleReportMarkers);
@@ -1197,7 +1143,7 @@ fetchReports();
 
 // Wait for all data before fetching neighborhoods
 async function fetchAll() {
-  const [parkData, fountainData, washroomData, _transit, _centres, _heat] =
+  const [parkData, fountainData, washroomData, transitData, _centres, _heat] =
     await Promise.all([
       fetchParks(),
       fetchWaterFountains(),
