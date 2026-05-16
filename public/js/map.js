@@ -4,6 +4,7 @@ import {
   createFountainMarkers,
   toggleFountainMarkers,
 } from "./water.js";
+import { fetchParks, createParkGeom, toggleParkGeom } from "./parks.js";
 
 window.submitReport = async function (lat, lng, address) {
   const formText = document.getElementById("reportText").value;
@@ -99,67 +100,6 @@ const toggleForms = () => {
   } else {
     formMarkers.forEach((marker) => {
       marker.addTo(map);
-    });
-  }
-};
-
-// Raw park data from opendata.vancouver.ca
-let parkData = [];
-
-// Park geometry
-let parkGeom = [];
-
-/**
- * Fetch raw park data from backend route and push to parkData array
- */
-const fetchParks = async () => {
-  parkData = [];
-
-  try {
-    const results = await fetch("/api/parks");
-    const resultsJSON = await results.json();
-
-    parkData = resultsJSON;
-  } catch (error) {
-    console.log(error);
-  }
-
-  createParkGeom();
-};
-
-/**
- * Push park geometry data from each park to parkGeom array
- */
-const createParkGeom = async () => {
-  parkGeom = [];
-
-  for (let i = 0; i < parkData.length; i++) {
-    const park = parkData[i];
-    const geom = L.geoJSON(park.geom);
-
-    // Get the center of the park boundary for routing
-    const center = geom.getBounds().getCenter();
-
-    geom.bindPopup(`
-      ${park.park_name}<br><br>
-      <button onclick="routeTo(${center.lat}, ${center.lng})" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>
-    `);
-    parkGeom.push(geom);
-  }
-};
-
-/**
- * Toggle park geometry when the Parks button in the navbar is clicked. Used in site-navbar.js
- */
-const toggleParkGeom = () => {
-  const button = document.getElementById("parksBtn");
-  if (!button.classList.contains("active")) {
-    parkGeom.forEach((geom) => {
-      map.removeLayer(geom);
-    });
-  } else {
-    parkGeom.forEach((geom) => {
-      geom.addTo(map);
     });
   }
 };
@@ -941,7 +881,7 @@ let neighborhoodGeom = [];
 /**
  * Fetch raw neighborhood data from backend route
  */
-const fetchNeighborhoods = async (fountainData) => {
+const fetchNeighborhoods = async (parkData, fountainData) => {
   neighborhoodData = [];
 
   try {
@@ -954,7 +894,7 @@ const fetchNeighborhoods = async (fountainData) => {
     console.log(error);
   }
 
-  createNeighborhoodGeom(fountainData);
+  createNeighborhoodGeom(parkData, fountainData);
 };
 
 // const getScoreColor = (score) => {
@@ -994,7 +934,7 @@ const fetchHeatScoreFormula = async () => {
  * Create neighborhood geometry layers
  */
 
-const createNeighborhoodGeom = (fountainData) => {
+const createNeighborhoodGeom = (parkData, fountainData) => {
   neighborhoodGeom = [];
 
   const neighborhoodStats = [];
@@ -1290,7 +1230,9 @@ document.getElementById("fountainsBtn").addEventListener("click", () => {
 document
   .getElementById("publicWashroomsBtn")
   .addEventListener("click", toggleWashroomMarkers);
-document.getElementById("parksBtn").addEventListener("click", toggleParkGeom);
+document.getElementById("parksBtn").addEventListener("click", () => {
+  toggleParkGeom(map);
+});
 document
   .getElementById("communityCentresBtn")
   .addEventListener("click", toggleCommunityCentreMarkers);
@@ -1307,7 +1249,7 @@ fetchReports();
 
 // Wait for all data before fetching neighborhoods
 async function fetchAll() {
-  const [_parks, fountainData, _washrooms, _transit, _centres, _heat] =
+  const [parkData, fountainData, _washrooms, _transit, _centres, _heat] =
     await Promise.all([
       fetchParks(),
       fetchWaterFountains(),
@@ -1317,7 +1259,7 @@ async function fetchAll() {
       fetchHeatScoreFormula(),
     ]);
 
-  await fetchNeighborhoods(fountainData);
+  await fetchNeighborhoods(parkData, fountainData);
 }
 
 fetchAll();
