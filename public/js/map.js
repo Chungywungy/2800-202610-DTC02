@@ -51,62 +51,6 @@ window.submitReport = async function (lat, lng, address) {
   }
 };
 
-let formMarkers = [];
-let formsData = [];
-
-const fetchForms = async () => {
-  formsData = [];
-
-  try {
-    const result = await fetch("/api/reports");
-    const resultJSON = await result.json();
-
-    formsData = resultJSON;
-  } catch (error) {
-    console.log(error);
-  }
-
-  createFormMarkers();
-};
-
-const createFormMarkers = () => {
-  formMarkers = [];
-
-  for (let i = 0; i < formsData.length; i++) {
-    const report = formsData[i];
-
-    const marker = L.marker([report.lat, report.lng]);
-
-    marker.bindPopup(`
-      <div class="w-56">
-        <h3 class="font-semibold text-lg mb-2">Community Report</h3>
-
-        <p><strong>User:</strong> ${report.username}</p>
-
-        <p class="mt-2">
-          <strong>Feedback:</strong><br>
-          ${report.formText}
-        </p>
-      </div>
-    `);
-
-    formMarkers.push(marker);
-  }
-};
-
-const toggleForms = () => {
-  const button = document.getElementById("formReports");
-  if (!button.classList.contains("active")) {
-    formMarkers.forEach((marker) => {
-      map.removeLayer(marker);
-    });
-  } else {
-    formMarkers.forEach((marker) => {
-      marker.addTo(map);
-    });
-  }
-};
-
 async function fetchNeighborhoodNames() {
   try {
     const result = await fetch("/api/neighborhoods");

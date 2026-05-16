@@ -24,80 +24,80 @@ L.tileLayer(
 
 map.getContainer().style.backgroundColor = "#eef7ff";
 
-// // Replace temperature
-// const tempComponent = document.querySelector("temperature-container");
+// Replace temperature
+const tempComponent = document.querySelector("temperature-container");
 
-// map.on("click", (e) => {
-//   const { lat, lng } = e.latlng;
+map.on("click", (e) => {
+  const { lat, lng } = e.latlng;
 
-//   tempComponent.loadTemperature(lat, lng);
-// });
+  tempComponent.loadTemperature(lat, lng);
+});
 
-// // for form submission, right click on desktop, press and hold for mobile
-// map.on("contextmenu", async (e) => {
-//   const { lat, lng } = e.latlng;
+// for form submission, right click on desktop, press and hold for mobile
+map.on("contextmenu", async (e) => {
+  const { lat, lng } = e.latlng;
 
-//   let address = "Unknown location";
+  let address = "Unknown location";
 
-//   try {
-//     const response = await fetch(
-//       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
-//     );
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+    );
 
-//     const data = await response.json();
+    const data = await response.json();
 
-//     if (data.address) {
-//       address = [
-//         data.address.house_number,
-//         data.address.road,
-//         data.address.suburb,
-//         data.address.neighbourhood,
-//         data.address.city,
-//         data.address.postcode,
-//       ]
-//         .filter(Boolean)
-//         .join(", ");
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
+    if (data.address) {
+      address = [
+        data.address.house_number,
+        data.address.road,
+        data.address.suburb,
+        data.address.neighbourhood,
+        data.address.city,
+        data.address.postcode,
+      ]
+        .filter(Boolean)
+        .join(", ");
+    }
+  } catch (error) {
+    console.log(error);
+  }
 
-//   const popupContent = `
-//     <div class="w-64">
-//       <h3 class="text-lg font-semibold mb-2">Share your feedback</h3>
+  const popupContent = `
+    <div class="w-64">
+      <h3 class="text-lg font-semibold mb-2">Share your feedback</h3>
 
-//       <p class="text-sm mb-2">
-//         <strong>Address:</strong><br>
-//         ${address}
-//       </p>
+      <p class="text-sm mb-2">
+        <strong>Address:</strong><br>
+        ${address}
+      </p>
 
-//       <p class="text-xs mb-3 text-gray-600">
-//         ${lat.toFixed(5)}, ${lng.toFixed(5)}
-//       </p>
+      <p class="text-xs mb-3 text-gray-600">
+        ${lat.toFixed(5)}, ${lng.toFixed(5)}
+      </p>
 
-//       <textarea
-//         id="reportText"
-//         placeholder="Describe the issue"
-//         rows="3"
-//         class="w-full p-2 mb-2 border border-gray-300 rounded"
-//       ></textarea>
+      <textarea
+        id="reportText"
+        placeholder="Describe the issue"
+        rows="3"
+        class="w-full p-2 mb-2 border border-gray-300 rounded"
+      ></textarea>
 
-//       <button
-//         onclick="submitReport(${lat}, ${lng}, \`${address}\`)"
-//         class="w-full p-2 bg-blue-900 text-white rounded hover:bg-blue-800"
-//       >
-//         Submit Feedback
-//       </button>
-//     </div>
-//   `;
+      <button
+        onclick="submitReport(${lat}, ${lng}, \`${address}\`)"
+        class="w-full p-2 bg-blue-900 text-white rounded hover:bg-blue-800"
+      >
+        Submit Feedback
+      </button>
+    </div>
+  `;
 
-//   L.popup({
-//     minWidth: 260,
-//     maxWidth: 260,
-//     closeOnClick: false,
-//     autoClose: true,
-//   })
-//     .setLatLng(e.latlng)
-//     .setContent(popupContent)
-//     .openOn(map);
-// });
+  L.popup({
+    minWidth: 260,
+    maxWidth: 260,
+    closeOnClick: false,
+    autoClose: true,
+  })
+    .setLatLng(e.latlng)
+    .setContent(popupContent)
+    .openOn(map);
+});
