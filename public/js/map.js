@@ -426,7 +426,7 @@ const createNeighborhoodGeom = (
     Transit Stops: ${stats.transit}<br>
     Parks: ${stats.parks}<br><br>
 
-    <b>Normalized Heat Score:</b>
+    <b>Normalized Cool Score:</b>
     ${(stats.totalScore * 100).toFixed(1)}
   `);
 
