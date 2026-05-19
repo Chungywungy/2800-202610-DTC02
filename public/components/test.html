@@ -1,16 +1,25 @@
-/**
- * Navbar Component
- * Create a <site-navbar> tag to implement
- */
-
-class SpeedDial extends HTMLElement {
-  constructor() {
-    super();
-    this.createSpeedDial();
-  }
-
-  createSpeedDial() {
-    this.innerHTML = `
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- TAILWIND -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- DAISYUI -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- GOOGLE COMPONENTS -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+  </head>
+  <body>
+    <!-- separator -->
     <section id="speedDialContainer" class="z-10000000 bottom-5 left-1 fixed">
       <div class="fab">
         <!-- a focusable div with tabindex is necessary to work on all browsers. role="button" is necessary for accessibility -->
@@ -97,8 +106,6 @@ class SpeedDial extends HTMLElement {
         </section>
       </div>
     </section>
-    `;
-  }
-}
-
-customElements.define("speed-dial", SpeedDial);
+    <!-- separator -->
+  </body>
+</html>
