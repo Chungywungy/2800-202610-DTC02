@@ -15,6 +15,14 @@ import {
 } from "./summaryAI.js";
 import { initTrees } from "./trees.js";
 
+/**
+ * Submits a user feedback report to the backend API.
+ *
+ * @async
+ * @param {number} lat - Latitude of the report location.
+ * @param {number} lng - Longitude of the report location.
+ * @param {string} address - Address of the report location.
+ */
 window.submitReport = async function (lat, lng, address) {
   const formText = document.getElementById("reportText").value;
 
@@ -110,7 +118,7 @@ if (summaryButton) {
 }
 
 /**
- * Shade API Integration Section (start)
+ * Shade API Integration Section (end)
  * Contains: fetching data and creating shade layer
  */
 const res = await fetch("/api/key");
@@ -204,7 +212,15 @@ let neighborhoodData = [];
 let neighborhoodGeom = [];
 
 /**
- * Fetch raw neighborhood data from backend route
+ * Fetches neighborhood data from the backend and creates
+ * neighborhood geometry layers.
+ *
+ * @async
+ * @param {Array} parkData - Array of park data.
+ * @param {Array} fountainData - Array of fountain data.
+ * @param {Array} washroomData - Array of washroom data.
+ * @param {Object} transitData - Transit stop GeoJSON data.
+ * @param {Array} communityCentresData - Array of community centre data.
  */
 const fetchNeighborhoods = async (
   parkData,
@@ -243,6 +259,11 @@ let heatScoreFormula = {
   transit: 0.2,
 };
 
+/**
+ * Fetches the user's saved cool score formula.
+ *
+ * @async
+ */
 const fetchHeatScoreFormula = async () => {
   try {
     const result = await fetch("/api/heatScoreFormula");
@@ -260,10 +281,17 @@ const fetchHeatScoreFormula = async () => {
     console.log(error);
   }
 };
-/**
- * Create neighborhood geometry layers
- */
 
+/**
+ * Creates neighborhood polygon layers and calculates
+ * normalized heat scores and rankings.
+ *
+ * @param {Array} parkData - Array of park data.
+ * @param {Array} fountainData - Array of fountain data.
+ * @param {Array} washroomData - Array of washroom data.
+ * @param {Object} transitData - Transit stop GeoJSON data.
+ * @param {Array} communityCentresData - Array of community centre data.
+ */
 const createNeighborhoodGeom = (
   parkData,
   fountainData,
@@ -275,7 +303,7 @@ const createNeighborhoodGeom = (
 
   const neighborhoodStats = [];
 
-  // PASS 1: gather counts for every neighborhood
+  // Gather counts for every neighborhood
   for (let i = 0; i < neighborhoodData.length; i++) {
     const neighborhood = neighborhoodData[i];
 
@@ -365,7 +393,7 @@ const createNeighborhoodGeom = (
 
   const maxParks = Math.max(...neighborhoodStats.map((n) => n.parks));
 
-  // PASS 2: calculate all scores first
+  // Next calculate all scores first
   const scoredNeighborhoods = neighborhoodStats.map((stats) => {
     const fountainScore = stats.fountains / maxFountains;
 
@@ -433,8 +461,9 @@ const createNeighborhoodGeom = (
     neighborhoodGeom.push(geom);
   });
 };
+
 /**
- * Toggle neighborhood geometry on map
+ * Toggles neighborhood score polygons on or off the map.
  */
 const toggleNeighborhoodGeom = () => {
   const button = document.getElementById("scoreBtn");
@@ -501,7 +530,6 @@ let routingControl = null; // global variable to hold the routing control instan
  * Use Leaflet Routing Machine to calculate and display a route from the user's current location to a specified destination (latitude and longitude). If the user's location is not available, it shows an alert. If there's an existing route displayed, it removes it before creating a new one. The route is displayed on the map without the turn-by-turn panel, and users cannot add extra waypoints.
  * @param {number} destinationLat - The latitude of the destination.
  * @param {number} destinationLon - The longitude of the destination.
- * @returns {void}
  * Reference: Leaflet Routing Machine (https://www.liedman.net/leaflet-routing-machine/)
  */
 window.routeTo = function (destinationLat, destinationLon) {
@@ -560,7 +588,12 @@ document
   .addEventListener("click", toggleNeighborhoodGeom);
 fetchReports();
 
-// Wait for all data before fetching neighborhoods
+/**
+ * Fetches all required datasets in parallel and initializes
+ * neighborhood scoring.
+ *
+ * @async
+ */
 async function fetchAll() {
   // Loading Spinner. Spinner is on by default
   const loadingSpinner = document.querySelector("#spinningModalContainer");
