@@ -12,8 +12,6 @@ const resetFormulaBtn = document.getElementById("resetFormula");
 
 /**
  * Resets the formula sliders to equal default weights.
- *
- * @returns {void}
  */
 function resetFormula() {
   const defaultFormula = {
@@ -61,8 +59,6 @@ function getFormula() {
 /**
  * Calculates the total formula weight and updates the total display,
  * message, and save button state.
- *
- * @returns {void}
  */
 function updateTotal() {
   const formula = getFormula();
@@ -101,6 +97,8 @@ transitInput.addEventListener("input", updateTotal);
 
 /**
  * Saves the current heat score formula to the backend.
+ *
+ * @async
  */
 saveFormulaBtn.addEventListener("click", async () => {
   const formula = getFormula();
@@ -139,7 +137,6 @@ saveFormulaBtn.addEventListener("click", async () => {
  * Fetches the saved heat score formula from the backend and updates the sliders.
  *
  * @async
- * @returns {Promise<void>}
  */
 async function loadFormula() {
   const response = await fetch("/api/heatScoreFormula");
@@ -156,7 +153,6 @@ loadFormula();
  * Updates the slider and text input values using the given formula.
  *
  * @param {object} formula - Formula object containing heat score weights.
- * @returns {void}
  */
 function updateSliders(formula) {
   Object.entries(formula).forEach(([sliderName, sliderValue]) => {

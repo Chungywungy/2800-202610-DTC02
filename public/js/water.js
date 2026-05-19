@@ -1,4 +1,3 @@
-// Display water fountains
 let fountainMarkers = [];
 
 /**
@@ -53,7 +52,6 @@ export const fetchWaterFountains = async () => {
  * in the fountainMarkers array.
  *
  * @param {Array} fountainData - Array of water fountain data objects.
- * @returns {void}
  */
 export const createFountainMarkers = (fountainData) => {
   fountainMarkers = [];
@@ -73,7 +71,6 @@ export const createFountainMarkers = (fountainData) => {
  * whether the fountains button has the active class.
  *
  * @param {L.Map} map - The Leaflet map instance.
- * @returns {void}
  */
 export const toggleFountainMarkers = (map) => {
   const button = document.getElementById("fountainsBtn");

@@ -27,7 +27,6 @@ const reportIcon = L.divIcon({
  * Fetches report data from the backend and creates report markers.
  *
  * @async
- * @returns {Promise<void>}
  */
 export const fetchReports = async () => {
   let reportData = [];
@@ -46,7 +45,6 @@ export const fetchReports = async () => {
  * in the reportMarkers array.
  *
  * @param {Array} reportData - Array of user report objects.
- * @returns {void}
  */
 const createReportMarkers = (reportData) => {
   reportMarkers = [];
@@ -91,7 +89,6 @@ const createReportMarkers = (reportData) => {
  *
  * @async
  * @param {L.Map} map - Leaflet map instance.
- * @returns {Promise<void>}
  */
 export const toggleReportMarkers = async (map) => {
   const button = document.getElementById("formReports");
