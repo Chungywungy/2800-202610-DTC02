@@ -562,6 +562,9 @@ fetchReports();
 
 // Wait for all data before fetching neighborhoods
 async function fetchAll() {
+  // Loading Spinner. Spinner is on by default
+  const loadingSpinner = document.querySelector("#spinningModalContainer");
+
   const [
     parkData,
     fountainData,
@@ -576,6 +579,7 @@ async function fetchAll() {
     fetchTransitStops(),
     fetchCommunityCentres(),
     fetchHeatScoreFormula(),
+    new Promise((resolve) => setTimeout(resolve, 3000)), // Add delay for animation
   ]);
 
   await fetchNeighborhoods(
@@ -585,6 +589,9 @@ async function fetchAll() {
     transitData,
     communityCentresData,
   );
+  // Hide Spinner
+  loadingSpinner.classList.add("hidden");
+  loadingSpinner.classList.remove("flex");
 }
 initTrees(map);
 fetchAll();
