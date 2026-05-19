@@ -19,7 +19,7 @@ class SiteProfile extends HTMLElement {
           <h3 class="text-lg font-bold">Hello ${user.username}!</h3>
           <br>
 
-          <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300 mb-4">
             <input type="checkbox" />
 
             <div class="collapse-title font-semibold">User Reports</div>
@@ -53,7 +53,12 @@ class SiteProfile extends HTMLElement {
               </div>
             </div>
           </div>
-          <br>
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300 mb-4">
+            <input type="checkbox" />
+            <div class="collapse-title font-semibold">Achievements</div>
+            <div class="collapse-content text-sm flex flex-wrap justify-start gap-2" id="achievements">
+            </div>
+          </div>
           <div class="collapse collapse-arrow bg-base-100 border border-base-300">
             <input type="checkbox" />
             <div class="collapse-title font-semibold">Delete Account</div>
@@ -440,3 +445,58 @@ document.getElementById("reportNeighborhood").addEventListener("change", () => {
     displayReports(document.getElementById("reportNeighborhood").value);
   }
 });
+
+//Achievements
+function addBadges() {
+  const achievementsContainer = document.getElementById("achievements");
+  ["weather", "report"].forEach((achievement) => {
+    const achievementDiv = document.createElement("div");
+    achievementDiv.classList.add(
+      "px-[10px]",
+      "py-[10px]",
+      "rounded-lg",
+      "shadow-sm",
+      "bg-neutral-100",
+      "flex",
+      "flex-col",
+      "justify-left",
+      "items-center",
+      "w-1/5",
+    );
+    const badgeSpan = document.createElement("span");
+    badgeSpan.classList.add("material-symbols-outlined");
+    badgeSpan.style = "font-size: 50px";
+    badgeSpan.textContent = "license";
+
+    const achievementName = document.createElement("p");
+    achievementName.id = achievement;
+    achievementName.textContent = achievement;
+
+    // combine together
+    achievementDiv.appendChild(badgeSpan);
+    achievementDiv.appendChild(achievementName);
+
+    // append to container
+    achievementsContainer.appendChild(achievementDiv);
+  });
+}
+
+addBadges();
+
+async function updateUserBadges() {
+  const responseUser = await fetchUser();
+  const loggedInUser = await responseUser.username;
+
+  const responseAchievements = await fetch(
+    `/achievement?username=${loggedInUser}`,
+  );
+  const achievements = await responseAchievements.json();
+
+  achievements.forEach((achievementObject) => {
+    document
+      .getElementById(achievementObject.achievementName).parentNode
+      .classList.add("bg-warning");
+  });
+}
+
+updateUserBadges();
