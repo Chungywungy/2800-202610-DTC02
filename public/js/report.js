@@ -1,6 +1,16 @@
-// Toggle pins for feedback report forms submitted
+/**
+ * Stores all report markers displayed on the map.
+ *
+ * @type {Array}
+ */
 let reportMarkers = [];
 
+/**
+ * Custom Leaflet icon used for report markers.
+ *
+ * @constant
+ * @type {L.DivIcon}
+ */
 const reportIcon = L.divIcon({
   html: `
     <svg width="32" height="32" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
@@ -13,7 +23,12 @@ const reportIcon = L.divIcon({
   iconAnchor: [16, 32],
 });
 
-// Display the users reports as pins on map
+/**
+ * Fetches report data from the backend and creates report markers.
+ *
+ * @async
+ * @returns {Promise<void>}
+ */
 export const fetchReports = async () => {
   let reportData = [];
   try {
@@ -26,6 +41,13 @@ export const fetchReports = async () => {
   createReportMarkers(reportData);
 };
 
+/**
+ * Creates map markers for submitted user reports and stores them
+ * in the reportMarkers array.
+ *
+ * @param {Array} reportData - Array of user report objects.
+ * @returns {void}
+ */
 const createReportMarkers = (reportData) => {
   reportMarkers = [];
 
@@ -63,6 +85,14 @@ const createReportMarkers = (reportData) => {
   }
 };
 
+/**
+ * Toggles report markers on or off the map. Users must be logged in
+ * to view submitted reports.
+ *
+ * @async
+ * @param {L.Map} map - Leaflet map instance.
+ * @returns {Promise<void>}
+ */
 export const toggleReportMarkers = async (map) => {
   const button = document.getElementById("formReports");
 
