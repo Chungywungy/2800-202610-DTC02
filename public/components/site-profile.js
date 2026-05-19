@@ -494,8 +494,8 @@ async function updateUserBadges() {
 
   achievements.forEach((achievementObject) => {
     document
-      .getElementById(achievementObject.achievementName).parentNode
-      .classList.add("bg-warning");
+      .getElementById(achievementObject.achievementName)
+      .parentNode.classList.add("bg-warning");
   });
 }
 
