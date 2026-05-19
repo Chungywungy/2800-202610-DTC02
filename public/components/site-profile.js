@@ -499,4 +499,7 @@ async function updateUserBadges() {
   });
 }
 
+// Expose updateUserBadges globally so it can be called from other scripts
+window.updateUserBadges = updateUserBadges;
+
 updateUserBadges();

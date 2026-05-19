@@ -51,6 +51,14 @@ window.submitReport = async function (lat, lng, address) {
     // SUCCESS
     map.closePopup();
     alert("Report submitted!");
+
+    // Refresh achievements display if the function exists
+    if (
+      window.updateUserBadges &&
+      typeof window.updateUserBadges === "function"
+    ) {
+      window.updateUserBadges();
+    }
   } catch (error) {
     console.log(error);
     alert("Failed to submit report");
