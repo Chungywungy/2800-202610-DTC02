@@ -135,8 +135,8 @@ class SiteProfile extends HTMLElement {
 }
 
 /**
- * Fetch the user account details
- * @returns user account details JSON
+ * @description Fetch the user account details
+ * @returns {Object} user account details JSON
  */
 async function fetchUser() {
   try {
@@ -149,8 +149,8 @@ async function fetchUser() {
 }
 
 /**
- * Delete user account
- * @param {*} username current session's username
+ * @description Delete user account
+ * @param {string} username current session's username
  */
 async function deleteAccount(username) {
   try {
@@ -164,8 +164,7 @@ async function deleteAccount(username) {
 }
 
 /**
- * Fetch user reports from the backend
- * @returns user reports JSON
+ * @description Fetch user reports from the backend and populates reports array
  */
 async function fetchReports() {
   try {
@@ -177,7 +176,7 @@ async function fetchReports() {
 }
 
 /**
- * Display user reports in a table. Used Copilot to learn how to store variables in HTML elements
+ * @description Display user reports in a table. Used Copilot to learn how to store variables in HTML elements
  */
 async function displayReports(neighbourhood = "all") {
   const reportsDiv = document.getElementById("reports");
@@ -239,6 +238,10 @@ async function displayReports(neighbourhood = "all") {
     });
 }
 
+/**
+ * @description Sort reports table by username alphabetically from A to Z
+ * @returns {Number}
+ */
 function sortReportUsernameAZ() {
   reports.sort((a, b) => {
     if (a.username > b.username) {
@@ -255,6 +258,10 @@ function sortReportUsernameAZ() {
   displayReports();
 }
 
+/**
+ * @description Sort reports table by username alphabetically from Z to A
+ * @returns {Number}
+ */
 function sortReportUsernameZA() {
   reports.sort((a, b) => {
     if (a.username < b.username) {
@@ -271,6 +278,10 @@ function sortReportUsernameZA() {
   displayReports();
 }
 
+/**
+ * @description Sort reports table by form text alphabetically from A to Z
+ * @returns {Number}
+ */
 function sortReportFormTextAZ() {
   reports.sort((a, b) => {
     if (a.formText[0].toLowerCase() > b.formText[0].toLowerCase()) {
@@ -287,6 +298,10 @@ function sortReportFormTextAZ() {
   displayReports();
 }
 
+/**
+ * @description Sort reports table by form text alphabetically from Z to A
+ * @returns {Number}
+ */
 function sortReportFormTextZA() {
   reports.sort((a, b) => {
     if (a.formText[0].toLowerCase() < b.formText[0].toLowerCase()) {
@@ -303,6 +318,10 @@ function sortReportFormTextZA() {
   displayReports();
 }
 
+/**
+ * @description Sort reports table by address alphabetically from A to Z
+ * @returns {Number}
+ */
 function sortReportAddressAZ() {
   reports.sort((a, b) => {
     if (a.address[0].toLowerCase() > b.address[0].toLowerCase()) {
@@ -319,6 +338,10 @@ function sortReportAddressAZ() {
   displayReports();
 }
 
+/**
+ * @description Sort reports table by address alphabetically from Z to A
+ * @returns {Number}
+ */
 function sortReportAddressZA() {
   reports.sort((a, b) => {
     if (a.address[0].toLowerCase() < b.address[0].toLowerCase()) {
@@ -335,7 +358,11 @@ function sortReportAddressZA() {
   displayReports();
 }
 
-// Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
+/**
+ * @description Fetch neighbourhood names from backend.
+ * @see map.js Taken from Sprint 2 Pop-up AI-generated feature and adapted for viewing reports by neighbourhood.
+ * @returns {Set} Set of neighbourhoods sorted by name
+ */
 async function fetchNeighborhoodNames() {
   try {
     const result = await fetch("/api/neighborhoods");
@@ -354,7 +381,10 @@ async function fetchNeighborhoodNames() {
   }
 }
 
-// Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
+/**
+ * @description Load neighbourhood names into reports dropdown.
+ * @see map.js Taken from Sprint 2 Pop-up AI-generated feature and adapted for viewing reports by neighbourhood.
+ */
 async function loadNeighborhoodOptions() {
   const neighborhoodSelect = document.getElementById("reportNeighborhood");
 
@@ -382,7 +412,10 @@ async function loadNeighborhoodOptions() {
   displayReports(neighborhoodSelect.value);
 }
 
-// Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
+/**
+ * @description Toggle between "Citywide" and neighbourhood names dropdown.
+ * @see map.js Taken from Sprint 2 Pop-up AI-generated feature and adapted for viewing reports by neighbourhood.
+ */
 function toggleReportNeighborhoodSelect() {
   const scope = document.getElementById("reportScope");
   const neighborhoodSelect = document.getElementById("reportNeighborhood");
@@ -394,11 +427,11 @@ function toggleReportNeighborhoodSelect() {
   neighborhoodSelect.classList.toggle("hidden", scope.value !== "neighborhood");
 }
 
+// Module-level variables
 const user = await fetchUser();
 let reports = [];
 
 fetchReports();
-// displayReports();
 
 customElements.define("site-profile", SiteProfile);
 
@@ -429,6 +462,7 @@ document.getElementById("profileModal").addEventListener("click", (e) => {
   }
 });
 
+// Sort report usernames click event
 document.getElementById("sortUsername").addEventListener("click", () => {
   const sortDirection = document.getElementById("usernameArrow");
 
@@ -441,6 +475,7 @@ document.getElementById("sortUsername").addEventListener("click", () => {
   }
 });
 
+// Sort report form text click event
 document.getElementById("sortFormText").addEventListener("click", () => {
   const sortDirection = document.getElementById("reportArrow");
 
@@ -453,6 +488,7 @@ document.getElementById("sortFormText").addEventListener("click", () => {
   }
 });
 
+// Sort report addresses click event
 document.getElementById("sortAddress").addEventListener("click", () => {
   const sortDirection = document.getElementById("addressArrow");
 
@@ -465,7 +501,8 @@ document.getElementById("sortAddress").addEventListener("click", () => {
   }
 });
 
-// Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
+// Change event for toggle between "Citywide" and neighbourhood names dropdown.
+// Taken from Sprint 2 Pop-up AI-generated feature and adapted for viewing reports by neighbourhood.
 document.getElementById("reportScope").addEventListener("change", async () => {
   toggleReportNeighborhoodSelect();
 
@@ -481,6 +518,7 @@ document.getElementById("reportScope").addEventListener("change", async () => {
   }
 });
 
+// Change event for selecting the neighbourhood in the reports dropdown
 // Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
 document.getElementById("reportNeighborhood").addEventListener("change", () => {
   if (document.getElementById("reportScope").value === "neighborhood") {
@@ -488,7 +526,9 @@ document.getElementById("reportNeighborhood").addEventListener("change", () => {
   }
 });
 
-//Achievements
+/**
+ * @description Adds all achievement badges to the profile page in a neutral grey colour.
+ */
 function addBadges() {
   const achievementsContainer = document.getElementById("achievements");
   ["score", "report"].forEach((achievement) => {
@@ -525,6 +565,9 @@ function addBadges() {
 
 addBadges();
 
+/**
+ * @description Updates achievement badges by checking the database for completed achievements.
+ */
 async function updateUserBadges() {
   const responseUser = await fetchUser();
   const loggedInUser = await responseUser.username;
@@ -536,7 +579,6 @@ async function updateUserBadges() {
 
   const themeButtons = document.querySelectorAll("input[type='radio']");
 
-  console.log(achievements);
   for (let i = 0; i < achievements.length; i++) {
     const themeBtn = themeButtons[i + 1];
     // Early exit if no more themes but more achievements
