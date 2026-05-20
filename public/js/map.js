@@ -53,12 +53,19 @@ window.submitReport = async function (lat, lng, address) {
     alert("Report submitted!");
 
     // Refresh achievements display if the function exists
-    if (
-      window.updateUserBadges &&
-      typeof window.updateUserBadges === "function"
-    ) {
-      window.updateUserBadges();
-    }
+    // fetch username
+    const usernameResponse = await fetch("/api/user");
+    const usernameObject = await usernameResponse.json();
+    const username = usernameObject.user.username;
+
+    // add achievement added logic
+    const achievementAddedResponse = await fetch("/achievement", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ achievementName: "report", username: username }),
+    });
   } catch (error) {
     console.log(error);
     alert("Failed to submit report");

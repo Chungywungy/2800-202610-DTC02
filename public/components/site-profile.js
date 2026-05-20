@@ -449,7 +449,7 @@ document.getElementById("reportNeighborhood").addEventListener("change", () => {
 //Achievements
 function addBadges() {
   const achievementsContainer = document.getElementById("achievements");
-  ["weather", "report"].forEach((achievement) => {
+  ["score", "report"].forEach((achievement) => {
     const achievementDiv = document.createElement("div");
     achievementDiv.classList.add(
       "px-[10px]",
