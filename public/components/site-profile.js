@@ -150,7 +150,7 @@ async function fetchUser() {
 
 /**
  * @description Delete user account
- * @param {string} username current session's username
+ * @param {String} username current session's username
  */
 async function deleteAccount(username) {
   try {

@@ -8,10 +8,12 @@ const {
 } = require("../mongodbAtlas");
 
 const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
+// Default to claude-sonnet-4-6
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-4-6";
 const NEIGHBORHOOD_DATA_URL =
   "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/local-area-boundary/records?limit=100";
 
+// Array of keywords to filter reports in AI summary
 const RELEVANCE_KEYWORDS = [
   "heat",
   "hot",
@@ -37,6 +39,7 @@ const RELEVANCE_KEYWORDS = [
   "respite",
 ];
 
+// Defines a label for keywords
 const REPORT_TOPIC_DEFINITIONS = [
   {
     label: "temperature and heat",
@@ -92,10 +95,20 @@ const REPORT_TOPIC_DEFINITIONS = [
 
 let neighborhoodCache = null;
 
+/**
+ * @description Normalizes the text string to lowercase
+ * @param {String} value a string found in a user report
+ * @returns value in lowercase
+ */
 function normalizeText(value) {
   return String(value || "").toLowerCase();
 }
 
+/**
+ * @description Determines if the user report contains relevant keywords.
+ * @param {Object} report user report object with formText, address, and username
+ * @returns whether the report contains relevant keywords, as a boolean
+ */
 function isRelevantReport(report) {
   const text = normalizeText(
     [report?.formText, report?.address, report?.username].join(" "),
@@ -103,6 +116,12 @@ function isRelevantReport(report) {
   return RELEVANCE_KEYWORDS.some((keyword) => text.includes(keyword));
 }
 
+/**
+ * @description Checks whether the coordinate point is within the ring coordinates
+ * @param {Array} point lat, lng coordinates
+ * @param {Array} ring coordinates
+ * @returns whether the point is inside the coordinates, as a boolean
+ */
 function pointInRing(point, ring) {
   let inside = false;
 
@@ -128,6 +147,12 @@ function pointInRing(point, ring) {
   return inside;
 }
 
+/**
+ * @description Checks whether the coordinate point is within the neighbourhood geometry
+ * @param {Array} point lat, lng coordinates
+ * @param {Array} geometry array of coordinates
+ * @returns whether the point is inside the geometry, as a boolean
+ */
 function pointInGeometry(point, geometry) {
   if (!geometry || !geometry.type || !geometry.coordinates) {
     return false;
@@ -146,6 +171,11 @@ function pointInGeometry(point, geometry) {
   return false;
 }
 
+/**
+ * @description Extracts the neighbourhood geometry from the neighbourhood data
+ * @param {Object} entry neighbourhood dataset
+ * @returns an array with the neighbourhood name and its geometry
+ */
 function extractNeighborhood(entry) {
   const geometry =
     entry?.geom?.geometry || entry?.geom || entry?.geometry || null;
@@ -163,6 +193,11 @@ function extractNeighborhood(entry) {
   return { name, geometry };
 }
 
+/**
+ * @description Extracts the neighbourhood geometry from the neighbourhood data for each neighbourhood and
+ * adds it to the neighborhoodCache array
+ * @returns an array with the neighbourhood names and respective geometry
+ */
 async function getNeighborhoodBoundaries() {
   if (neighborhoodCache) {
     return neighborhoodCache;
@@ -177,6 +212,12 @@ async function getNeighborhoodBoundaries() {
   return neighborhoodCache;
 }
 
+/**
+ * @description Gets the neighbourhood associated with the user report
+ * @param {Object} report user report
+ * @param {Array} neighborhoods array of neighbourhoods
+ * @returns the neighbourhood name associated with the user report, as a string
+ */
 function getNeighborhoodForReport(report, neighborhoods) {
   const point = [Number(report?.lng), Number(report?.lat)];
 
@@ -193,6 +234,11 @@ function getNeighborhoodForReport(report, neighborhoods) {
   return "Unknown";
 }
 
+/**
+ * @description Gets the topics associated with the text in the user report
+ * @param {Object} report user report
+ * @returns the topics associated with the form text in the user report, as an array
+ */
 function getMatchedTopics(report) {
   const text = normalizeText([report?.formText, report?.address].join(" "));
   const matches = [];
@@ -206,6 +252,13 @@ function getMatchedTopics(report) {
   return matches;
 }
 
+/**
+ * @description
+ * @param {Array} reports array of user reports
+ * @param {String} scopeLabel "Citywide" or neighbourhood
+ * @param {String} neighborhoodName neighbourhood name
+ * @returns
+ */
 function buildFallbackSummary(reports, scopeLabel, neighborhoodName) {
   const topicCounts = new Map();
   const neighborhoodCounts = new Map();
