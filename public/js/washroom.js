@@ -3,13 +3,13 @@ let washroomMarkers = [];
 
 const washroomIcon = L.divIcon({
   html: `
-    <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="48" height="48" fill="white" rx="6"/>
-      <circle cx="15" cy="10" r="4" fill="#2F88FF" stroke="#000000" stroke-width="2"/>
-      <circle cx="33" cy="10" r="4" fill="#2F88FF" stroke="#000000" stroke-width="2"/>
-      <path d="M10 20H20L18 42H12L10 20Z" fill="#2F88FF" stroke="#000000" stroke-width="2"/>
-      <path d="M28 20H38L40 31H37L36 42H30L29 31H26L28 20Z" fill="#2F88FF" stroke="#000000" stroke-width="2"/>
-    </svg>
+    <div class="relative flex flex-col items-center w-9 h-11">
+      <div class="w-9 h-9 rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-none bg-primary flex items-center justify-center shadow-md">
+        <span class="material-symbols-outlined text-xl text-primary-content leading-none">
+          wc
+        </span>
+      </div>
+    </div>
   `,
   className: "",
   iconSize: [32, 32],
