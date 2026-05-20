@@ -156,6 +156,11 @@ saveFormulaBtn.addEventListener("click", async () => {
     window.showToast("Achievement unlocked: Score", "success");
   }
 
+  if (window.updateUserBadges && window.addThemeController) {
+    window.updateUserBadges();
+    window.addThemeController();
+  }
+
   console.log(data);
   updateSliders(data.formula);
 });

@@ -79,7 +79,7 @@ class SiteProfile extends HTMLElement {
                 aria-label="Default"
                 value="default" />
             </div>
-            <div class="tooltip  tooltip-top" data-tip="Complete achievement: name">
+            <div class="tooltip  tooltip-top" data-tip="Complete 1 achievement to unlock">
               <input
                 disabled
                 type="radio"
@@ -88,7 +88,7 @@ class SiteProfile extends HTMLElement {
                 aria-label="Cyberpunk"
                 value="cyberpunk" />
             </div>
-            <div class="tooltip  tooltip-top" data-tip="Complete achievement: name">
+            <div class="tooltip  tooltip-top" data-tip="Complete 2 achievements to unlock">
               <input
                 disabled
                 type="radio"
@@ -97,7 +97,7 @@ class SiteProfile extends HTMLElement {
                 aria-label="Synthwave"
                 value="synthwave" />
             </div>
-            <div class="tooltip  tooltip-top" data-tip="Complete achievement: name">
+            <div class="tooltip  tooltip-top" data-tip="Complete 3 achievements to unlock">
               <input
                 disabled
                 type="radio"

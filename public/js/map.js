@@ -66,8 +66,24 @@ window.submitReport = async function (lat, lng, address) {
     const usernameObject = await usernameResponse.json();
     const username = usernameObject.user.username;
 
-    if (data.achievementUnlocked) {
+    // add achievement added logic
+    const achievementAddedResponse = await fetch("/achievement", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ achievementName: "report", username: username }),
+    });
+
+    const achievementAddedResponseJSON = await achievementAddedResponse.json();
+    const achievementResult = achievementAddedResponseJSON.matchedCount;
+    if (achievementResult != 1) {
       window.showToast("Achievement unlocked: Report", "success");
+    }
+
+    if (window.updateUserBadges && window.addThemeController) {
+      window.updateUserBadges();
+      window.addThemeController();
     }
   } catch (error) {
     console.log(error);
@@ -607,6 +623,9 @@ function addThemeController() {
     setTileLayer(themePalette[initialTheme]);
   }
 }
+
+// Expose addThemeController globally so it can be called from other scripts
+window.addThemeController = addThemeController;
 
 document.getElementById("fountainsBtn").addEventListener("click", () => {
   toggleFountainMarkers(map);

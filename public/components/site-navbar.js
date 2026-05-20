@@ -831,37 +831,17 @@ const FILTER_BUTTON_IDS = [
 ];
 const FILTER_ACHIEVEMENT_NAME = "all-filters";
 
-function getFilterClickHistory() {
-  try {
-    const values = JSON.parse(localStorage.getItem("clickedFilters") || "[]");
-    return new Set(
-      (Array.isArray(values) ? values : []).filter((id) =>
-        FILTER_BUTTON_IDS.includes(id),
-      ),
-    );
-  } catch (error) {
-    return new Set();
-  }
-}
-
-function saveFilterClickHistory(clickedFilters) {
-  const validIds = Array.from(clickedFilters).filter((id) =>
-    FILTER_BUTTON_IDS.includes(id),
-  );
-  localStorage.setItem("clickedFilters", JSON.stringify(validIds));
-}
-
 async function awardFilterAchievement() {
   try {
     const userResponse = await fetch("/api/user");
     const userData = await userResponse.json();
-    const username = userData?.user?.username;
+    const username = userData.user.username;
 
     if (!username) {
       return;
     }
 
-    const response = await fetch("/achievement", {
+    const achievementAddedResponse = await fetch("/achievement", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -869,30 +849,30 @@ async function awardFilterAchievement() {
         username,
       }),
     });
-    const result = await response.json();
-    if (response.ok && (result.upsertedCount === 1 || result.upsertedId)) {
+
+    const achievementResult = await achievementAddedResponse.json();
+    if (
+      achievementAddedResponse.ok &&
+      (achievementResult.upsertedCount === 1 || achievementResult.upsertedId)
+    ) {
       window.showToast("Achievement unlocked: Filter Master", "success");
     }
 
-    if (window.updateUserBadges) {
+    if (window.updateUserBadges && window.addThemeController) {
       window.updateUserBadges();
+      window.addThemeController();
     }
   } catch (error) {
     console.error("Failed to award filter achievement", error);
   }
 }
 
-function recordFilterClick(buttonId) {
-  const clickedFilters = getFilterClickHistory();
-  const beforeCount = clickedFilters.size;
-  clickedFilters.add(buttonId);
-  saveFilterClickHistory(clickedFilters);
+function recordFilterClick() {
+  const allActive = FILTER_BUTTON_IDS.every((id) =>
+    document.getElementById(id)?.classList.contains("active"),
+  );
 
-  const afterCount = clickedFilters.size;
-  if (
-    afterCount === FILTER_BUTTON_IDS.length &&
-    beforeCount < FILTER_BUTTON_IDS.length
-  ) {
+  if (allActive) {
     awardFilterAchievement();
   }
 }
