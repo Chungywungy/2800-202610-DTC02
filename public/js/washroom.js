@@ -4,8 +4,8 @@ let washroomMarkers = [];
 const washroomIcon = L.divIcon({
   html: `
     <div class="relative flex flex-col items-center w-9 h-11">
-      <div class="w-9 h-9 rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-none bg-info flex items-center justify-center shadow-md">
-        <span class="material-symbols-outlined text-xl text-base-100 leading-none">
+      <div class="w-9 h-9 rounded-tl-full rounded-tr-full rounded-br-full rounded-bl-none bg-primary flex items-center justify-center shadow-md">
+        <span class="material-symbols-outlined text-xl text-primary-content leading-none">
           wc
         </span>
       </div>
