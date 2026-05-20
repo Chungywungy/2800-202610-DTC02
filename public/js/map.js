@@ -552,6 +552,23 @@ window.routeTo = function (destinationLat, destinationLon) {
   }).addTo(map);
 };
 
+function addThemeController() {
+  const themeButtons = document.querySelectorAll(
+    "#themeControllerContainer input",
+  );
+  themeButtons.forEach((theme) => {
+    const themePalette = {
+      default: "voyager",
+      cyberpunk: "light_all",
+      synthwave: "dark_all",
+      luxury: "dark_nolabels",
+    };
+    theme.addEventListener("change", (e) => {
+      setTileLayer(themePalette[theme.value]);
+    });
+  });
+}
+
 document.getElementById("fountainsBtn").addEventListener("click", () => {
   toggleFountainMarkers(map);
 });
@@ -601,20 +618,7 @@ async function fetchAll() {
     communityCentresData,
   );
 
-  const themeButtons = document.querySelectorAll(
-    "#themeControllerContainer input",
-  );
-  themeButtons.forEach((theme) => {
-    const themePalette = {
-      default: "voyager",
-      cyberpunk: "light_all",
-      synthwave: "dark_all",
-      luxury: "dark_nolabels",
-    };
-    theme.addEventListener("change", (e) => {
-      setTileLayer(themePalette[theme.value]);
-    });
-  });
+  addThemeController();
 }
 initTrees(map);
 fetchAll();

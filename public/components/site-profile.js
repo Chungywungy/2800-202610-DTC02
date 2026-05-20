@@ -81,6 +81,7 @@ class SiteProfile extends HTMLElement {
             </div>
             <div class="tooltip  tooltip-top" data-tip="Complete achievement: name">
               <input
+                disabled
                 type="radio"
                 name="theme-buttons"
                 class="btn theme-controller join-item"
@@ -89,6 +90,7 @@ class SiteProfile extends HTMLElement {
             </div>
             <div class="tooltip  tooltip-top" data-tip="Complete achievement: name">
               <input
+                disabled
                 type="radio"
                 name="theme-buttons"
                 class="btn theme-controller join-item"
@@ -97,6 +99,7 @@ class SiteProfile extends HTMLElement {
             </div>
             <div class="tooltip  tooltip-top" data-tip="Complete achievement: name">
               <input
+                disabled
                 type="radio"
                 name="theme-buttons"
                 class="btn theme-controller join-item"
@@ -530,6 +533,19 @@ async function updateUserBadges() {
     `/achievement?username=${loggedInUser}`,
   );
   const achievements = await responseAchievements.json();
+
+  const themeButtons = document.querySelectorAll("input[type='radio']");
+
+  console.log(achievements);
+  for (let i = 0; i < achievements.length; i++) {
+    const themeBtn = themeButtons[i + 1];
+    // Early exit if no more themes but more achievements
+    if (!themeBtn) return;
+    // Remove locked look
+    themeBtn.removeAttribute("disabled");
+    themeBtn.closest(".tooltip").dataset.tip =
+      themeButtons[i + 1].getAttribute("aria-label");
+  }
 
   achievements.forEach((achievementObject) => {
     document
