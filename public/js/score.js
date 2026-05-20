@@ -35,7 +35,7 @@ resetFormulaBtn.addEventListener("click", () => {
 
   updateSliders(defaultFormula);
 
-  alert("Formula reset to default values.");
+  window.showToast("Formula reset to default values.", "success");
 });
 
 function getFormula() {
@@ -110,7 +110,7 @@ saveFormulaBtn.addEventListener("click", async () => {
 
   formulaMessage.innerText = response.ok ? "Formula saved!" : data.error;
   if (response.ok) {
-    alert("Formula saved successfully!");
+    window.showToast("Formula saved successfully!", "success");
     // Change the score achievement badge color when formula is saved
     const scoreAchievementElement = document.getElementById("score");
     if (scoreAchievementElement) {
@@ -136,11 +136,7 @@ saveFormulaBtn.addEventListener("click", async () => {
     achievementAddedResponse.ok &&
     (achievementResult.upsertedCount === 1 || achievementResult.upsertedId)
   ) {
-    if (window.showAchievementToast) {
-      window.showAchievementToast("Achievement unlocked: Score");
-    } else {
-      alert("Achievement unlocked: Score");
-    }
+    window.showToast("Achievement unlocked: Score", "success");
   }
 
   console.log(data);

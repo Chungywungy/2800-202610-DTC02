@@ -785,7 +785,7 @@ class="hidden fixed inset-0 z-[9999] bg-black/50 items-center justify-center"   
 
 customElements.define("site-navbar", SiteNavbar);
 
-function showAchievementToast(message) {
+function showToast(message, type = "success") {
   let toastContainer = document.getElementById("achievement-toast-container");
   if (!toastContainer) {
     toastContainer = document.createElement("div");
@@ -797,8 +797,18 @@ function showAchievementToast(message) {
 
   const toast = document.createElement("div");
   toast.className = "toast";
+
+  const typeClass =
+    type === "error"
+      ? "alert-error"
+      : type === "warning"
+        ? "alert-warning"
+        : type === "info"
+          ? "alert-info"
+          : "alert-success";
+
   toast.innerHTML = `
-    <div class="alert alert-success shadow-lg">
+    <div class="alert ${typeClass} shadow-lg">
       <div>
         <span>${message}</span>
       </div>
@@ -811,7 +821,8 @@ function showAchievementToast(message) {
   }, 3200);
 }
 
-window.showAchievementToast = showAchievementToast;
+window.showToast = showToast;
+window.showAchievementToast = showToast;
 
 const FILTER_BUTTON_IDS = [
   "scoreBtn",
@@ -865,11 +876,7 @@ async function awardFilterAchievement() {
     });
     const result = await response.json();
     if (response.ok && (result.upsertedCount === 1 || result.upsertedId)) {
-      if (window.showAchievementToast) {
-        window.showAchievementToast("Achievement unlocked: Filter Master");
-      } else {
-        alert("Achievement unlocked: Filter Master");
-      }
+      window.showToast("Achievement unlocked: Filter Master", "success");
     }
 
     if (window.updateUserBadges) {
@@ -882,10 +889,15 @@ async function awardFilterAchievement() {
 
 function recordFilterClick(buttonId) {
   const clickedFilters = getFilterClickHistory();
+  const beforeCount = clickedFilters.size;
   clickedFilters.add(buttonId);
   saveFilterClickHistory(clickedFilters);
 
-  if (clickedFilters.size >= FILTER_BUTTON_IDS.length) {
+  const afterCount = clickedFilters.size;
+  if (
+    afterCount === FILTER_BUTTON_IDS.length &&
+    beforeCount < FILTER_BUTTON_IDS.length
+  ) {
     awardFilterAchievement();
   }
 }

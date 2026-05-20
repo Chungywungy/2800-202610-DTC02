@@ -19,7 +19,7 @@ window.submitReport = async function (lat, lng, address) {
   const formText = document.getElementById("reportText").value;
 
   if (!formText) {
-    alert("Please fill in all fields");
+    window.showToast("Please fill in all fields", "error");
     return;
   }
 
@@ -38,19 +38,19 @@ window.submitReport = async function (lat, lng, address) {
 
     // NOT LOGGED IN
     if (res.status === 401) {
-      alert("You must be logged in to submit feedback");
+      window.showToast("You must be logged in to submit feedback", "error");
       return;
     }
 
     // OTHER SERVER ERROR
     if (!res.ok) {
-      alert(data.error || "Failed to submit report");
+      window.showToast(data.error || "Failed to submit report", "error");
       return;
     }
 
     // SUCCESS
     map.closePopup();
-    alert("Report submitted!");
+    window.showToast("Report submitted!", "success");
 
     // Refresh achievements display if the function exists
     // fetch username
@@ -59,15 +59,11 @@ window.submitReport = async function (lat, lng, address) {
     const username = usernameObject.user.username;
 
     if (data.achievementUnlocked) {
-      if (window.showAchievementToast) {
-        window.showAchievementToast("Achievement unlocked: Report");
-      } else {
-        alert("Achievement unlocked: Report");
-      }
+      window.showToast("Achievement unlocked: Report", "success");
     }
   } catch (error) {
     console.log(error);
-    alert("Failed to submit report");
+    window.showToast("Failed to submit report", "error");
   }
 };
 
@@ -520,7 +516,7 @@ let routingControl = null; // global variable to hold the routing control instan
  */
 window.routeTo = function (destinationLat, destinationLon) {
   if (!userMarker) {
-    alert("Your location is not available yet.");
+    window.showToast("Your location is not available yet.", "error");
     return;
   }
 
