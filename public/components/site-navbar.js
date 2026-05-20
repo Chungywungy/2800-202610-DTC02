@@ -785,6 +785,34 @@ class="hidden fixed inset-0 z-[9999] bg-black/50 items-center justify-center"   
 
 customElements.define("site-navbar", SiteNavbar);
 
+function showAchievementToast(message) {
+  let toastContainer = document.getElementById("achievement-toast-container");
+  if (!toastContainer) {
+    toastContainer = document.createElement("div");
+    toastContainer.id = "achievement-toast-container";
+    toastContainer.className =
+      "fixed top-4 right-4 z-[10000000001] flex flex-col items-end gap-3 pointer-events-none";
+    document.body.appendChild(toastContainer);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerHTML = `
+    <div class="alert alert-success shadow-lg">
+      <div>
+        <span>${message}</span>
+      </div>
+    </div>
+  `;
+
+  toastContainer.appendChild(toast);
+  setTimeout(() => {
+    toast.remove();
+  }, 3200);
+}
+
+window.showAchievementToast = showAchievementToast;
+
 const FILTER_BUTTON_IDS = [
   "scoreBtn",
   "treesBtn",
@@ -799,17 +827,22 @@ const FILTER_ACHIEVEMENT_NAME = "all-filters";
 
 function getFilterClickHistory() {
   try {
-    return new Set(JSON.parse(localStorage.getItem("clickedFilters") || "[]"));
+    const values = JSON.parse(localStorage.getItem("clickedFilters") || "[]");
+    return new Set(
+      (Array.isArray(values) ? values : []).filter((id) =>
+        FILTER_BUTTON_IDS.includes(id),
+      ),
+    );
   } catch (error) {
     return new Set();
   }
 }
 
 function saveFilterClickHistory(clickedFilters) {
-  localStorage.setItem(
-    "clickedFilters",
-    JSON.stringify(Array.from(clickedFilters)),
+  const validIds = Array.from(clickedFilters).filter((id) =>
+    FILTER_BUTTON_IDS.includes(id),
   );
+  localStorage.setItem("clickedFilters", JSON.stringify(validIds));
 }
 
 async function awardFilterAchievement() {
@@ -832,7 +865,11 @@ async function awardFilterAchievement() {
     });
     const result = await response.json();
     if (response.ok && (result.upsertedCount === 1 || result.upsertedId)) {
-      alert("Achievement unlocked: Filter Master");
+      if (window.showAchievementToast) {
+        window.showAchievementToast("Achievement unlocked: Filter Master");
+      } else {
+        alert("Achievement unlocked: Filter Master");
+      }
     }
 
     if (window.updateUserBadges) {
@@ -868,6 +905,10 @@ document.querySelectorAll("#filterContainer button").forEach((btn) => {
     btn.classList.toggle("bg-secondary");
     btn.classList.toggle("text-secondary-content");
     btn.classList.toggle("active");
+
+    if (!btn.id) {
+      return;
+    }
 
     if (FILTER_BUTTON_IDS.includes(btn.id)) {
       recordFilterClick(btn.id);

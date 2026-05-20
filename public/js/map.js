@@ -58,20 +58,12 @@ window.submitReport = async function (lat, lng, address) {
     const usernameObject = await usernameResponse.json();
     const username = usernameObject.user.username;
 
-    // add achievement added logic
-    const achievementAddedResponse = await fetch("/achievement", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ achievementName: "report", username: username }),
-    });
-    const achievementResult = await achievementAddedResponse.json();
-    if (
-      achievementAddedResponse.ok &&
-      (achievementResult.upsertedCount === 1 || achievementResult.upsertedId)
-    ) {
-      alert("Achievement unlocked: Report");
+    if (data.achievementUnlocked) {
+      if (window.showAchievementToast) {
+        window.showAchievementToast("Achievement unlocked: Report");
+      } else {
+        alert("Achievement unlocked: Report");
+      }
     }
   } catch (error) {
     console.log(error);

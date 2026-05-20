@@ -136,7 +136,11 @@ saveFormulaBtn.addEventListener("click", async () => {
     achievementAddedResponse.ok &&
     (achievementResult.upsertedCount === 1 || achievementResult.upsertedId)
   ) {
-    alert("Achievement unlocked: Score");
+    if (window.showAchievementToast) {
+      window.showAchievementToast("Achievement unlocked: Score");
+    } else {
+      alert("Achievement unlocked: Score");
+    }
   }
 
   console.log(data);
