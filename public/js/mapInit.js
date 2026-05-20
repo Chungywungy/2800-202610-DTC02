@@ -12,15 +12,25 @@ export const map = L.map("map", {
   zoomControl: false,
 }).fitBounds(bounds);
 
-// Display map
-L.tileLayer(
-  "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-  {
-    minZoom: 12,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-  },
-).addTo(map);
+let tileLayer;
+let mapStyle = "voyager";
+
+function setTileLayer(style) {
+  mapStyle = style;
+  if (tileLayer) {
+    map.removeLayer(tileLayer);
+  }
+  tileLayer = L.tileLayer(
+    `https://{s}.basemaps.cartocdn.com/rastertiles/${style}/{z}/{x}/{y}{r}.png`,
+    { minZoom: 12 },
+  ).addTo(map);
+  map.invalidateSize();
+}
+
+// Initialize with default
+setTileLayer(mapStyle);
+
+export { setTileLayer };
 
 map.getContainer().style.backgroundColor = "#eef7ff";
 

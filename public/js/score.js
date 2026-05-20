@@ -128,7 +128,27 @@ saveFormulaBtn.addEventListener("click", async () => {
   formulaMessage.innerText = response.ok ? "Formula saved!" : data.error;
   if (response.ok) {
     alert("Formula saved successfully!");
+    // Change the score achievement badge color when formula is saved
+    const scoreAchievementElement = document.getElementById("score");
+    if (scoreAchievementElement) {
+      scoreAchievementElement.parentNode.classList.add("bg-warning");
+    }
   }
+
+  // fetch username
+  const usernameResponse = await fetch("/api/user");
+  const usernameObject = await usernameResponse.json();
+  const username = usernameObject.user.username;
+
+  // add achievement added logic
+  const achievementAddedResponse = await fetch("/achievement", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ achievementName: "score", username: username }),
+  });
+
   console.log(data);
   updateSliders(data.formula);
 });

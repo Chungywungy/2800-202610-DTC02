@@ -61,6 +61,16 @@ const formulaModel = mongoose.model(`formula`, formulaSchema);
  *
  * @async
  */
+const achievementSchema = new mongoose.Schema({
+  username: String,
+  achievementName: {
+    type: String,
+    enum: ["weather", "report"],
+  },
+});
+
+const achievementModel = mongoose.model(`achievements`, achievementSchema);
+
 async function connectToDatabase() {
   try {
     await mongoose.connect(process.env.MONGODB_URI, { dbName: "test" });
@@ -70,4 +80,10 @@ async function connectToDatabase() {
   }
 }
 
-module.exports = { connectToDatabase, userModel, formsModel, formulaModel };
+module.exports = {
+  connectToDatabase,
+  userModel,
+  formsModel,
+  formulaModel,
+  achievementModel,
+};

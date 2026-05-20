@@ -797,7 +797,8 @@ document.querySelectorAll("#filterContainer button").forEach((btn) => {
       btn.id === "closeSummaryBtn"
     )
       return;
-    btn.classList.toggle("bg-success");
+    btn.classList.toggle("bg-secondary");
+    btn.classList.toggle("text-secondary-content");
     btn.classList.toggle("active");
   });
 });
@@ -849,8 +850,6 @@ document.getElementById("nextBtnSettings").addEventListener("click", () => {
   document.getElementById("settingsTutorialModal").classList.add("hidden");
   document.getElementById("reportTutorialModal").classList.remove("hidden");
 });
-
-
 
 /**
  * Local storage of first time mode

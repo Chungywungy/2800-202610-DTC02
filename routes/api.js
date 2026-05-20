@@ -1,6 +1,11 @@
 // import all dependencies
 const express = require("express");
-const { formsModel, formulaModel, userModel } = require("../mongodbAtlas");
+const {
+  formsModel,
+  formulaModel,
+  userModel,
+  achievementModel,
+} = require("../mongodbAtlas");
 
 const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-4-6";
@@ -675,14 +680,29 @@ router.post("/reports", async (req, res) => {
 
   try {
     const { lat, lng, address, formText } = req.body;
+    const username = req.session.user.username;
+
+    // Check if this is the user's first report
+    const existingReports = await formsModel.find({ username });
+
     const newReport = new formsModel({
-      username: req.session.user.username,
+      username,
       lat,
       lng,
       address,
       formText,
     });
     await newReport.save();
+
+    // If this is the first report, create a "report" achievement
+    if (existingReports.length === 0) {
+      const newAchievement = new achievementModel({
+        username,
+        achievementName: "report",
+      });
+      await newAchievement.save();
+    }
+
     res.json({ success: true });
   } catch (error) {
     console.log("Error saving report:", error);

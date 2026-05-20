@@ -1,4 +1,4 @@
-import { map } from "./mapInit.js";
+import { map, setTileLayer } from "./mapInit.js";
 import { fetchWaterFountains, toggleFountainMarkers } from "./water.js";
 import { fetchParks, createParkGeom, toggleParkGeom } from "./parks.js";
 import { fetchPublicWashrooms, toggleWashroomMarkers } from "./washroom.js";
@@ -59,6 +59,21 @@ window.submitReport = async function (lat, lng, address) {
     // SUCCESS
     map.closePopup();
     alert("Report submitted!");
+
+    // Refresh achievements display if the function exists
+    // fetch username
+    const usernameResponse = await fetch("/api/user");
+    const usernameObject = await usernameResponse.json();
+    const username = usernameObject.user.username;
+
+    // add achievement added logic
+    const achievementAddedResponse = await fetch("/achievement", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ achievementName: "report", username: username }),
+    });
   } catch (error) {
     console.log(error);
     alert("Failed to submit report");
@@ -565,6 +580,23 @@ window.routeTo = function (destinationLat, destinationLon) {
   }).addTo(map);
 };
 
+function addThemeController() {
+  const themeButtons = document.querySelectorAll(
+    "#themeControllerContainer input",
+  );
+  themeButtons.forEach((theme) => {
+    const themePalette = {
+      default: "voyager",
+      cyberpunk: "light_all",
+      synthwave: "dark_all",
+      luxury: "dark_nolabels",
+    };
+    theme.addEventListener("change", (e) => {
+      setTileLayer(themePalette[theme.value]);
+    });
+  });
+}
+
 document.getElementById("fountainsBtn").addEventListener("click", () => {
   toggleFountainMarkers(map);
 });
@@ -622,6 +654,8 @@ async function fetchAll() {
     transitData,
     communityCentresData,
   );
+
+  addThemeController();
   // Hide Spinner
   loadingSpinner.classList.add("hidden");
   loadingSpinner.classList.remove("flex");
