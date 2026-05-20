@@ -12,7 +12,7 @@ class TemperatureContainer extends HTMLElement {
 
   createTempContainer() {
     this.innerHTML = `<div class="text-white p-2 rounded-xl z-1000 bottom-5 left-5 fixed backdrop-blur-md bg-gray-800/50 items-center flex flex-row">
-    
+
     <!-- Weather icon -->
     <img id="icon" src="" alt="weather icon" class="w-15 h-15">
 
