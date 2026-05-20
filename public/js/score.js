@@ -131,6 +131,13 @@ saveFormulaBtn.addEventListener("click", async () => {
     },
     body: JSON.stringify({ achievementName: "score", username: username }),
   });
+  const achievementResult = await achievementAddedResponse.json();
+  if (
+    achievementAddedResponse.ok &&
+    (achievementResult.upsertedCount === 1 || achievementResult.upsertedId)
+  ) {
+    alert("Achievement unlocked: Score");
+  }
 
   console.log(data);
   updateSliders(data.formula);

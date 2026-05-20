@@ -66,6 +66,13 @@ window.submitReport = async function (lat, lng, address) {
       },
       body: JSON.stringify({ achievementName: "report", username: username }),
     });
+    const achievementResult = await achievementAddedResponse.json();
+    if (
+      achievementAddedResponse.ok &&
+      (achievementResult.upsertedCount === 1 || achievementResult.upsertedId)
+    ) {
+      alert("Achievement unlocked: Report");
+    }
   } catch (error) {
     console.log(error);
     alert("Failed to submit report");

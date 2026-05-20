@@ -822,7 +822,7 @@ async function awardFilterAchievement() {
       return;
     }
 
-    await fetch("/achievement", {
+    const response = await fetch("/achievement", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -830,6 +830,10 @@ async function awardFilterAchievement() {
         username,
       }),
     });
+    const result = await response.json();
+    if (response.ok && (result.upsertedCount === 1 || result.upsertedId)) {
+      alert("Achievement unlocked: Filter Master");
+    }
 
     if (window.updateUserBadges) {
       window.updateUserBadges();
