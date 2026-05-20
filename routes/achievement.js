@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
   try {
     let achievementAdded = await achievementModel.updateOne(
       { username: username },
-      { $set: { achievementName: achievementName } },
+      { $set: { achievementName: achievementName, username: username } },
       { upsert: true }, // insert if not found
     );
     res.status(200).send(achievementAdded);
