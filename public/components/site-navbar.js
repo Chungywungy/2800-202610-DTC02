@@ -78,12 +78,9 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                       role="button"
                       class="btn btn-ghost btn-circle avatar"
                     >
-                      <div class="w-10 rounded-full">
-                        <!-- IMAGES -->
-                        <img
-                          alt="Tailwind CSS Navbar component"
-                          src="https://preview.redd.it/serious-cat-meme-unedited-version-from-2003-found-by-v0-90prc33ob1ze1.jpeg?width=2560&format=pjpg&auto=webp&s=69718ad34727ec7c70e26b28fedf38886cee7b3e"
-                        />
+                      <div class="flex items-center justify-center w-10 rounded-full border border-gray-300">
+                        <span id="profileInitial" class="text-xl"></span>
+                        <span id="profileIcon" class="material-symbols-outlined">person</span>
                       </div>
                     </div>
 
@@ -91,7 +88,7 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                       tabindex="0"
                       class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shrink-0 shadow"
                     >
-          <li><button id="profileBtn" class="hidden" onclick="profileModal.showModal()">Profile</button></li>
+                      <li><button id="profileBtn" class="hidden" onclick="profileModal.showModal()">Profile</button></li>
                       <li id="settingsBtn" class="hidden">
                         <label for="settingsDrawer"> Cool Score </label>
                       </li>
@@ -152,11 +149,10 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                   <span class="material-symbols-outlined"> flag </span>
                 </button>
                       <!-- AI SUMMARY -->
-        <button class="btn hidden" id="summaryBtn">
-          AI Summary
-          <span class="material-symbols-outlined"> smart_toy </span>
-        </button>
-                
+                <button class="btn hidden" id="summaryBtn">
+                  AI Summary
+                  <span class="material-symbols-outlined"> smart_toy </span>
+                </button>
               </ul>
             </section>
 
@@ -184,17 +180,17 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                 <div class="bg-white rounded-xl p-4">
 
                 <!-- PROGRESS BAR -->
-<div class="mt-4">
-  <div class="flex justify-between text-sm mb-1">
-    <span>1/6</span>
-  </div>
+                  <div class="mt-4">
+                    <div class="flex justify-between text-sm mb-1">
+                      <span>1/6</span>
+                    </div>
 
-  <progress
-    class="progress progress-primary w-full"
-    value="1"
-    max="6"
-  ></progress>
-</div>
+                    <progress
+                      class="progress progress-primary w-full"
+                      value="1"
+                      max="6"
+                    ></progress>
+                  </div>
                   <h2 class="text-2xl font-bold mb-4">How to Use the App</h2>
                   <p>
                     You can select a filter to render the locations on the map. <br />
@@ -208,22 +204,21 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
 
 
 
-<div class="flex gap-3 mt-6">
-  <button
-    id="closeHelpBtn"
-    class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
-  >
-    Close
-  </button>
+                  <div class="flex gap-3 mt-6">
+                    <button
+                      id="closeHelpBtn"
+                      class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+                    >
+                      Close
+                    </button>
 
-  <button
-    id="nextBtnFilter"
-    class="bg-blue-600 text-white px-4 py-2 rounded-lg"
-  >
-    Next
-  </button>
-</div>
-
+                    <button
+                      id="nextBtnFilter"
+                      class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -850,8 +845,6 @@ document.getElementById("nextBtnSettings").addEventListener("click", () => {
   document.getElementById("reportTutorialModal").classList.remove("hidden");
 });
 
-
-
 /**
  * Local storage of first time mode
  */
@@ -887,6 +880,9 @@ async function checkUserAuth() {
     document.getElementById("logOutBtn").classList.toggle("hidden");
     document.getElementById("settingsBtn").classList.toggle("hidden");
     document.getElementById("profileBtn").classList.toggle("hidden");
+    document.getElementById("profileIcon").style.display = "none";
+    document.getElementById("profileInitial").innerText =
+      data.user.username[0].toUpperCase();
 
     const summaryButton = document.getElementById("summaryBtn");
     if (data.user?.role === "planner") {
