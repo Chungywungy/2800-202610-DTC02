@@ -97,7 +97,10 @@ export const toggleReportMarkers = async (map) => {
   const userData = await res.json();
 
   if (!userData.loggedIn) {
-    alert("You must be logged in to view and submit feedback reports");
+    window.showToast(
+      "You must be logged in to view and submit feedback reports",
+      "error",
+    );
     button.classList.remove("active");
     button.classList.remove("bg-success");
     return;

@@ -491,7 +491,13 @@ document.getElementById("reportNeighborhood").addEventListener("change", () => {
 //Achievements
 function addBadges() {
   const achievementsContainer = document.getElementById("achievements");
-  ["score", "report"].forEach((achievement) => {
+  const badgeDefinitions = [
+    { id: "score", label: "Score" },
+    { id: "report", label: "Report" },
+    { id: "all-filters", label: "Filter Master" },
+  ];
+
+  badgeDefinitions.forEach((achievement) => {
     const achievementDiv = document.createElement("div");
     achievementDiv.classList.add(
       "px-[10px]",
@@ -511,8 +517,8 @@ function addBadges() {
     badgeSpan.textContent = "license";
 
     const achievementName = document.createElement("p");
-    achievementName.id = achievement;
-    achievementName.textContent = achievement;
+    achievementName.id = achievement.id;
+    achievementName.textContent = achievement.label;
 
     // combine together
     achievementDiv.appendChild(badgeSpan);
@@ -548,9 +554,12 @@ async function updateUserBadges() {
   }
 
   achievements.forEach((achievementObject) => {
-    document
-      .getElementById(achievementObject.achievementName)
-      .parentNode.classList.add("bg-warning");
+    const achievementElement = document.getElementById(
+      achievementObject.achievementName,
+    );
+    if (achievementElement?.parentNode) {
+      achievementElement.parentNode.classList.add("bg-warning");
+    }
   });
 }
 

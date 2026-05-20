@@ -695,15 +695,17 @@ router.post("/reports", async (req, res) => {
     await newReport.save();
 
     // If this is the first report, create a "report" achievement
+    let achievementUnlocked = false;
     if (existingReports.length === 0) {
       const newAchievement = new achievementModel({
         username,
         achievementName: "report",
       });
       await newAchievement.save();
+      achievementUnlocked = true;
     }
 
-    res.json({ success: true });
+    res.json({ success: true, achievementUnlocked });
   } catch (error) {
     console.log("Error saving report:", error);
     res.status(500).json({ error: "Failed to save report" });

@@ -27,7 +27,7 @@ window.submitReport = async function (lat, lng, address) {
   const formText = document.getElementById("reportText").value;
 
   if (!formText) {
-    alert("Please fill in all fields");
+    window.showToast("Please fill in all fields", "error");
     return;
   }
 
@@ -46,19 +46,19 @@ window.submitReport = async function (lat, lng, address) {
 
     // NOT LOGGED IN
     if (res.status === 401) {
-      alert("You must be logged in to submit feedback");
+      window.showToast("You must be logged in to submit feedback", "error");
       return;
     }
 
     // OTHER SERVER ERROR
     if (!res.ok) {
-      alert(data.error || "Failed to submit report");
+      window.showToast(data.error || "Failed to submit report", "error");
       return;
     }
 
     // SUCCESS
     map.closePopup();
-    alert("Report submitted!");
+    window.showToast("Report submitted!", "success");
 
     // Refresh achievements display if the function exists
     // fetch username
@@ -66,17 +66,12 @@ window.submitReport = async function (lat, lng, address) {
     const usernameObject = await usernameResponse.json();
     const username = usernameObject.user.username;
 
-    // add achievement added logic
-    const achievementAddedResponse = await fetch("/achievement", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ achievementName: "report", username: username }),
-    });
+    if (data.achievementUnlocked) {
+      window.showToast("Achievement unlocked: Report", "success");
+    }
   } catch (error) {
     console.log(error);
-    alert("Failed to submit report");
+    window.showToast("Failed to submit report", "error");
   }
 };
 
@@ -549,7 +544,7 @@ let routingControl = null; // global variable to hold the routing control instan
  */
 window.routeTo = function (destinationLat, destinationLon) {
   if (!userMarker) {
-    alert("Your location is not available yet.");
+    window.showToast("Your location is not available yet.", "error");
     return;
   }
 
@@ -584,17 +579,33 @@ function addThemeController() {
   const themeButtons = document.querySelectorAll(
     "#themeControllerContainer input",
   );
+  const themePalette = {
+    default: "voyager",
+    cyberpunk: "light_all",
+    synthwave: "dark_all",
+    luxury: "dark_nolabels",
+  };
+  const storageKey = "selectedMapTheme";
+
   themeButtons.forEach((theme) => {
-    const themePalette = {
-      default: "voyager",
-      cyberpunk: "light_all",
-      synthwave: "dark_all",
-      luxury: "dark_nolabels",
-    };
-    theme.addEventListener("change", (e) => {
-      setTileLayer(themePalette[theme.value]);
+    theme.addEventListener("change", () => {
+      const selectedTheme = theme.value;
+      setTileLayer(themePalette[selectedTheme] || themePalette.default);
+      localStorage.setItem(storageKey, selectedTheme);
     });
   });
+
+  const savedTheme = localStorage.getItem(storageKey);
+  const initialTheme =
+    savedTheme && themePalette[savedTheme] ? savedTheme : "default";
+  const defaultButton = Array.from(themeButtons).find(
+    (button) => button.value === initialTheme,
+  );
+
+  if (defaultButton) {
+    defaultButton.checked = true;
+    setTileLayer(themePalette[initialTheme]);
+  }
 }
 
 document.getElementById("fountainsBtn").addEventListener("click", () => {

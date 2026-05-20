@@ -780,6 +780,123 @@ class="hidden fixed inset-0 z-[9999] bg-black/50 items-center justify-center"   
 
 customElements.define("site-navbar", SiteNavbar);
 
+function showToast(message, type = "success") {
+  let toastContainer = document.getElementById("achievement-toast-container");
+  if (!toastContainer) {
+    toastContainer = document.createElement("div");
+    toastContainer.id = "achievement-toast-container";
+    toastContainer.className =
+      "fixed top-4 right-4 z-[10000000001] flex flex-col items-end gap-3 pointer-events-none";
+    document.body.appendChild(toastContainer);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = "toast";
+
+  const typeClass =
+    type === "error"
+      ? "alert-error"
+      : type === "warning"
+        ? "alert-warning"
+        : type === "info"
+          ? "alert-info"
+          : "alert-success";
+
+  toast.innerHTML = `
+    <div class="alert ${typeClass} shadow-lg">
+      <div>
+        <span>${message}</span>
+      </div>
+    </div>
+  `;
+
+  toastContainer.appendChild(toast);
+  setTimeout(() => {
+    toast.remove();
+  }, 3200);
+}
+
+window.showToast = showToast;
+window.showAchievementToast = showToast;
+
+const FILTER_BUTTON_IDS = [
+  "scoreBtn",
+  "treesBtn",
+  "parksBtn",
+  "communityCentresBtn",
+  "publicWashroomsBtn",
+  "transitBtn",
+  "fountainsBtn",
+  "formReports",
+];
+const FILTER_ACHIEVEMENT_NAME = "all-filters";
+
+function getFilterClickHistory() {
+  try {
+    const values = JSON.parse(localStorage.getItem("clickedFilters") || "[]");
+    return new Set(
+      (Array.isArray(values) ? values : []).filter((id) =>
+        FILTER_BUTTON_IDS.includes(id),
+      ),
+    );
+  } catch (error) {
+    return new Set();
+  }
+}
+
+function saveFilterClickHistory(clickedFilters) {
+  const validIds = Array.from(clickedFilters).filter((id) =>
+    FILTER_BUTTON_IDS.includes(id),
+  );
+  localStorage.setItem("clickedFilters", JSON.stringify(validIds));
+}
+
+async function awardFilterAchievement() {
+  try {
+    const userResponse = await fetch("/api/user");
+    const userData = await userResponse.json();
+    const username = userData?.user?.username;
+
+    if (!username) {
+      return;
+    }
+
+    const response = await fetch("/achievement", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        achievementName: FILTER_ACHIEVEMENT_NAME,
+        username,
+      }),
+    });
+    const result = await response.json();
+    if (response.ok && (result.upsertedCount === 1 || result.upsertedId)) {
+      window.showToast("Achievement unlocked: Filter Master", "success");
+    }
+
+    if (window.updateUserBadges) {
+      window.updateUserBadges();
+    }
+  } catch (error) {
+    console.error("Failed to award filter achievement", error);
+  }
+}
+
+function recordFilterClick(buttonId) {
+  const clickedFilters = getFilterClickHistory();
+  const beforeCount = clickedFilters.size;
+  clickedFilters.add(buttonId);
+  saveFilterClickHistory(clickedFilters);
+
+  const afterCount = clickedFilters.size;
+  if (
+    afterCount === FILTER_BUTTON_IDS.length &&
+    beforeCount < FILTER_BUTTON_IDS.length
+  ) {
+    awardFilterAchievement();
+  }
+}
+
 document.querySelectorAll("#filterContainer button").forEach((btn) => {
   btn.addEventListener("click", () => {
     if (
@@ -795,6 +912,14 @@ document.querySelectorAll("#filterContainer button").forEach((btn) => {
     btn.classList.toggle("bg-secondary");
     btn.classList.toggle("text-secondary-content");
     btn.classList.toggle("active");
+
+    if (!btn.id) {
+      return;
+    }
+
+    if (FILTER_BUTTON_IDS.includes(btn.id)) {
+      recordFilterClick(btn.id);
+    }
   });
 });
 
