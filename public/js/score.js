@@ -10,6 +10,9 @@ const saveFormulaBtn = document.getElementById("saveFormulaBtn");
 
 const resetFormulaBtn = document.getElementById("resetFormula");
 
+/**
+ * Resets the formula sliders to equal default weights.
+ */
 function resetFormula() {
   const defaultFormula = {
     waterFountains: 0.2,
@@ -38,6 +41,11 @@ resetFormulaBtn.addEventListener("click", () => {
   alert("Formula reset to default values.");
 });
 
+/**
+ * Gets the current heat score formula values from the text inputs.
+ *
+ * @returns {object} Formula weights for each heat score category.
+ */
 function getFormula() {
   return {
     waterFountains: Number(waterFountainsInput.value),
@@ -48,6 +56,10 @@ function getFormula() {
   };
 }
 
+/**
+ * Calculates the total formula weight and updates the total display,
+ * message, and save button state.
+ */
 function updateTotal() {
   const formula = getFormula();
 
@@ -83,6 +95,11 @@ parksInput.addEventListener("input", updateTotal);
 communityCentresInput.addEventListener("input", updateTotal);
 transitInput.addEventListener("input", updateTotal);
 
+/**
+ * Saves the current heat score formula to the backend.
+ *
+ * @async
+ */
 saveFormulaBtn.addEventListener("click", async () => {
   const formula = getFormula();
 
@@ -136,23 +153,11 @@ saveFormulaBtn.addEventListener("click", async () => {
   updateSliders(data.formula);
 });
 
-// updateTotal();
-
-// function updateSliders(data) {
-//   const sliders = [
-//     "waterFountains",
-//     "washrooms",
-//     "parks",
-//     "communityCentres",
-//     "transit",
-//   ];
-
-//   data.formula.forEach((sliderName, sliderValue) => {
-//     document.getElementById(`${sliderName}Text`).value = sliderValue; // changes the textbox
-//     document.getElementById(sliderName).value = sliderValue; // changes the slider
-//   });
-// }
-
+/**
+ * Fetches the saved heat score formula from the backend and updates the sliders.
+ *
+ * @async
+ */
 async function loadFormula() {
   const response = await fetch("/api/heatScoreFormula");
   const data = await response.json();
@@ -163,6 +168,12 @@ async function loadFormula() {
 }
 
 loadFormula();
+
+/**
+ * Updates the slider and text input values using the given formula.
+ *
+ * @param {object} formula - Formula object containing heat score weights.
+ */
 function updateSliders(formula) {
   Object.entries(formula).forEach(([sliderName, sliderValue]) => {
     // update textbox

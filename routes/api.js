@@ -663,6 +663,14 @@ router.get("/deleteAccount/:user", async (req, res) => {
   }
 });
 
+/**
+ * Creates and saves a new feedback report submitted by a logged-in user.
+ *
+ * Requires user authentication before saving report data.
+ *
+ * @route POST /reports
+ * @returns {JSON} Success status or error message
+ */
 router.post("/reports", async (req, res) => {
   if (!req.session.user) {
     return res
@@ -731,6 +739,15 @@ router.get("/reports", async (req, res) => {
   }
 });
 
+/**
+ * Generates an AI summary of heat-related community reports.
+ *
+ * Only accessible to planner users. Supports citywide and
+ * neighborhood-specific summaries.
+ *
+ * @route GET /reports/summary
+ * @returns {JSON} Summary data with recommendations and topics
+ */
 router.get("/reports/summary", async (req, res) => {
   if (!req.session.user || req.session.user.role !== "planner") {
     return res.status(403).json({
