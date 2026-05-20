@@ -53,17 +53,55 @@ class SiteProfile extends HTMLElement {
               </div>
             </div>
           </div>
+
           <div class="collapse collapse-arrow bg-base-100 border border-base-300 mb-4">
             <input type="checkbox" />
             <div class="collapse-title font-semibold">Achievements</div>
             <div class="collapse-content text-sm flex flex-wrap justify-start gap-2" id="achievements">
             </div>
           </div>
+
           <div class="collapse collapse-arrow bg-base-100 border border-base-300">
             <input type="checkbox" />
             <div class="collapse-title font-semibold">Delete Account</div>
             <div class="collapse-content text-sm">
               <button class="btn bg-red-500 text-white" onclick="deleteProfileModal.showModal()">Delete Account</button>
+            </div>
+          </div>
+
+          <h1 class="py-1 w-full flex justify-center text-3xl font-semibold">Themes</h1>
+          <div id="themeControllerContainer" class="join py-2 pb-4 flex justify-center w-full">
+            <div class="tooltip  tooltip-top" data-tip="Default Theme">
+              <input
+                type="radio"
+                name="theme-buttons"
+                class="btn theme-controller join-item"
+                aria-label="Default"
+                value="default" />
+            </div>
+            <div class="tooltip  tooltip-top" data-tip="Complete achievement: name">
+              <input
+                type="radio"
+                name="theme-buttons"
+                class="btn theme-controller join-item"
+                aria-label="Cyberpunk"
+                value="cyberpunk" />
+            </div>
+            <div class="tooltip  tooltip-top" data-tip="Complete achievement: name">
+              <input
+                type="radio"
+                name="theme-buttons"
+                class="btn theme-controller join-item"
+                aria-label="Synthwave"
+                value="synthwave" />
+            </div>
+            <div class="tooltip  tooltip-top" data-tip="Complete achievement: name">
+              <input
+                type="radio"
+                name="theme-buttons"
+                class="btn theme-controller join-item"
+                aria-label="Luxury"
+                value="luxury" />
             </div>
           </div>
 
@@ -74,6 +112,7 @@ class SiteProfile extends HTMLElement {
               </form>
             </div>
           </div>
+
         </div>
       </dialog>
 

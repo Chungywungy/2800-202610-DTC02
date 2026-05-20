@@ -1,4 +1,4 @@
-import { map } from "./mapInit.js";
+import { map, setTileLayer } from "./mapInit.js";
 import { fetchWaterFountains, toggleFountainMarkers } from "./water.js";
 import { fetchParks, createParkGeom, toggleParkGeom } from "./parks.js";
 import { fetchPublicWashrooms, toggleWashroomMarkers } from "./washroom.js";
@@ -600,6 +600,21 @@ async function fetchAll() {
     transitData,
     communityCentresData,
   );
+
+  const themeButtons = document.querySelectorAll(
+    "#themeControllerContainer input",
+  );
+  themeButtons.forEach((theme) => {
+    const themePalette = {
+      default: "voyager",
+      cyberpunk: "light_all",
+      synthwave: "dark_all",
+      luxury: "dark_nolabels",
+    };
+    theme.addEventListener("change", (e) => {
+      setTileLayer(themePalette[theme.value]);
+    });
+  });
 }
 initTrees(map);
 fetchAll();
