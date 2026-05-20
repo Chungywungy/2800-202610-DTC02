@@ -1,8 +1,9 @@
-// Park geometry
+// Park geometry array
 let parkGeom = [];
 
 /**
- * Fetch raw park data from backend route and push to parkData array
+ * @description Fetch raw park data from backend route and push to parkData array
+ * @returns {Array} parkData array with data fetched from backend
  */
 export const fetchParks = async () => {
   let parkData = [];
@@ -21,7 +22,9 @@ export const fetchParks = async () => {
 };
 
 /**
- * Push park geometry data from each park to parkGeom array
+ * @description Push park geometry data from each park to parkGeom array and adds park location to popup for
+ * wayfinding.
+ * @param {Array} parkData array with parks data fetched from backend
  */
 export const createParkGeom = async (parkData) => {
   parkGeom = [];
@@ -42,7 +45,8 @@ export const createParkGeom = async (parkData) => {
 };
 
 /**
- * Toggle park geometry when the Parks button in the navbar is clicked. Used in site-navbar.js
+ * @description Toggle park geometry when the Parks button in the navbar is clicked. Used in site-navbar.js
+ * @param {Object} Map object
  */
 export const toggleParkGeom = (map) => {
   const button = document.getElementById("parksBtn");
