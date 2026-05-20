@@ -785,6 +785,70 @@ class="hidden fixed inset-0 z-[9999] bg-black/50 items-center justify-center"   
 
 customElements.define("site-navbar", SiteNavbar);
 
+const FILTER_BUTTON_IDS = [
+  "scoreBtn",
+  "treesBtn",
+  "parksBtn",
+  "communityCentresBtn",
+  "publicWashroomsBtn",
+  "transitBtn",
+  "fountainsBtn",
+  "formReports",
+];
+const FILTER_ACHIEVEMENT_NAME = "all-filters";
+
+function getFilterClickHistory() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem("clickedFilters") || "[]"));
+  } catch (error) {
+    return new Set();
+  }
+}
+
+function saveFilterClickHistory(clickedFilters) {
+  localStorage.setItem(
+    "clickedFilters",
+    JSON.stringify(Array.from(clickedFilters)),
+  );
+}
+
+async function awardFilterAchievement() {
+  try {
+    const userResponse = await fetch("/api/user");
+    const userData = await userResponse.json();
+    const username = userData?.user?.username;
+
+    if (!username) {
+      return;
+    }
+
+    await fetch("/achievement", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        achievementName: FILTER_ACHIEVEMENT_NAME,
+        username,
+      }),
+    });
+
+    if (window.updateUserBadges) {
+      window.updateUserBadges();
+    }
+  } catch (error) {
+    console.error("Failed to award filter achievement", error);
+  }
+}
+
+function recordFilterClick(buttonId) {
+  const clickedFilters = getFilterClickHistory();
+  clickedFilters.add(buttonId);
+  saveFilterClickHistory(clickedFilters);
+
+  if (clickedFilters.size >= FILTER_BUTTON_IDS.length) {
+    awardFilterAchievement();
+  }
+}
+
 document.querySelectorAll("#filterContainer button").forEach((btn) => {
   btn.addEventListener("click", () => {
     if (
@@ -800,6 +864,10 @@ document.querySelectorAll("#filterContainer button").forEach((btn) => {
     btn.classList.toggle("bg-secondary");
     btn.classList.toggle("text-secondary-content");
     btn.classList.toggle("active");
+
+    if (FILTER_BUTTON_IDS.includes(btn.id)) {
+      recordFilterClick(btn.id);
+    }
   });
 });
 
