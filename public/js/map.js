@@ -563,17 +563,33 @@ function addThemeController() {
   const themeButtons = document.querySelectorAll(
     "#themeControllerContainer input",
   );
+  const themePalette = {
+    default: "voyager",
+    cyberpunk: "light_all",
+    synthwave: "dark_all",
+    luxury: "dark_nolabels",
+  };
+  const storageKey = "selectedMapTheme";
+
   themeButtons.forEach((theme) => {
-    const themePalette = {
-      default: "voyager",
-      cyberpunk: "light_all",
-      synthwave: "dark_all",
-      luxury: "dark_nolabels",
-    };
-    theme.addEventListener("change", (e) => {
-      setTileLayer(themePalette[theme.value]);
+    theme.addEventListener("change", () => {
+      const selectedTheme = theme.value;
+      setTileLayer(themePalette[selectedTheme] || themePalette.default);
+      localStorage.setItem(storageKey, selectedTheme);
     });
   });
+
+  const savedTheme = localStorage.getItem(storageKey);
+  const initialTheme =
+    savedTheme && themePalette[savedTheme] ? savedTheme : "default";
+  const defaultButton = Array.from(themeButtons).find(
+    (button) => button.value === initialTheme,
+  );
+
+  if (defaultButton) {
+    defaultButton.checked = true;
+    setTileLayer(themePalette[initialTheme]);
+  }
 }
 
 document.getElementById("fountainsBtn").addEventListener("click", () => {
