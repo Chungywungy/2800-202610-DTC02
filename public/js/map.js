@@ -441,7 +441,7 @@ const createNeighborhoodGeom = (
     Transit Stops: ${stats.transit}<br>
     Parks: ${stats.parks}<br><br>
 
-    <b>Normalized Heat Score:</b>
+    <b>Normalized Cool Score:</b>
     ${(stats.totalScore * 100).toFixed(1)}
   `);
 
@@ -594,6 +594,9 @@ fetchReports();
 
 // Wait for all data before fetching neighborhoods
 async function fetchAll() {
+  // Loading Spinner. Spinner is on by default
+  const loadingSpinner = document.querySelector("#spinningModalContainer");
+
   const [
     parkData,
     fountainData,
@@ -608,6 +611,7 @@ async function fetchAll() {
     fetchTransitStops(),
     fetchCommunityCentres(),
     fetchHeatScoreFormula(),
+    // new Promise((resolve) => setTimeout(resolve, 3000)), // Add delay for animation UNDO comment when in production
   ]);
 
   await fetchNeighborhoods(
@@ -619,6 +623,9 @@ async function fetchAll() {
   );
 
   addThemeController();
+  // Hide Spinner
+  loadingSpinner.classList.add("hidden");
+  loadingSpinner.classList.remove("flex");
 }
 initTrees(map);
 fetchAll();
