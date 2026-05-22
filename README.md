@@ -28,7 +28,7 @@ Source: [City of Vancouver Open Data Portal](https://opendata.vancouver.ca/pages
 
 ### User Reports
 
-Logged in users can submit a commhnity report anywhere on the map. All reports are viewable by City Planner accounts.
+Logged in users can submit a community report anywhere on the map. All reports are viewable by City Planner accounts.
 
 ### Live Temperature
 
