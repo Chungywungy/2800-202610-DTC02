@@ -48,11 +48,11 @@ City planner accounts can open the AI Summary panel to generate a citywide or ne
     - [Claude API](https://platform.claude.com/docs/en/api/admin/api_keys/retrieve)
 
 ```env
-PORT=[insert port number]
-MONGODB_URI=[insert MongoDB Atlas connection string]
-OPENWEATHER_KEY=[insert Open Weather API key]
-SHADE_API=[insert ShadeMap API key]
-CLAUDE_API_KEY=[insert Claude API key]
+PORT=5500
+MONGODB_URI=replace_with_MongoDB_Atlas_connection_string
+OPENWEATHER_KEY=replace_with_Open_Weather_API_key
+SHADE_API=replace_with_ShadeMap_API_key
+CLAUDE_API_KEY=replace_with_Claude_API_key
 ```
 
 Run the following commands to get up and running:
