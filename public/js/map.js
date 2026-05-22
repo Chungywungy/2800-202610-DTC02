@@ -471,18 +471,45 @@ const createNeighborhoodGeom = (
     });
 
     geom.bindPopup(`
-    <b>${stats.neighborhood.name}</b><br>
-    Rank: ${index + 1}<br><br>
-
-    Fountains: ${stats.fountains}<br>
-    Washrooms: ${stats.washrooms}<br>
-    Community Centres: ${stats.centres}<br>
-    Transit Stops: ${stats.transit}<br>
-    Parks: ${stats.parks}<br><br>
-
+    <b>${stats.neighborhood.name} (Rank: ${index + 1})</b><br>
+    <br>
+    <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-1">
+        <p style="margin:0">Fountains: (${stats.fountains} / ${maxFountains})</p>
+        <div class="flex justify-between">
+          <progress class="progress w-full progress-accent" value="${stats.fountains}" max="${maxFountains}"></progress>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1">
+        <p style="margin:0">Washrooms: (${stats.washrooms} / ${maxWashrooms})</p>
+        <div class="flex justify-between">
+          <progress class="progress w-full progress-accent" value="${stats.washrooms}" max="${maxWashrooms}"></progress>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1">
+        <p style="margin:0">Community Centres: (${stats.centres} / ${maxCentres})</p>
+        <div class="flex justify-between">
+          <progress class="progress w-full progress-accent" value="${stats.centres}" max="${maxCentres}"></progress>
+        </div>
+      </div>
+        <div class="flex flex-col gap-1">
+        <p style="margin:0">Transit Stops: (${stats.transit} / ${maxTransit})</p>
+        <div class="flex justify-between">
+          <progress class="progress w-full progress-accent" value="${stats.transit}" max="${maxTransit}"></progress>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1">
+        <p style="margin:0">Parks: (${stats.parks} / ${maxParks})</p>
+        <div class="flex justify-between">
+          <progress class="progress w-full progress-accent" value="${stats.parks}" max="${maxParks}"></progress>
+        </div>
+      </div>
+    </div>
+    <br>
     <b>Normalized Cool Score:</b>
     ${(stats.totalScore * 100).toFixed(1)}
-  `);
+  `,
+    );
 
     neighborhoodGeom.push(geom);
   });
