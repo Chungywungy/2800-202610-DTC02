@@ -131,6 +131,10 @@ Run the following commands to get up and running:
 - [Figma](https://www.figma.com/)
 - [Trello](https://trello.com/)
 
+## Issues and Testing
+
+Check out our [Issues](https://github.com/Chungywungy/2800-202610-DTC02/issues) tab on Github to improve Find Your Cool!
+
 ## Contributors
 
 ### BCIT COMP 2800 2026 - Team DTC-02
