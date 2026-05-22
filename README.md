@@ -108,6 +108,16 @@ Run the following commands to get up and running:
 
 ## Tech Stack
 
+![image](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+![image](https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=Leaflet&logoColor=white)
+![image](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![image](https://img.shields.io/badge/daisyUI-1ad1a5?style=for-the-badge&logo=daisyui&logoColor=white)
+![image](https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![image](https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white)
+![image](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![image](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+![image](https://img.shields.io/badge/Trello-0052CC?style=for-the-badge&logo=trello&logoColor=white)
+
 - [Javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [Leaflet](https://leafletjs.com/)
 - [Leaflet Shadow Simulator](https://www.npmjs.com/package/leaflet-shadow-simulator)
@@ -118,6 +128,8 @@ Run the following commands to get up and running:
 - [Express](https://expressjs.com/en/)
 - [MongoDB](https://www.mongodb.com/)
 - [Claude API](https://platform.claude.com/docs/en/api/overview)
+- [Figma](https://www.figma.com/)
+- [Trello](https://trello.com/)
 
 ## Contributors
 
