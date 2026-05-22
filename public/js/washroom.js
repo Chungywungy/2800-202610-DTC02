@@ -36,7 +36,7 @@ export const createWashroomMarkers = (washroomData) => {
     let lonValue = result.geo_point_2d["lon"];
     let latValue = result.geo_point_2d["lat"];
     const marker = L.marker([latValue, lonValue], { icon: washroomIcon });
-    let washroomInfo = `<b>${result.park_name}</b><br>${result.type}<br>Summer: ${result.summer_hours}<br>Wheelchair: ${result.wheelchair_access}<br><button onclick="routeTo(${latValue}, ${lonValue})" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>`;
+    let washroomInfo = `<b>${result.park_name || "Public Washroom"}</b><br>${result.type}<br>Summer: ${result.summer_hours}<br>Wheelchair: ${result.wheelchair_access || "Data not available"}<br><button onclick="routeTo(${latValue}, ${lonValue})" class="text-center cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Get Directions</button>`;
     marker.bindPopup(washroomInfo);
     washroomMarkers.push(marker);
   }
