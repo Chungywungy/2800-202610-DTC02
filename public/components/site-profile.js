@@ -1,4 +1,5 @@
-import { map, toggleReportMarkers } from "../js/map.js";
+import { toggleReportMarkers } from "../js/report.js";
+import { map } from "../js/mapInit.js";
 
 /**
  * Profile modal component
@@ -13,17 +14,17 @@ class SiteProfile extends HTMLElement {
 
   createProfileModal() {
     this.innerHTML = `
-      <dialog id="profileModal" class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box w-11/12 max-w-5xl">
+      <dialog id="profileModal" class="modal modal-middle">
+        <div class="modal-box w-11/12 max-w-lg sm:max-w-full lg:max-w-5xl">
           <h3 class="text-lg font-bold">Hello ${user.username}!</h3>
           <br>
 
-          <div class="collapse collapse-arrow bg-base-100 border border-base-300">
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300 mb-4">
             <input type="checkbox" />
 
             <div class="collapse-title font-semibold">User Reports</div>
             <div class="collapse-content text-sm">
-              <div class="flex flex-col gap-2 sm:flex-row sm:items-center place-self-end">
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-center justify-end">
                 <span class="font-semibold pr-2">Filter: </span>
                 <select id="reportScope" class="select select-bordered select-sm w-full sm:w-48">
                   <option value="all">Citywide</option>
@@ -37,7 +38,7 @@ class SiteProfile extends HTMLElement {
               </div>
               <br>
               <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table table-xs sm:table-md">
                   <thead>
                     <tr>
                       <th><span id="sortUsername">Username <span id="usernameArrow">▼</span></span></th>
@@ -52,12 +53,58 @@ class SiteProfile extends HTMLElement {
               </div>
             </div>
           </div>
-          <br>
+
+          <div class="collapse collapse-arrow bg-base-100 border border-base-300 mb-4">
+            <input type="checkbox" />
+            <div class="collapse-title font-semibold">Achievements</div>
+            <div class="collapse-content text-sm flex flex-wrap justify-start gap-2" id="achievements">
+            </div>
+          </div>
+
           <div class="collapse collapse-arrow bg-base-100 border border-base-300">
             <input type="checkbox" />
             <div class="collapse-title font-semibold">Delete Account</div>
             <div class="collapse-content text-sm">
               <button class="btn bg-red-500 text-white" onclick="deleteProfileModal.showModal()">Delete Account</button>
+            </div>
+          </div>
+
+          <h1 class="py-1 w-full flex justify-center text-xl sm:text-3xl font-semibold">Themes</h1>
+          <div id="themeControllerContainer" class="flex flex-wrap justify-center gap-2 py-2 pb-4 w-full">
+            <div class="tooltip  tooltip-top" data-tip="Default Theme">
+              <input
+                type="radio"
+                name="theme-buttons"
+                class="btn theme-controller join-item"
+                aria-label="Default"
+                value="default" />
+            </div>
+            <div class="tooltip  tooltip-top" data-tip="Complete 1 achievement to unlock">
+              <input
+                disabled
+                type="radio"
+                name="theme-buttons"
+                class="btn theme-controller join-item"
+                aria-label="Cyberpunk"
+                value="cyberpunk" />
+            </div>
+            <div class="tooltip  tooltip-top" data-tip="Complete 2 achievements to unlock">
+              <input
+                disabled
+                type="radio"
+                name="theme-buttons"
+                class="btn theme-controller join-item"
+                aria-label="Synthwave"
+                value="synthwave" />
+            </div>
+            <div class="tooltip  tooltip-top" data-tip="Complete 3 achievements to unlock">
+              <input
+                disabled
+                type="radio"
+                name="theme-buttons"
+                class="btn theme-controller join-item"
+                aria-label="Luxury"
+                value="luxury" />
             </div>
           </div>
 
@@ -68,6 +115,7 @@ class SiteProfile extends HTMLElement {
               </form>
             </div>
           </div>
+
         </div>
       </dialog>
 
@@ -143,23 +191,30 @@ async function displayReports(neighbourhood = "all") {
   reports.forEach((report) => {
     const reportItem = document.createElement("tr");
 
-    reportItem.classList.add("hover:bg-base-300");
-    reportItem.innerHTML = `
-      <td>${report.username}</td>
-      <td>${report.formText}</td>
-      <td>${report.address}</td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-sm" 
-          data-lat="${report.lat}"
-          data-lng="${report.lng}"
-        >
-          View
-        </button>
-      </td>
-    `;
-    reportsDiv.appendChild(reportItem);
+    if (
+      neighbourhood == "all" ||
+      report.address.includes(neighbourhood) ||
+      (neighbourhood === "Arbutus Ridge" &&
+        report.address.replaceAll("-", " ").includes(neighbourhood))
+    ) {
+      reportItem.classList.add("hover:bg-base-300");
+      reportItem.innerHTML = `
+          <td>${report.username}</td>
+          <td>${report.formText}</td>
+          <td>${report.address}</td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-sm" 
+              data-lat="${report.lat}"
+              data-lng="${report.lng}"
+            >
+              View
+            </button>
+          </td>
+        `;
+      reportsDiv.appendChild(reportItem);
+    }
   });
 
   // Add listener on each "View" button
@@ -324,6 +379,7 @@ async function loadNeighborhoodOptions() {
   });
 
   neighborhoodSelect.disabled = false;
+  displayReports(neighborhoodSelect.value);
 }
 
 // Taken from Sprint 2 Pop-up AI-generated feature (map.js) and adapted for viewing reports by neighbourhood
@@ -342,7 +398,7 @@ const user = await fetchUser();
 let reports = [];
 
 fetchReports();
-displayReports();
+// displayReports();
 
 customElements.define("site-profile", SiteProfile);
 
@@ -350,7 +406,11 @@ customElements.define("site-profile", SiteProfile);
 // Used Copilot to learn about event.newState
 document.getElementById("profileModal").addEventListener("toggle", (e) => {
   if (e.newState === "open") {
-    displayReports();
+    if (document.getElementById("reportScope").value === "neighborhood") {
+      displayReports(document.getElementById("reportNeighborhood").value);
+    } else {
+      displayReports();
+    }
   }
 });
 
@@ -414,6 +474,10 @@ document.getElementById("reportScope").addEventListener("change", async () => {
     !document.getElementById("reportNeighborhood").options.length
   ) {
     await loadNeighborhoodOptions();
+  } else if (document.getElementById("reportScope").value === "neighborhood") {
+    displayReports(document.getElementById("reportNeighborhood").value);
+  } else {
+    displayReports();
   }
 });
 
@@ -423,3 +487,85 @@ document.getElementById("reportNeighborhood").addEventListener("change", () => {
     displayReports(document.getElementById("reportNeighborhood").value);
   }
 });
+
+//Achievements
+function addBadges() {
+  const achievementsContainer = document.getElementById("achievements");
+  const badgeDefinitions = [
+    { id: "score", label: "Score" },
+    { id: "report", label: "Report" },
+    { id: "all-filters", label: "Filter Master" },
+  ];
+
+  badgeDefinitions.forEach((achievement) => {
+    const achievementDiv = document.createElement("div");
+    achievementDiv.classList.add(
+      "px-[10px]",
+      "py-[10px]",
+      "rounded-lg",
+      "shadow-sm",
+      "bg-neutral-100",
+      "flex",
+      "flex-col",
+      "justify-left",
+      "items-center",
+      "w-2/5",
+      "md:w-1/5",
+    );
+    const badgeSpan = document.createElement("span");
+    badgeSpan.classList.add("material-symbols-outlined");
+    badgeSpan.style = "font-size: 50px";
+    badgeSpan.textContent = "license";
+
+    const achievementName = document.createElement("p");
+    achievementName.classList.add("text-center");
+    achievementName.id = achievement.id;
+    achievementName.textContent = achievement.label;
+
+    // combine together
+    achievementDiv.appendChild(badgeSpan);
+    achievementDiv.appendChild(achievementName);
+
+    // append to container
+    achievementsContainer.appendChild(achievementDiv);
+  });
+}
+
+addBadges();
+
+async function updateUserBadges() {
+  const responseUser = await fetchUser();
+  const loggedInUser = await responseUser.username;
+
+  const responseAchievements = await fetch(
+    `/achievement?username=${loggedInUser}`,
+  );
+  const achievements = await responseAchievements.json();
+
+  const themeButtons = document.querySelectorAll("input[type='radio']");
+
+  console.log(achievements);
+  for (let i = 0; i < achievements.length; i++) {
+    const themeBtn = themeButtons[i + 1];
+    // Early exit if no more themes but more achievements
+    if (!themeBtn) return;
+    // Remove locked look
+    themeBtn.removeAttribute("disabled");
+    themeBtn.closest(".tooltip").dataset.tip =
+      themeButtons[i + 1].getAttribute("aria-label");
+  }
+
+  achievements.forEach((achievementObject) => {
+    const achievementElement = document.getElementById(
+      achievementObject.achievementName,
+    );
+    if (achievementElement?.parentNode) {
+      achievementElement.parentNode.classList.add("bg-warning");
+    }
+  });
+}
+
+// Expose updateUserBadges globally so it can be called from other scripts
+window.updateUserBadges = updateUserBadges;
+
+updateUserBadges();

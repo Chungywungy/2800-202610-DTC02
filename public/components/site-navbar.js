@@ -16,12 +16,12 @@ class SiteNavbar extends HTMLElement {
         <div class="drawer-content">
 
           <nav id="navContainer" class="z-2000 absolute flex flex-col w-full">
-<!-- HEATSCORE LEGEND MODAL -->
+<!-- COOLSCORE LEGEND MODAL -->
 <div
   id="heatScoreLegend"
 class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 overflow-hidden">
   <div class="flex items-center justify-between bg-base-200 px-4 py-2">
-    <h2 class="font-bold">Heat Score Legend</h2>
+    <h2 class="font-bold">Cool Score Legend</h2>
 
     <button
       id="minimizeLegendBtn"
@@ -34,22 +34,22 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
   <div id="legendContent" class="space-y-2 text-sm p-4">
     <div class="flex items-center gap-2">
       <div class="w-5 h-5 rounded" style="background-color: #97C459"></div>
-      <span>Rank 1-5 : Very High Heat Score</span>
+      <span>Rank 1-5 : Very High Cool Score</span>
     </div>
 
     <div class="flex items-center gap-2">
       <div class="w-5 h-5 rounded" style="background-color: #F5E663"></div>
-      <span>Rank 6-10 : High Heat Score</span>
+      <span>Rank 6-10 : High Cool Score</span>
     </div>
 
     <div class="flex items-center gap-2">
       <div class="w-5 h-5 rounded" style="background-color: #EF9F27"></div>
-      <span>Rank 11-15 : Moderate Heat Score</span>
+      <span>Rank 11-15 : Moderate Cool Score</span>
     </div>
 
     <div class="flex items-center gap-2">
       <div class="w-5 h-5 rounded" style="background-color: #E24B4A"></div>
-      <span>Rank 16+ : Low Heat Score</span>
+      <span>Rank 16+ : Low Cool Score</span>
     </div>
   </div>
 </div>
@@ -67,6 +67,7 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                 </div>
                 <div class="flex gap-2 shrink-0">
                   <!-- HELP / TUTORIAL -->
+      
                   <button class="btn btn-warning mx-2" id="helpBtn">
                     Help
                   </button>
@@ -77,12 +78,9 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                       role="button"
                       class="btn btn-ghost btn-circle avatar"
                     >
-                      <div class="w-10 rounded-full">
-                        <!-- IMAGES -->
-                        <img
-                          alt="Tailwind CSS Navbar component"
-                          src="https://preview.redd.it/serious-cat-meme-unedited-version-from-2003-found-by-v0-90prc33ob1ze1.jpeg?width=2560&format=pjpg&auto=webp&s=69718ad34727ec7c70e26b28fedf38886cee7b3e"
-                        />
+                      <div class="flex items-center justify-center w-10 rounded-full border border-gray-300">
+                        <span id="profileInitial" class="text-xl"></span>
+                        <span id="profileIcon" class="material-symbols-outlined">person</span>
                       </div>
                     </div>
 
@@ -90,9 +88,9 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                       tabindex="0"
                       class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shrink-0 shadow"
                     >
-          <li><button id="profileBtn" class="hidden" onclick="profileModal.showModal()">Profile</button></li>
+                      <li><button id="profileBtn" class="hidden" onclick="profileModal.showModal()">Profile</button></li>
                       <li id="settingsBtn" class="hidden">
-                        <label for="settingsDrawer"> Heat Score </label>
+                        <label for="settingsDrawer"> Cool Score </label>
                       </li>
                       <li><button id="logInBtn">Login</button></li>
                       <li><button id="logOutBtn" class="hidden">Logout</button></li>
@@ -151,11 +149,10 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                   <span class="material-symbols-outlined"> flag </span>
                 </button>
                       <!-- AI SUMMARY -->
-        <button class="btn hidden" id="summaryBtn">
-          AI Summary
-          <span class="material-symbols-outlined"> smart_toy </span>
-        </button>
-                
+                <button class="btn hidden" id="summaryBtn">
+                  AI Summary
+                  <span class="material-symbols-outlined"> smart_toy </span>
+                </button>
               </ul>
             </section>
 
@@ -166,9 +163,9 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
               class="hidden fixed inset-0 flex justify-center bg-black/50"
             >
               <div
-                class="fixed z-[2000] flex flex-col items-center mt-[140px] md:mt-18"
+                class=" z-[2000] flex flex-col items-center mt-[140px] md:mt-18"
               >
-                <div class="flex relative justify-center rounded-xl -mb-11">
+                <div class="flex relative pointer-events-none justify-center rounded-xl -mb-11">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="100px"
@@ -181,6 +178,19 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                 </div>
 
                 <div class="bg-white rounded-xl p-4">
+
+                <!-- PROGRESS BAR -->
+                  <div class="mt-4">
+                    <div class="flex justify-between text-sm mb-1">
+                      <span>1/6</span>
+                    </div>
+
+                    <progress
+                      class="progress progress-primary w-full"
+                      value="1"
+                      max="6"
+                    ></progress>
+                  </div>
                   <h2 class="text-2xl font-bold mb-4">How to Use the App</h2>
                   <p>
                     You can select a filter to render the locations on the map. <br />
@@ -192,55 +202,334 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
                     <label for="rememberMe">Enable first time user help</label>
                   </div>
 
-                  <button
-                    id="closeHelpBtn"
-                    class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg"
-                  >
-                    Close
-                  </button>
 
-                  <button
-                    id="nextBtnFilter"
-                    class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg"
-                  >
-                    Next
-                  </button>
+
+                  <div class="flex gap-3 mt-6">
+                    <button
+                      id="closeHelpBtn"
+                      class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+                    >
+                      Close
+                    </button>
+
+                    <button
+                      id="nextBtnFilter"
+                      class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                    >
+                      Next
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
             <!-- Weather Help Modal -->
-            <div
-              id="weatherModal"
-              class="hidden fixed inset-0 bg-black/50 items-end justify-end flex">
-              
-              <div class="z-[2000] flex flex-col mb-30 mr-30">
-                <div class="bg-white rounded-lg shadow-lg p-6 -top-48">
-                  <h2 class="text-2xl font-bold mb-4">Temperature and Heat Score</h2>
+<div
+  id="weatherModal"
+  class="hidden fixed inset-0 bg-black/50 items-end justify-start flex"
+>
+  <div class="z-[2000] flex flex-col mb-20 ml-5">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+     <!-- PROGRESS BAR -->
+<div class="mt-4">
+  <div class="flex justify-between text-sm mb-1">
+    <span>2/6</span>
+  </div>
 
-                  <p>See the current temperature and heat score for your location.</p>
+  <progress
+    class="progress progress-primary w-full"
+    value="2"
+    max="6"
+  ></progress>
+</div>
+      <h2 class="text-2xl font-bold mb-4">
+        Temperature
+      </h2>
 
-                  <button
-                    id="nextBtnWeather"
-                    class="mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg"
-                  >
-                    Close
-                  </button>
-                </div>
+      <p>
+        See the current temperature for your location.
+      </p>
 
-                <div class="flex relative justify-end rounded-xl -mt-11">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="100px"
-                    viewBox="0 -960 960 960"
-                    width="100px"
-                    fill="white"
-                  >
-                    <path d="M480-360 280-559h400L480-360Z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
+      <div class="flex gap-3 mt-6">
+        <button
+          id="closeWeatherBtn"
+          class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+        >
+          Close
+        </button>
+
+        <button
+          id="nextBtnWeather"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <div class="flex relative pointer-events-none justify-start rounded-xl -mt-11">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="100px"
+        viewBox="0 -960 960 960"
+        width="100px"
+        fill="white"
+      >
+        <path d="M480-360 280-559h400L480-360Z" />
+      </svg>
+    </div>
+  </div>
+</div>
+<!-- Score Help Modal -->
+<div
+  id="scoreTutorialModal"
+  class="hidden fixed inset-0 bg-black/50 flex items-start justify-start"
+>
+  <div class="z-[2000] flex flex-col items-start mt-24 ml-[15%]">
+
+    <div class="flex relative pointer-events-none justify-start rounded-xl -mb-11 ml-10">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="100px"
+        viewBox="0 -960 960 960"
+        width="100px"
+        fill="white"
+      >
+        <path d="m280-400 200-201 200 201H280Z" />
+      </svg>
+    </div>
+
+    <!-- CARD -->
+    <div class="bg-white rounded-lg shadow-lg p-6 w-80">
+     <!-- PROGRESS BAR -->
+<div class="mt-4">
+  <div class="flex justify-between text-sm mb-1">
+    <span>3/6</span>
+  </div>
+
+  <progress
+    class="progress progress-primary w-full"
+    value="3"
+    max="6"
+  ></progress>
+</div>
+      <h2 class="text-2xl font-bold mb-4">Cool Score</h2>
+
+      <p>
+        Turn on the Score layer to view neighbourhood heat vulnerability rankings.
+      </p>
+
+      <p class="mt-3">
+        Use the legend to understand what each colour means.
+      </p>
+
+      <div class="flex gap-3 mt-6">
+        <button
+          id="closeScoreBtn"
+          class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+        >
+          Close
+        </button>
+
+        <button
+          id="nextBtnScore"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Profile Help Modal -->
+<div
+  id="profileTutorialModal"
+  class="hidden fixed inset-0 bg-black/50 flex items-start justify-end"
+>
+  <div class="z-[2000] flex flex-col items-end mt-10 mr-3">
+
+    <div class="flex relative pointer-events-none justify-end rounded-xl -mb-12 -mr-7">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="100px"
+        viewBox="0 -960 960 960"
+        width="100px"
+        fill="white"
+      >
+        <path d="m280-400 200-201 200 201H280Z" />
+      </svg>
+    </div>
+
+    <!-- CARD -->
+    <div class="bg-white rounded-lg shadow-lg p-6 w-80">
+     <!-- PROGRESS BAR -->
+<div class="mt-4">
+  <div class="flex justify-between text-sm mb-1">
+    <span>4/6</span>
+  </div>
+
+  <progress
+    class="progress progress-primary w-full"
+    value="4"
+    max="6"
+  ></progress>
+</div>
+      <h2 class="text-2xl font-bold mb-4">Profile and Login</h2>
+
+      <p>
+        Click the profile icon in the top-right corner to log in or view your
+        profile.
+      </p>
+
+      <p class="mt-3">
+        Once logged in, you can access profile and Cool Score options.
+      </p>
+
+      <div class="flex gap-3 mt-6">
+        <button
+          id="closeProfileBtn"
+          class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+        >
+          Close
+        </button>
+
+        <button
+          id="nextBtnProfile"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- Cool Score Settings Help Modal -->
+<div
+  id="settingsTutorialModal"
+  class="hidden fixed inset-0 bg-black/50 flex items-start justify-end"
+>
+  <div class="z-[2000] flex flex-col items-end mt-10 mr-3">
+
+    <div class="flex relative pointer-events-none justify-end rounded-xl -mb-12 -mr-7">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="100px"
+        viewBox="0 -960 960 960"
+        width="100px"
+        fill="white"
+      >
+        <path d="m280-400 200-201 200 201H280Z" />
+      </svg>
+    </div>
+
+    <!-- CARD -->
+    <div class="bg-white rounded-lg shadow-lg p-6 w-80">
+     <!-- PROGRESS BAR -->
+<div class="mt-4">
+  <div class="flex justify-between text-sm mb-1">
+    <span>5/6</span>
+  </div>
+
+  <progress
+    class="progress progress-primary w-full"
+    value="5"
+    max="6"
+  ></progress>
+</div>
+      <h2 class="text-2xl font-bold mb-4">Cool Score Options</h2>
+
+      <p>
+        Logged-in users can open the Cool Score drawer from the profile menu.
+      </p>
+
+      <p class="mt-3">
+        Use the sliders to customize how each resource affects the score.
+      </p>
+
+      <div class="flex gap-3 mt-6">
+        <button
+          id="closeSettingsBtn"
+          class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+        >
+          Close
+        </button>
+
+        <button
+          id="nextBtnSettings"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Report Help Modal -->
+<div
+  id="reportTutorialModal"
+  class="hidden fixed inset-0 bg-black/50 flex items-center justify-center"
+>
+  <div class="z-[2000] flex flex-col items-center">
+
+    <!-- CARD -->
+    <div class="bg-white rounded-lg shadow-lg p-6 w-80">
+     <!-- PROGRESS BAR -->
+<div class="mt-4">
+  <div class="flex justify-between text-sm mb-1">
+    <span>6/6</span>
+  </div>
+
+  <progress
+    class="progress progress-primary w-full"
+    value="6"
+    max="6"
+  ></progress>
+</div>
+      <h2 class="text-2xl font-bold mb-4">Submit Reports</h2>
+
+      <p>
+        You can submit community reports directly on the map.
+      </p>
+
+      <p class="mt-3">
+        <strong>Desktop:</strong> right-click on the map
+      </p>
+
+      <p class="mt-3">
+        <strong>Mobile:</strong> press and hold on the map
+      </p>
+
+      <div class="flex gap-3 mt-6">
+        <button
+          id="closeReportBtn"
+          class="tutorialCloseBtn bg-gray-500 text-white px-4 py-2 rounded-lg"
+        >
+          Close
+        </button>
+
+
+      </div>
+    </div>
+
+    <div class="flex relative pointer-events-none justify-center rounded-xl -mt-12">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="100px"
+        viewBox="0 -960 960 960"
+        width="100px"
+        fill="white"
+      >
+        <path d="M480-360 280-559h400L480-360Z" />
+      </svg>
+    </div>
+
+  </div>
+</div>
             </nav>
           </div>
 
@@ -253,10 +542,10 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
 
   <div class="menu bg-base-100 min-h-full w-96 p-6">
 
- <div class="p-6 max-w-md w-full bg-white rounded-xl shadow space-y-4">
-      <h2 class="text-xl font-bold">Heat Score Formula</h2>
-<p class="text-center text-lg font-mono bg-base-200 rounded-lg p-2">
-  Heat Score = ∑ ((count ÷ max) × weight)
+ <div class="p-4 sm:p-6 w-full bg-white rounded-xl shadow space-y-4">
+      <h2 class="text-xl font-bold">Cool Score Formula</h2>
+<p class="text-center md:text-md text-sm font-mono bg-base-200 rounded-lg p-2">
+  Cool Score = ∑ ((count ÷ max) × weight)
 </p>
       <!-- WATER FOUNTAIN SETTINGS CONTAINER -->
       <div id="waterFountainContainer" class="flex flex-col gap-1">
@@ -416,7 +705,7 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
             step="0.01"
             value="0.20"
             class="input input-bordered w-1/4"
-            oninput=
+            oninput="
               this.previousElementSibling.value = Math.round(this.value * 100)
             "
           />
@@ -484,12 +773,108 @@ class="hidden fixed inset-0 z-[9999] bg-black/50 items-center justify-center"   
           </div>
         </div>
       </div>
-    </nav>
     `;
   }
 }
 
 customElements.define("site-navbar", SiteNavbar);
+
+function showToast(message, type = "success") {
+  let toastContainer = document.getElementById("achievement-toast-container");
+  if (!toastContainer) {
+    toastContainer = document.createElement("div");
+    toastContainer.id = "achievement-toast-container";
+    toastContainer.className =
+      "fixed top-4 right-4 z-[10000000001] flex flex-col items-end gap-3 pointer-events-none";
+    document.body.appendChild(toastContainer);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = "toast";
+
+  const typeClass =
+    type === "error"
+      ? "alert-error"
+      : type === "warning"
+        ? "alert-warning"
+        : type === "info"
+          ? "alert-info"
+          : "alert-success";
+
+  toast.innerHTML = `
+    <div class="alert ${typeClass} shadow-lg">
+      <div>
+        <span>${message}</span>
+      </div>
+    </div>
+  `;
+
+  toastContainer.appendChild(toast);
+  setTimeout(() => {
+    toast.remove();
+  }, 3200);
+}
+
+window.showToast = showToast;
+window.showAchievementToast = showToast;
+
+const FILTER_BUTTON_IDS = [
+  "scoreBtn",
+  "treesBtn",
+  "parksBtn",
+  "communityCentresBtn",
+  "publicWashroomsBtn",
+  "transitBtn",
+  "fountainsBtn",
+  "formReports",
+];
+const FILTER_ACHIEVEMENT_NAME = "all-filters";
+
+async function awardFilterAchievement() {
+  try {
+    const userResponse = await fetch("/api/user");
+    const userData = await userResponse.json();
+    const username = userData.user.username;
+
+    if (!username) {
+      return;
+    }
+
+    const achievementAddedResponse = await fetch("/achievement", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        achievementName: FILTER_ACHIEVEMENT_NAME,
+        username,
+      }),
+    });
+
+    const achievementResult = await achievementAddedResponse.json();
+    if (
+      achievementAddedResponse.ok &&
+      (achievementResult.upsertedCount === 1 || achievementResult.upsertedId)
+    ) {
+      window.showToast("Achievement unlocked: Filter Master", "success");
+    }
+
+    if (window.updateUserBadges && window.addThemeController) {
+      window.updateUserBadges();
+      window.addThemeController();
+    }
+  } catch (error) {
+    console.error("Failed to award filter achievement", error);
+  }
+}
+
+function recordFilterClick() {
+  const allActive = FILTER_BUTTON_IDS.every((id) =>
+    document.getElementById(id)?.classList.contains("active"),
+  );
+
+  if (allActive) {
+    awardFilterAchievement();
+  }
+}
 
 document.querySelectorAll("#filterContainer button").forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -503,8 +888,17 @@ document.querySelectorAll("#filterContainer button").forEach((btn) => {
       btn.id === "closeSummaryBtn"
     )
       return;
-    btn.classList.toggle("bg-success");
+    btn.classList.toggle("bg-secondary");
+    btn.classList.toggle("text-secondary-content");
     btn.classList.toggle("active");
+
+    if (!btn.id) {
+      return;
+    }
+
+    if (FILTER_BUTTON_IDS.includes(btn.id)) {
+      recordFilterClick(btn.id);
+    }
   });
 });
 
@@ -513,30 +907,47 @@ document.querySelectorAll("#filterContainer button").forEach((btn) => {
  */
 document.getElementById("helpBtn").addEventListener("click", () => {
   document.getElementById("filterModal").classList.remove("hidden");
-  document.getElementById("filterModal").classList.add("flex");
 });
 
 /**
- * Close help modal
+ * Tutorial logic / flow between modals
  */
-document.getElementById("closeHelpBtn").addEventListener("click", () => {
-  document.getElementById("filterModal").classList.add("hidden");
-  document.getElementById("filterModal").classList.remove("flex");
+
+// UNIVERSAL CLOSE BUTTON
+document.querySelectorAll(".tutorialCloseBtn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    btn.closest(".fixed").classList.add("hidden");
+  });
 });
 
-/**
- * First next button from filter modal -> weather modal
- */
+// FILTER -> WEATHER
 document.getElementById("nextBtnFilter").addEventListener("click", () => {
   document.getElementById("filterModal").classList.add("hidden");
-  document.getElementById("filterModal").classList.remove("flex");
   document.getElementById("weatherModal").classList.remove("hidden");
-  document.getElementById("weatherModal").classList.add("flex");
 });
 
-document.getElementById("weatherModal").addEventListener("click", () => {
+// WEATHER -> SCORE
+document.getElementById("nextBtnWeather").addEventListener("click", () => {
   document.getElementById("weatherModal").classList.add("hidden");
-  document.getElementById("weatherModal").classList.remove("flex");
+  document.getElementById("scoreTutorialModal").classList.remove("hidden");
+});
+
+// SCORE -> PROFILE
+document.getElementById("nextBtnScore").addEventListener("click", () => {
+  document.getElementById("scoreTutorialModal").classList.add("hidden");
+  document.getElementById("profileTutorialModal").classList.remove("hidden");
+});
+
+// PROFILE -> SETTINGS
+document.getElementById("nextBtnProfile").addEventListener("click", () => {
+  document.getElementById("profileTutorialModal").classList.add("hidden");
+  document.getElementById("settingsTutorialModal").classList.remove("hidden");
+});
+
+// SETTINGS -> REPORT
+document.getElementById("nextBtnSettings").addEventListener("click", () => {
+  document.getElementById("settingsTutorialModal").classList.add("hidden");
+  document.getElementById("reportTutorialModal").classList.remove("hidden");
 });
 
 /**
@@ -574,6 +985,9 @@ async function checkUserAuth() {
     document.getElementById("logOutBtn").classList.toggle("hidden");
     document.getElementById("settingsBtn").classList.toggle("hidden");
     document.getElementById("profileBtn").classList.toggle("hidden");
+    document.getElementById("profileIcon").style.display = "none";
+    document.getElementById("profileInitial").innerText =
+      data.user.username[0].toUpperCase();
 
     const summaryButton = document.getElementById("summaryBtn");
     if (data.user?.role === "planner") {
@@ -608,8 +1022,6 @@ document.getElementById("summaryModal").addEventListener("click", (event) => {
   }
 });
 
-
-
 // HEATSCORE LEGEND POPUP MODAL
 const scoreBtn = document.getElementById("scoreBtn");
 const heatScoreLegend = document.getElementById("heatScoreLegend");
@@ -630,7 +1042,6 @@ minimizeLegendBtn.addEventListener("click", () => {
   }
 });
 // HEATSCORE POPUP MODAL END
-
 
 checkUserAuth();
 

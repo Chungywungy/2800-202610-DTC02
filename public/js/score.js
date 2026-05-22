@@ -10,6 +10,9 @@ const saveFormulaBtn = document.getElementById("saveFormulaBtn");
 
 const resetFormulaBtn = document.getElementById("resetFormula");
 
+/**
+ * Resets the formula sliders to equal default weights.
+ */
 function resetFormula() {
   const defaultFormula = {
     waterFountains: 0.2,
@@ -35,9 +38,14 @@ resetFormulaBtn.addEventListener("click", () => {
 
   updateSliders(defaultFormula);
 
-  alert("Formula reset to default values.");
+  window.showToast("Formula reset to default values.", "success");
 });
 
+/**
+ * Gets the current heat score formula values from the text inputs.
+ *
+ * @returns {object} Formula weights for each heat score category.
+ */
 function getFormula() {
   return {
     waterFountains: Number(waterFountainsInput.value),
@@ -48,6 +56,10 @@ function getFormula() {
   };
 }
 
+/**
+ * Calculates the total formula weight and updates the total display,
+ * message, and save button state.
+ */
 function updateTotal() {
   const formula = getFormula();
 
@@ -83,6 +95,11 @@ parksInput.addEventListener("input", updateTotal);
 communityCentresInput.addEventListener("input", updateTotal);
 transitInput.addEventListener("input", updateTotal);
 
+/**
+ * Saves the current heat score formula to the backend.
+ *
+ * @async
+ */
 saveFormulaBtn.addEventListener("click", async () => {
   const formula = getFormula();
 
@@ -110,29 +127,49 @@ saveFormulaBtn.addEventListener("click", async () => {
 
   formulaMessage.innerText = response.ok ? "Formula saved!" : data.error;
   if (response.ok) {
-    alert("Formula saved successfully!");
+    window.showToast("Formula saved successfully!", "success");
+    // Change the score achievement badge color when formula is saved
+    const scoreAchievementElement = document.getElementById("score");
+    if (scoreAchievementElement) {
+      scoreAchievementElement.parentNode.classList.add("bg-warning");
+    }
   }
+
+  // fetch username
+  const usernameResponse = await fetch("/api/user");
+  const usernameObject = await usernameResponse.json();
+  const username = usernameObject.user.username;
+
+  // add achievement added logic
+  const achievementAddedResponse = await fetch("/achievement", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ achievementName: "score", username: username }),
+  });
+  const achievementResult = await achievementAddedResponse.json();
+  if (
+    achievementAddedResponse.ok &&
+    (achievementResult.upsertedCount === 1 || achievementResult.upsertedId)
+  ) {
+    window.showToast("Achievement unlocked: Score", "success");
+  }
+
+  if (window.updateUserBadges && window.addThemeController) {
+    window.updateUserBadges();
+    window.addThemeController();
+  }
+
   console.log(data);
   updateSliders(data.formula);
 });
 
-// updateTotal();
-
-// function updateSliders(data) {
-//   const sliders = [
-//     "waterFountains",
-//     "washrooms",
-//     "parks",
-//     "communityCentres",
-//     "transit",
-//   ];
-
-//   data.formula.forEach((sliderName, sliderValue) => {
-//     document.getElementById(`${sliderName}Text`).value = sliderValue; // changes the textbox
-//     document.getElementById(sliderName).value = sliderValue; // changes the slider
-//   });
-// }
-
+/**
+ * Fetches the saved heat score formula from the backend and updates the sliders.
+ *
+ * @async
+ */
 async function loadFormula() {
   const response = await fetch("/api/heatScoreFormula");
   const data = await response.json();
@@ -143,6 +180,12 @@ async function loadFormula() {
 }
 
 loadFormula();
+
+/**
+ * Updates the slider and text input values using the given formula.
+ *
+ * @param {object} formula - Formula object containing heat score weights.
+ */
 function updateSliders(formula) {
   Object.entries(formula).forEach(([sliderName, sliderValue]) => {
     // update textbox

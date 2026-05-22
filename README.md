@@ -1,21 +1,142 @@
-# 2800-202610-DTC02
+# Find Your Cool
 
-## About Us
+[**Find Your Cool**](https://find-your-cool.onrender.com/home) is an interactive web application that helps residents locate nearby cooling resources and helps city planners identify heat-vulnerable neighbourhoods in Vancouver
 
-Team Name: DTC-02
-Team Members:
+## Features
 
-- Luka Gajic
-- James Garcia
-- Bill Hodges
-- Sam Mynott
-- Fawaz Shariff
+### Cool Score
 
-## More details to come
+Toggle the Score map filter to view the relative Cool Score of each Vancouver neighbourhood.
 
-TBA
+The Cool Score takes into account all water fountains, public washrooms, parks, community centres, and transit stops in each neighbourhood and weighs them according to the user-controlled sliders.
 
-### Report Summary
+Cool Score Formula: ∑ ((count ÷ max) × weight)
 
-City planner accounts can open the AI Summary panel to generate a citywide or neighbourhood-level overview of heat-related reports.
-If `CLAUDE_API_KEY` is configured, the backend uses it for model-generated summaries; otherwise it falls back to a local heuristic summary.
+Adjust the formula by accessing the Cool Score from the user menu in the top right of the screen.
+
+### Map Filters
+
+Source: [City of Vancouver Open Data Portal](https://opendata.vancouver.ca/pages/home/)
+
+- Trees
+- Parks
+- Community centres
+- Public washrooms
+- Transit stops
+- Water fountains
+- User reports
+
+### User Reports
+
+Logged in users can submit a community report anywhere on the map. All reports are viewable by City Planner accounts.
+
+### Live Temperature
+
+Live weather for any location via [OpenWeather](https://openweathermap.org/). Click anywhere on the map to update the temperature.
+
+### AI Report Summary
+
+City planner accounts can open the AI Summary panel to generate a citywide or neighbourhood-level overview of heat-related reports. If `CLAUDE_API_KEY` is configured, the backend uses it for model-generated summaries; otherwise it falls back to a local heuristic summary.
+
+## Developer Installation and Operation
+
+1. Clone the repo locally and navigate to the folder.
+2. Create a `.env` file with the the contents below and replace the values with your desired port number and information from the following sources:
+    - [MongoDB Atlas](https://www.mongodb.com/docs/manual/reference/connection-string/?deployment-type=atlas&interface-atlas-only=atlas-cli)
+    - [Open Weather API](https://openweathermap.org/api)
+    - [ShadeMap API](https://shademap.app/about/)
+    - [Claude API](https://platform.claude.com/docs/en/api/admin/api_keys/retrieve)
+
+```env
+PORT=5500
+MONGODB_URI=replace_with_MongoDB_Atlas_connection_string
+OPENWEATHER_KEY=replace_with_Open_Weather_API_key
+SHADE_API=replace_with_ShadeMap_API_key
+CLAUDE_API_KEY=replace_with_Claude_API_key
+```
+
+Run the following commands to get up and running:
+
+1. `npm i` to install dependencies.
+2. `node server.js` to run the server.
+
+## Project Structure
+
+```md
+├── mongodbAtlas.js
+├── nodemon.json
+├── package.json
+├── package-lock.json
+├── public
+│   ├── components
+│   │   ├── loading-spinner.js
+│   │   ├── site-navbar.js
+│   │   ├── site-profile.js
+│   │   ├── speed-dial.js
+│   │   └── temperature-container.js
+│   ├── css
+│   │   └── index.css
+│   ├── data
+│   │   └── stops.geojson
+│   ├── images
+│   │   ├── background-vancouver-backdrop.avif
+│   │   └── background-vancouver-backdrop.jpg
+│   ├── index.html
+│   ├── js
+│   │   ├── communityCentres.js
+│   │   ├── login.js
+│   │   ├── mapInit.js
+│   │   ├── map.js
+│   │   ├── parks.js
+│   │   ├── report.js
+│   │   ├── score.js
+│   │   ├── summaryAI.js
+│   │   ├── transit.js
+│   │   ├── trees.js
+│   │   ├── washroom.js
+│   │   └── water.js
+│   └── login.html
+├── README.md
+├── routes
+│   ├── achievement.js
+│   ├── api.js
+│   ├── auth.js
+│   └── index.js
+├── server.js
+└── tailwind.config.js
+```
+
+## Tech Stack
+
+![image](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+![image](https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=Leaflet&logoColor=white)
+![image](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![image](https://img.shields.io/badge/daisyUI-1ad1a5?style=for-the-badge&logo=daisyui&logoColor=white)
+![image](https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![image](https://img.shields.io/badge/Express%20js-000000?style=for-the-badge&logo=express&logoColor=white)
+![image](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![image](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+![image](https://img.shields.io/badge/Trello-0052CC?style=for-the-badge&logo=trello&logoColor=white)
+
+- [Javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [Leaflet](https://leafletjs.com/)
+- [Leaflet Shadow Simulator](https://www.npmjs.com/package/leaflet-shadow-simulator)
+- [Tailwind](https://tailwindcss.com/)
+- [DaisyUI](https://daisyui.com/)
+- [Turf.js](https://turfjs.org/)
+- [Node](https://nodejs.org/en)
+- [Express](https://expressjs.com/en/)
+- [MongoDB](https://www.mongodb.com/)
+- [Claude API](https://platform.claude.com/docs/en/api/overview)
+- [Figma](https://www.figma.com/)
+- [Trello](https://trello.com/)
+
+## Contributors
+
+### BCIT COMP 2800 2026 - Team DTC-02
+
+- [Luka Gajic](https://github.com/lukagajic1)
+- [James Garcia](https://github.com/jgarcia-programs)
+- [Bill Hodges](https://github.com/b-hsy)
+- [Sam Mynott](https://github.com/sjmy)
+- [Fawaz Shariff](https://github.com/Chungywungy)

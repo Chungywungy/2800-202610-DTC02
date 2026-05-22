@@ -1,6 +1,11 @@
 // import all dependencies
 const express = require("express");
-const { formsModel, formulaModel, userModel } = require("../mongodbAtlas");
+const {
+  formsModel,
+  formulaModel,
+  userModel,
+  achievementModel,
+} = require("../mongodbAtlas");
 
 const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-4-6";
@@ -658,6 +663,14 @@ router.get("/deleteAccount/:user", async (req, res) => {
   }
 });
 
+/**
+ * Creates and saves a new feedback report submitted by a logged-in user.
+ *
+ * Requires user authentication before saving report data.
+ *
+ * @route POST /reports
+ * @returns {JSON} Success status or error message
+ */
 router.post("/reports", async (req, res) => {
   if (!req.session.user) {
     return res
@@ -667,15 +680,32 @@ router.post("/reports", async (req, res) => {
 
   try {
     const { lat, lng, address, formText } = req.body;
+    const username = req.session.user.username;
+
+    // Check if this is the user's first report
+    const existingReports = await formsModel.find({ username });
+
     const newReport = new formsModel({
-      username: req.session.user.username,
+      username,
       lat,
       lng,
       address,
       formText,
     });
     await newReport.save();
-    res.json({ success: true });
+
+    // If this is the first report, create a "report" achievement
+    let achievementUnlocked = false;
+    if (existingReports.length === 0) {
+      const newAchievement = new achievementModel({
+        username,
+        achievementName: "report",
+      });
+      await newAchievement.save();
+      achievementUnlocked = true;
+    }
+
+    res.json({ success: true, achievementUnlocked });
   } catch (error) {
     console.log("Error saving report:", error);
     res.status(500).json({ error: "Failed to save report" });
@@ -711,6 +741,15 @@ router.get("/reports", async (req, res) => {
   }
 });
 
+/**
+ * Generates an AI summary of heat-related community reports.
+ *
+ * Only accessible to planner users. Supports citywide and
+ * neighborhood-specific summaries.
+ *
+ * @route GET /reports/summary
+ * @returns {JSON} Summary data with recommendations and topics
+ */
 router.get("/reports/summary", async (req, res) => {
   if (!req.session.user || req.session.user.role !== "planner") {
     return res.status(403).json({
