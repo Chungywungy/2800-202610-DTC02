@@ -14,8 +14,8 @@ class SiteProfile extends HTMLElement {
 
   createProfileModal() {
     this.innerHTML = `
-      <dialog id="profileModal" class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box w-11/12 max-w-5xl">
+      <dialog id="profileModal" class="modal modal-middle">
+        <div class="modal-box w-11/12 max-w-lg sm:max-w-full lg:max-w-5xl">
           <h3 class="text-lg font-bold">Hello ${user.username}!</h3>
           <br>
 
@@ -24,7 +24,7 @@ class SiteProfile extends HTMLElement {
 
             <div class="collapse-title font-semibold">User Reports</div>
             <div class="collapse-content text-sm">
-              <div class="flex flex-col gap-2 sm:flex-row sm:items-center place-self-end">
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-center justify-end">
                 <span class="font-semibold pr-2">Filter: </span>
                 <select id="reportScope" class="select select-bordered select-sm w-full sm:w-48">
                   <option value="all">Citywide</option>
@@ -38,7 +38,7 @@ class SiteProfile extends HTMLElement {
               </div>
               <br>
               <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table table-xs sm:table-md">
                   <thead>
                     <tr>
                       <th><span id="sortUsername">Username <span id="usernameArrow">▼</span></span></th>
@@ -69,8 +69,8 @@ class SiteProfile extends HTMLElement {
             </div>
           </div>
 
-          <h1 class="py-1 w-full flex justify-center text-3xl font-semibold">Themes</h1>
-          <div id="themeControllerContainer" class="join py-2 pb-4 flex justify-center w-full">
+          <h1 class="py-1 w-full flex justify-center text-xl sm:text-3xl font-semibold">Themes</h1>
+          <div id="themeControllerContainer" class="flex flex-wrap justify-center gap-2 py-2 pb-4 w-full">
             <div class="tooltip  tooltip-top" data-tip="Default Theme">
               <input
                 type="radio"
@@ -509,7 +509,8 @@ function addBadges() {
       "flex-col",
       "justify-left",
       "items-center",
-      "w-1/5",
+      "w-2/5",
+      "md:w-1/5",
     );
     const badgeSpan = document.createElement("span");
     badgeSpan.classList.add("material-symbols-outlined");
@@ -517,6 +518,7 @@ function addBadges() {
     badgeSpan.textContent = "license";
 
     const achievementName = document.createElement("p");
+    achievementName.classList.add("text-center");
     achievementName.id = achievement.id;
     achievementName.textContent = achievement.label;
 

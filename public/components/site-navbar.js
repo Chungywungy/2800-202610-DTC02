@@ -542,9 +542,9 @@ class="hidden fixed top-32 left-6 z-[3000] bg-white rounded-xl shadow-xl w-72 ov
 
   <div class="menu bg-base-100 min-h-full w-96 p-6">
 
- <div class="p-6 max-w-md w-full bg-white rounded-xl shadow space-y-4">
+ <div class="p-4 sm:p-6 w-full bg-white rounded-xl shadow space-y-4">
       <h2 class="text-xl font-bold">Cool Score Formula</h2>
-<p class="text-center text-lg font-mono bg-base-200 rounded-lg p-2">
+<p class="text-center md:text-md text-sm font-mono bg-base-200 rounded-lg p-2">
   Cool Score = ∑ ((count ÷ max) × weight)
 </p>
       <!-- WATER FOUNTAIN SETTINGS CONTAINER -->
@@ -773,7 +773,6 @@ class="hidden fixed inset-0 z-[9999] bg-black/50 items-center justify-center"   
           </div>
         </div>
       </div>
-    </nav>
     `;
   }
 }

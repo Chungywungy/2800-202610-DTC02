@@ -32,7 +32,7 @@ class LoadingSpinnerModal extends HTMLElement {
       >
         <div class="flex flex-col w-full h-full justify-center items-center">
           <div
-            class="flex flex-col justify-center max-w-3xl mx-auto rounded-lg h-fit w-1/2 md:w-1/4"
+            class="flex flex-col justify-center w-11/12 sm:w-3/4 md:w-1/2 lg:w-2/5 xl:w-1/3 mx-auto rounded-lg h-fit"
           >
             <div
               class="mockup-code bg-base-100 text-black w-full flex flex-col justify-center shadow-xl"

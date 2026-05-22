@@ -674,7 +674,7 @@ async function fetchAll() {
     fetchTransitStops(),
     fetchCommunityCentres(),
     fetchHeatScoreFormula(),
-    // new Promise((resolve) => setTimeout(resolve, 3000)), // Add delay for animation UNDO comment when in production
+    new Promise((resolve) => setTimeout(resolve, 3000)), // Add delay for animation UNDO comment when in production
   ]);
 
   await fetchNeighborhoods(
