@@ -38,6 +38,28 @@ Live weather for any location via [OpenWeather](https://openweathermap.org/). Cl
 
 City planner accounts can open the AI Summary panel to generate a citywide or neighbourhood-level overview of heat-related reports. If `CLAUDE_API_KEY` is configured, the backend uses it for model-generated summaries; otherwise it falls back to a local heuristic summary.
 
+## Developer Installation and Operation
+
+1. Clone the repo locally and navigate to the folder.
+2. Create a `.env` file with the the contents below and replace the values with your desired port number and information from the following sources:
+    - [MongoDB Atlas](https://www.mongodb.com/docs/manual/reference/connection-string/?deployment-type=atlas&interface-atlas-only=atlas-cli)
+    - [Open Weather API](https://openweathermap.org/api)
+    - [ShadeMap API](https://shademap.app/about/)
+    - [Claude API](https://platform.claude.com/docs/en/api/admin/api_keys/retrieve)
+
+```env
+PORT=[insert port number]
+MONGODB_URI=[insert MongoDB Atlas connection string]
+OPENWEATHER_KEY=[insert Open Weather API key]
+SHADE_API=[insert ShadeMap API key]
+CLAUDE_API_KEY=[insert Claude API key]
+```
+
+Run the following commands to get up and running:
+
+1. `npm i` to install dependencies.
+2. `node server.js` to run the server.
+
 ## Project Structure
 
 ```md
