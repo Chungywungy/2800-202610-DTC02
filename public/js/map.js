@@ -521,7 +521,7 @@ const watchId = navigator.geolocation.watchPosition(
 
     if (!userMarker) {
       // Create the marker and circle
-      map.setView(latlng, 15);
+      // map.setView(latlng, 15);
 
       userCircle = L.circle(latlng, {
         radius: accuracy,
