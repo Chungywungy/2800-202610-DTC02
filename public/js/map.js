@@ -508,8 +508,7 @@ const createNeighborhoodGeom = (
     <br>
     <b>Normalized Cool Score:</b>
     ${(stats.totalScore * 100).toFixed(1)}
-  `,
-    );
+  `);
 
     neighborhoodGeom.push(geom);
   });

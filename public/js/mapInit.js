@@ -13,22 +13,24 @@ export const map = L.map("map", {
 }).fitBounds(bounds);
 
 let tileLayer;
-let mapStyle = "voyager";
 
-function setTileLayer(style) {
-  mapStyle = style;
+/**
+ * TODO: Carto (the resource we've been using to support map themes) have stopped providing their free CDN and instead requires an API key
+ * which needs to be pre-approved to continue using their theme. For now, the current theme is the default Leaflet layout. There is a functionality
+ * in the app wherein unlocking achievements unlock map themes, that would no longer be supported (NOTE: it will still change the DaisyUI theme).
+ */
+function setTileLayer() {
   if (tileLayer) {
     map.removeLayer(tileLayer);
   }
-  tileLayer = L.tileLayer(
-    `https://{s}.basemaps.cartocdn.com/rastertiles/${style}/{z}/{x}/{y}{r}.png`,
-    { minZoom: 12 },
-  ).addTo(map);
+  tileLayer = L.tileLayer(`https://tile.openstreetmap.org/{z}/{x}/{y}.png`, {
+    minZoom: 12,
+  }).addTo(map);
   map.invalidateSize();
 }
 
 // Initialize with default
-setTileLayer(mapStyle);
+setTileLayer();
 
 export { setTileLayer };
 
